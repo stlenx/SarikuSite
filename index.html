@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+	<script src="vue.js"></script>
+</head>
+<body>
+
+	<div id="app">
+		<h1>{{ msg }}</h1>
+		<input v-model="msg">
+		<button v-on:click="lmao">Flip me!</button>
+		<ol>
+			<cringe v-for="item in stuff"
+					v-bind:todo="item"
+					v-bind:key="item.id">
+			</cringe>
+		</ol>
+	</div>
+
+	<script>
+		Vue.component('cringe'), {
+			props: ['todo'],
+			template: '<li>{{ todo.txt }}</li>'
+		}
+
+		var app = new Vue
+		({
+			el: '#app',
+			data: {
+				msg: 'Eyyy muy buenas a todos, guapísimos',
+				stuff: [
+					{id: 0, txt: "fortnite"},
+					{id: 1, txt: "marques brownlee"},
+					{id: 2, txt: "maker"}
+				]
+			},
+			methods: {
+				lmao: function () {
+					this.msg = this.msg.split('').reverse().join('')
+				}
+			}
+		})
+	</script>
+
+</body>
+</html>
