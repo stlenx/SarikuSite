@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Test</title>
+	<title>Sariku - Web</title>
 	<script src="vue.js"></script>
+	<link rel="icon" href="icon.jpg">
+	<style type="text/css">
+		.logo {
+			display: block;
+  			margin-left: auto;
+  			margin-right: auto;
+  			position: -webkit-sticky; /* Safari */
+  			position: sticky;
+  			top: 0;
+		}
+	</style>
 </head>
 <body>
 
 	<div id="app">
-		<h1>This page is cringe (for now) GET OUT</h1>
+		<img src="logo.png" class="logo">
 		<h1>{{ msg }}</h1>
 		<input v-model="msg">
 		<button v-on:click="lmao">Flip me!</button>
