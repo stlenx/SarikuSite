@@ -16,9 +16,6 @@
 <div id="app">
 	<transition>
 		<div  v-if="page">
-			<div style="text-align: center">
-				<button v-on:click="page = false">Next</button>
-			</div>
 
 			<p style="text-align: justify; width: 400px; padding-left: 40%;">
 				Discord bot for searching asl or bsl signs for words. Written in C#, it uses DSharp+ to interact with discord, scrappysharp to scrap the elements from signingsavvy.com
@@ -26,13 +23,18 @@
 				, feel free to use it at will.
 			</p>
 
+			<div style="text-align: center">
+				<button v-on:click="page = false">Next</button>
+			</div>
+
 		</div>
 		<div v-if="!page">
+
+			<p style="text-align: justify; width: 400px; padding-left: 40%;">No more projects... For now.</p>
+
 			<div style="text-align: center">
 				<button v-on:click="page = true">Back</button>
 			</div>
-
-			<p style="text-align: justify; width: 400px; padding-left: 40%;">No more projects... For now.</p>
 
 		</div>
 	</transition>
@@ -42,7 +44,7 @@
 	new Vue({
 		el: app,
 		data: {
-			page : true
+			page: true
 		}
 	})
 </script>
