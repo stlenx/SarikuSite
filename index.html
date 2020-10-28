@@ -7,50 +7,50 @@
 	<style type="text/css">
 		.logo {
 			display: block;
-  			margin-left: auto;
-  			margin-right: auto;
+			margin-left: auto;
+			margin-right: auto;
   			position: -webkit-sticky; /* Safari */
   			position: sticky;
+			width:30%; height: 30%;
   			top: 0;
 		}
+		.center {
+			text-align: center;
+		}
+		p {
+			color: #FFFFFF;
+		}
+		h1 {
+			color: #FFFFFF;
+		}
+		h2 {
+			color: #FFFFFF;
+		}
+
 	</style>
 </head>
-<body>
+<body style="background-color: #000000">
+
+	<img src="logo.png" class="logo">
+	<h1 class="center">I like code like i like my men</h1>
+	<h2 class="center">- in dark mode -</h2>
 
 	<div id="app">
-		<img src="logo.png" class="logo">
-		<h1>{{ msg }}</h1>
-		<input v-model="msg">
-		<button v-on:click="lmao">Flip me!</button>
-		<ol>
-			<cringe v-for="item in stuff"
-					v-bind:todo="item"
-					v-bind:key="item.id">
-			</cringe>
-		</ol>
+		<button v-on:click="show = !show">
+			toggle
+		</button>
+		<transition name="fade">
+			<p v-if="show">Hello</p>
+		</transition>
 	</div>
 
 	<script>
-		Vue.component('cringe'), {
-			props: ['todo'],
-			template: '<li>{{ todo.txt }}</li>'
-		}
 
 		var app = new Vue
 		({
 			el: '#app',
 			data: {
-				msg: 'Eyyy muy buenas a todos, guapísimos',
-				stuff: [
-					{id: 0, txt: "fortnite"},
-					{id: 1, txt: "marques brownlee"},
-					{id: 2, txt: "maker"}
-				]
-			},
-			methods: {
-				lmao: function () {
-					this.msg = this.msg.split('').reverse().join('')
-				}
+				show: true
 			}
 		})
 	</script>
