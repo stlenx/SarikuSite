@@ -14,6 +14,12 @@
 			width:30%; height: 30%;
   			top: 0;
 		}
+		.grow {
+			transition: all .2s ease-in-out;
+		}
+		.grow:hover {
+			transform: scale(1.1);
+		}
 		.center {
 			text-align: center;
 		}
@@ -26,34 +32,27 @@
 		h2 {
 			color: #FFFFFF;
 		}
+		li {
+			color: #FFFFFF;
+		}
 
 	</style>
 </head>
 <body style="background-color: #000000">
 
 	<img src="logo.png" class="logo">
-	<h1 class="center">I like code like i like my men</h1>
-	<h2 class="center">- in dark mode -</h2>
+	<h1 style="text-align: center">I like code like i like my men</h1>
+	<h2 class="grow" style="text-align: center">- in dark mode -</h2>
 
-	<div id="app">
-		<button v-on:click="show = !show">
-			toggle
-		</button>
-		<transition name="fade">
-			<p v-if="show">Hello</p>
-		</transition>
+	<div class="splide" style="text-align: center">
+		<div class="splide__track">
+			<ul class="splide__list">
+				<li class="splide__slide">hello</li>
+				<li class="splide__slide">kill</li>
+				<li class="splide__slide">me</li>
+			</ul>
+		</div>
 	</div>
-
-	<script>
-
-		var app = new Vue
-		({
-			el: '#app',
-			data: {
-				show: true
-			}
-		})
-	</script>
 
 </body>
 </html>
