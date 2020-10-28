@@ -1,0 +1,30 @@
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    width:30%; height: 30%;
+    top: 0;
+}
+.grow {
+    transition: all .2s ease-in-out;
+}
+.grow:hover {
+    transform: scale(1.1);
+}
+.center {
+    text-align: center;
+}
+p {
+    color: #FFFFFF;
+}
+h1 {
+    color: #FFFFFF;
+}
+h2 {
+    color: #FFFFFF;
+}
+li {
+    color: #FFFFFF;
+}

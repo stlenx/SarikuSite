@@ -1,58 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
 	<title>Sariku - Web</title>
 	<script src="vue.js"></script>
 	<link rel="icon" href="icon.jpg">
-	<style type="text/css">
-		.logo {
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-  			position: -webkit-sticky; /* Safari */
-  			position: sticky;
-			width:30%; height: 30%;
-  			top: 0;
-		}
-		.grow {
-			transition: all .2s ease-in-out;
-		}
-		.grow:hover {
-			transform: scale(1.1);
-		}
-		.center {
-			text-align: center;
-		}
-		p {
-			color: #FFFFFF;
-		}
-		h1 {
-			color: #FFFFFF;
-		}
-		h2 {
-			color: #FFFFFF;
-		}
-		li {
-			color: #FFFFFF;
-		}
-
-	</style>
+	<link rel="stylesheet" href="stylebruh.css">
 </head>
 <body style="background-color: #000000">
 
-	<img src="logo.png" class="logo">
-	<h1 style="text-align: center">I like code like i like my men</h1>
-	<h2 class="grow" style="text-align: center">- in dark mode -</h2>
+<img src="logo.png" class="logo">
+<h1 style="text-align: center">I like code like i like my men</h1>
+<h2 class="grow" style="text-align: center">in dark mode</h2>
+<h1 style="text-align: center">- Projects -</h1>
 
-	<div class="splide" style="text-align: center">
-		<div class="splide__track">
-			<ul class="splide__list">
-				<li class="splide__slide">hello</li>
-				<li class="splide__slide">kill</li>
-				<li class="splide__slide">me</li>
-			</ul>
+<div id="app">
+	<transition>
+		<div  v-if="page">
+			<div style="text-align: center">
+				<button v-on:click="page = false">Next</button>
+			</div>
+
+			<p style="text-align: justify; width: 400px; padding-left: 40%;">
+				Discord bot for searching asl or bsl signs for words. Written in C#, it uses DSharp+ to interact with discord, scrappysharp to scrap the elements from signingsavvy.com
+				and external api for Vrchat signs (generally very similar to irl ones but nice to have). The <a href="https://github.com/stlenx/SavvyBot">code</a> is up in my <a href="https://github.com/stlenx">github</a>
+				, feel free to use it at will.
+			</p>
+
 		</div>
-	</div>
+		<div v-if="!page">
+			<div style="text-align: center">
+				<button v-on:click="page = true">Back</button>
+			</div>
+
+			<p style="text-align: justify; width: 400px; padding-left: 40%;">No more projects... For now.</p>
+
+		</div>
+	</transition>
+</div>
+
+<script>
+	new Vue({
+		el: app,
+		data: {
+			page : true
+		}
+	})
+</script>
 
 </body>
 </html>
