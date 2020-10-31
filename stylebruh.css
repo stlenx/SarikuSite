@@ -1,7 +1,7 @@
 .logo {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 35%;
+    margin-right: 35%;
     position: -webkit-sticky; /* Safari */
     position: sticky;
     width:30%; height: 30%;
@@ -27,4 +27,49 @@ h2 {
 }
 li {
     color: #FFFFFF;
+}
+
+.dropbtn {
+    background-color: #161f4c;
+    color: #ffffff;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+}
+
+.dropdown {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #26389d;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: #e2e2e2;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #000e75;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #050037;}
+
+.imageLOL {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: 80%;
+    text-align: center;
 }
