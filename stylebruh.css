@@ -7,6 +7,9 @@
     width:30%; height: 30%;
     top: 0;
 }
+body {
+    background: url(img/background.png) repeat 0 0;
+}
 .grow {
     transition: all .2s ease-in-out;
 }
@@ -17,16 +20,16 @@
     text-align: center;
 }
 p {
-    color: #FFFFFF;
+    color: #FFFFFF; font-family: 'Montserrat';
 }
 h1 {
-    color: #FFFFFF;
+    color: #FFFFFF; font-family: 'Montserrat';
 }
 h2 {
-    color: #FFFFFF;
+    color: #FFFFFF; font-family: 'Montserrat';
 }
 li {
-    color: #FFFFFF;
+    color: #FFFFFF; font-family: 'Montserrat';
 }
 
 .dropbtn {
