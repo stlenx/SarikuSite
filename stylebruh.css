@@ -19,17 +19,30 @@ body {
 .center {
     text-align: center;
 }
-p {
+p,h1,h2,li {
     color: #FFFFFF; font-family: 'Montserrat';
 }
-h1 {
-    color: #FFFFFF; font-family: 'Montserrat';
+.header {
+
 }
-h2 {
-    color: #FFFFFF; font-family: 'Montserrat';
+#app {
+    background-color: #454545;
+    position: relative;
+    top: -20px;
+    width: 60%;
+    padding-bottom: 50px;
+    border-radius: 5px;
+    margin: auto;
 }
-li {
-    color: #FFFFFF; font-family: 'Montserrat';
+.article {
+    background-color: gray;
+    position: relative;
+    text-align: justify;
+    padding-top: 20px;
+    width: 95%;
+    left: 20px;
+    top: 20px;
+    border-radius: 5px;
 }
 
 .dropbtn {

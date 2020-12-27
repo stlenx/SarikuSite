@@ -18,37 +18,51 @@
 	</div>
 </div>
 
-<img src="img/logo.png" class="logo">
+<div class="header">
+	<img src="img/logo.png" class="logo">
 
-<h1 style="text-align: center">I like code like i like my men</h1>
-<h2 class="grow" style="text-align: center">in dark mode</h2>
-<h1 style="text-align: center">- Projects -</h1>
+	<h1 style="text-align: center">- Projects -</h1>
+</div>
 
 <div id="app">
-	<transition>
-		<div  v-if="page">
+	<div class="article">
+		<table>
+			<tr>
+				<td>
+					<video width="500" height="280" controls>
+						<source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" type="video/mp4">
+						Your browser does not support the video tag.
+					</video>
+				</td>
+				<td>
+					<transition>
+						<div  v-if="page">
 
-			<p style="text-align: justify; width: 400px; padding-left: 40%;">
-				Discord bot for searching asl or bsl signs for words. Written in C#, it uses DSharp+ to interact with discord, scrappysharp to scrap the elements from signingsavvy.com
-				and external api for Vrchat signs (generally very similar to irl ones but nice to have). The <a href="https://github.com/stlenx/SavvyBot">code</a> is up in my <a href="https://github.com/stlenx">github</a>
-				, feel free to use it at will.
-			</p>
+							<p style="text-align: justify; width: 400px; padding-left: 40%;">
+								Discord bot for searching asl or bsl signs for words. Written in C#, it uses DSharp+ to interact with discord, scrappysharp to scrap the elements from signingsavvy.com
+								and external api for Vrchat signs (generally very similar to irl ones but nice to have). The <a href="https://github.com/stlenx/SavvyBot">code</a> is up in my <a href="https://github.com/stlenx">github</a>
+								, feel free to use it at will.
+							</p>
 
-			<div style="text-align: center">
-				<button v-on:click="page = false">Next</button>
-			</div>
+							<div style="text-align: center">
+								<button v-on:click="page = false">Next</button>
+							</div>
 
-		</div>
-		<div v-if="!page">
+						</div>
+						<div v-if="!page">
 
-			<p style="text-align: justify; width: 400px; padding-left: 40%;">No more projects... For now.</p>
+							<p style="text-align: justify; width: 400px; padding-left: 40%;">No more projects... For now.</p>
 
-			<div style="text-align: center">
-				<button v-on:click="page = true">Back</button>
-			</div>
+							<div style="text-align: center">
+								<button v-on:click="page = true">Back</button>
+							</div>
 
-		</div>
-	</transition>
+						</div>
+					</transition>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 
 <script>
