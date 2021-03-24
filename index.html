@@ -30,10 +30,17 @@
 		<table>
 			<tr>
 				<td>
-					<video width="500" height="280" controls>
-						<source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" type="video/mp4">
-						Your browser does not support the video tag.
-					</video>
+					<transition>
+						<div v-if="page">
+							<video width="500" height="280" controls>
+								<source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" type="video/mp4">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+						<div v-if="!page">
+							<img src="img/Mandelbrot.png" class="imageContent">
+						</div>
+					</transition>
 				</td>
 				<td>
 					<transition>
@@ -52,7 +59,10 @@
 						</div>
 						<div v-if="!page">
 
-							<p style="text-align: justify; width: 400px; padding-left: 40%;">No more projects... For now.</p>
+							<p style="text-align: justify; width: 400px;">
+								Simple C# app to calculate and display the mandelbrot set. Counts with options for color, number of maximum iterations calculated, zoom and offset. By clicking the "Draw"
+								button it will show the set, by clicking somewhere in the form it will shot the respective julia set for that point. Uses multithreading on the cpu for faster load.
+							</p>
 
 							<div style="text-align: center">
 								<button v-on:click="page = true">Back</button>
