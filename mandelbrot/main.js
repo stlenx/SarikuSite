@@ -1,105 +1,79 @@
-let inp;
+let img
+let inp
 
 function setup () {
-    createCanvas(windowHeight, windowHeight);
+    createCanvas(1000, 1000);
+    img = createImage(1000, 1000);
+    img.loadPixels();
+
     inp = createInput(30);
     inp.position(90,19);
 
     button = createButton('Draw set');
     button.position(19, 19);
-    button.mousePressed(DrawSet);
+    button.mousePressed(render);
 
     textSize(18);
     text('← Number of iterations (takes a while, be patient)',270, 28);
     fill(0, 102, 153);
 }
 
-function mouseClicked() {
-    if(!(mouseX > 8 && mouseX < 260 && mouseY > 10 && mouseY < 34))
+const gpu = new GPU();
+const calculate = gpu.createKernel(function (itr) {
+    let xPercent = this.thread.x / 1000;
+    let yPercent = this.thread.y / 1000;
+
+    let newX = -2 + (2 + 2) * xPercent;
+    let newY = -2 + (2 + 2) * yPercent;
+
+    let Zreal = 0;
+    let Zimg = 0;
+    let Creal = newX;
+    let Cimg = newY;
+
+    let n = 0;
+    while (Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2 && n < itr)
     {
-        CalculateJulia(mouseX, mouseY);
-    }
-}
+        let cringe1 = (Zreal * Zreal) + ((Zimg * Zimg) * -1);
+        let cringe2 = (Zreal * Zimg) + (Zimg * Zreal);
 
-function DrawSet() {
-    for (let y = 0; y < height; y++)
-    {
-        for (let x = 0; x < width; x++)
-        {
-            var point = coordFromPixelLocation(x,y,-2,2,-2,2);
+        Zreal = cringe1;
+        Zimg = cringe2;
 
-            var result = GetPixelInSet(new complex(0,0), new complex(point.x,point.y));
-
-            if (result === -1)
-            {
-                stroke('black');
-                strokeWeight(1);
-                rect(x, y, 1, 1);
-            }
-            else
-            {
-                var hueValue = (int) ((100 * result) / 30);
-
-                noStroke();
-                colorMode(HSB, 255);
-                let c = color(hueValue, 255, 255);
-                fill(c);
-                rect(x, y, 1, 1);
-            }
-        }
-    }
-}
-
-function CalculateJulia(X, Y)
-{
-    for (let y = 0; y < height; y++)
-    {
-        for (let x = 0; x < width; x++)
-        {
-
-            let point = coordFromPixelLocation(x, y, -2, 2, -2, 2);
-            let pointC = coordFromPixelLocation(X,Y,-2,2,-2,2);
-
-            let result = GetPixelInSet(new complex(point.x,point.y), new complex(pointC.x,pointC.y));
-
-            if (result === -1)
-            {
-                stroke('black');
-                strokeWeight(1);
-                rect(x, y, 1, 1);
-            }
-            else
-            {
-                let hueValue = (int) ((100 * result) / 30);
-
-                noStroke();
-                colorMode(HSB, 255);
-                let c = color(hueValue, 255, 255);
-                fill(c);
-                rect(x, y, 1, 1);
-            }
-        }
-    }
-}
-
-function GetPixelInSet(Z,C) {
-    var n = 0;
-    while (Z.modulus() <= 2 && n < inp.value())
-    {
-        Z = Z.multi(Z,Z);
-        Z = Z.sum(Z, C);
+        Zreal = Zreal + Creal;
+        Zimg = Zimg + Cimg;
         n++;
     }
+    return Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) > 2 ? n : -1;
+}).setOutput([1000,1000]);
 
-    return Z.modulus() > 2 ? n : -1;
+function render() {
+
+    let output = calculate(inp.value())
+    for(let x = 0; x < 1000; x++) {
+        for(let y = 0; y < 1000; y++) {
+            if (output[y][x] === -1)
+            {
+                writeColor(img, x, y, 0, 0, 0, 255);
+            }
+            else
+            {
+                var hueValue = (int) ((100 * output[y][x]) / 30);
+                colorMode(HSB, 255);
+                let c = color(hueValue, 255, 255);
+
+                writeColor(img, x, y, red(c), green(c), blue(c), 255);
+            }
+        }
+    }
+    img.updatePixels();
+    image(img, 0, 0);
 }
 
-function coordFromPixelLocation(pixelX, pixelY, minCoordX, maxCoordX, minCoordY, maxCoordY) {
-    let xPercent = pixelX / width;
-    let yPercent = pixelY / height;
-
-    let newX = minCoordX + (maxCoordX - minCoordX) * xPercent;
-    let newY = minCoordY + (maxCoordY - minCoordY) * yPercent;
-
-    return new point2d (newX, newY);
+function writeColor(image, x, y, red, green, blue, alpha) {
+    let index = (x + y * width) * 4;
+    image.pixels[index] = red;
+    image.pixels[index + 1] = green;
+    image.pixels[index + 2] = blue;
+    image.pixels[index + 3] = alpha;
 }
