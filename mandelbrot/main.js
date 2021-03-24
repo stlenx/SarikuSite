@@ -14,6 +14,13 @@ function setup () {
     fill(0, 102, 153);
 }
 
+function mouseClicked() {
+    if(!(mouseX > 8 && mouseX < 260 && mouseY > 10 && mouseY < 34))
+    {
+        CalculateJulia(mouseX, mouseY);
+    }
+}
+
 function DrawSet() {
     for (let y = 0; y < height; y++)
     {
@@ -32,6 +39,38 @@ function DrawSet() {
             else
             {
                 var hueValue = (int) ((100 * result) / 30);
+
+                noStroke();
+                colorMode(HSB, 255);
+                let c = color(hueValue, 255, 255);
+                fill(c);
+                rect(x, y, 1, 1);
+            }
+        }
+    }
+}
+
+function CalculateJulia(X, Y)
+{
+    for (let y = 0; y < height; y++)
+    {
+        for (let x = 0; x < width; x++)
+        {
+
+            let point = coordFromPixelLocation(x, y, -2, 2, -2, 2);
+            let pointC = coordFromPixelLocation(X,Y,-2,2,-2,2);
+
+            let result = GetPixelInSet(new complex(point.x,point.y), new complex(pointC.x,pointC.y));
+
+            if (result === -1)
+            {
+                stroke('black');
+                strokeWeight(1);
+                rect(x, y, 1, 1);
+            }
+            else
+            {
+                let hueValue = (int) ((100 * result) / 30);
 
                 noStroke();
                 colorMode(HSB, 255);
