@@ -8,6 +8,15 @@
 </head>
     <body>
 
+        <div class="controls">
+            <div class="buttons">
+                <button type="button" onclick="MandelbrotSet()">Mandelbrot</button>
+                <button type="button" onclick="BurningShip()">Burning ship</button>
+            </div>
+
+            <textarea id="iterations">50</textarea>
+        </div>
+
         <canvas id="canvas" width="1000" height="1000" style="border:1px solid #000;"></canvas>
 
         <script src="main.js"></script>

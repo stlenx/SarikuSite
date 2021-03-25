@@ -1,8 +1,11 @@
 
 const gpu = new GPU();
-const calculateSet = gpu.createKernel(function (itr) {
-    let Creal = this.thread.x / 400 -2;
-    let Cimg = this.thread.y / 400 -1.25;
+const calculateMandelbrot = gpu.createKernel(function (itr, zoom, x, y) {
+    let xOff = x / zoom;
+    let yOff = y / zoom;
+
+    let Creal = this.thread.x / zoom -xOff;
+    let Cimg = this.thread.y / zoom -yOff;
 
     let Zreal = 0;
     let Zimg = 0;
@@ -13,11 +16,31 @@ const calculateSet = gpu.createKernel(function (itr) {
         let cringe1 = (Zreal * Zreal) + ((Zimg * Zimg) * -1);
         let cringe2 = (Zreal * Zimg) + (Zimg * Zreal);
 
-        Zreal = cringe1;
-        Zimg = cringe2;
+        Zreal = cringe1 + Creal;
+        Zimg = cringe2+ Cimg;
+        n++;
+    }
 
-        Zreal = Zreal + Creal;
-        Zimg = Zimg + Cimg;
+    if(Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2)
+        return -1;
+    return n;
+}).setOutput([1000,1000]);
+
+const calculateShip = gpu.createKernel(function (itr) {
+    let Creal = this.thread.x / 300 -1.95;
+    let Cimg = this.thread.y / 300 -1.8;
+
+    let Zreal = 0;
+    let Zimg = 0;
+
+    let n = 0;
+    while (Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2 && n < itr)
+    {
+        let cringe1 = (Zreal * Zreal) + ((Zimg * Zimg) * -1);
+        let cringe2 = Math.abs((Zreal * Zimg) + (Zimg * Zreal));
+
+        Zreal = cringe1 + Creal;
+        Zimg = cringe2+ Cimg;
         n++;
     }
 
@@ -92,8 +115,12 @@ const ctx = canvas.getContext('2d');
 const imageData = ctx.createImageData(1000, 1000);
 const data = imageData.data;
 
-function render() {
-    let output = calculateSet(50)
+function MandelbrotSet() {
+    let iterations = parseInt(document.getElementById('iterations').value);
+
+    console.log(iterations);
+    //iterations = 50
+    let output = calculateMandelbrot(iterations, 400,800, 500)
 
     for(let x = 0; x < 1000; x++) {
         for(let y = 0; y < 1000; y++) {
@@ -108,7 +135,7 @@ function render() {
             }
             else
             {
-                let hueValue = remap(0,50, 0,1, n);
+                let hueValue = remap(0,iterations, 0,1, n);
                 let color = hslToRgb(hueValue, 0.8,0.5)
                 //console.log(color, hueValue)
                 data[index] = color[1];
@@ -121,16 +148,44 @@ function render() {
     ctx.putImageData(imageData, 0, 0);
 }
 
-window.onload = render;
+function BurningShip() {
+    let iterations = parseInt(document.getElementById('iterations').value);
+    let output = calculateShip(iterations)
+
+    for (let x = 0; x < 1000; x++) {
+        for (let y = 0; y < 1000; y++) {
+            let n = output[x][y];
+            let index = (y + x * 1000) * 4;
+            if (n === -1)
+            {
+                //writeColor( x, y, 0, 0, 0, 255);
+                data[index] = 0;
+                data[index+1] = 0;
+                data[index+2] = 0;
+            }
+            else
+            {
+                let hueValue = remap(0,iterations, 0,1, n);
+                let color = hslToRgb(hueValue, 0.8,0.5)
+                //console.log(color, hueValue)
+                data[index] = color[1];
+                data[index+1] = color[2];
+                data[index+2] = color[3];
+            }
+            data[index + 3] = 255;
+        }
+    }
+    ctx.putImageData(imageData, 0, 0);
+}
 
 function remap(oneS, oneE, twoS, twoE, n) {
     return twoS + ((twoE - twoS) / (oneE - oneS)) * (n - oneS)
 }
 
 function hslToRgb(h, s, l){
-    var r, g, b;
+    let r, g, b;
 
-    if(s == 0){
+    if(s === 0){
         r = g = b = l; // achromatic
     }else{
         var hue2rgb = function hue2rgb(p, q, t){
@@ -148,7 +203,6 @@ function hslToRgb(h, s, l){
         g = hue2rgb(p, q, h);
         b = hue2rgb(p, q, h - 1/3);
     }
-
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 }
 
