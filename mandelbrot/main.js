@@ -115,16 +115,37 @@ const ctx = canvas.getContext('2d');
 const imageData = ctx.createImageData(1000, 1000);
 const data = imageData.data;
 
-function MandelbrotSet() {
-    let iterations = parseInt(document.getElementById('iterations').value);
+let iterations = parseInt(document.getElementById('iterations').value);
 
-    console.log(iterations);
-    //iterations = 50
+function MandelbrotSet() {
+    iterations = parseInt(document.getElementById('iterations').value);
     let output = calculateMandelbrot(iterations, 400,800, 500)
 
-    for(let x = 0; x < 1000; x++) {
-        for(let y = 0; y < 1000; y++) {
-            let n = output[x][y];
+    DrawImage(output)
+}
+
+function BurningShip() {
+    iterations = parseInt(document.getElementById('iterations').value);
+    let output = calculateShip(iterations)
+
+    DrawImage(output,iterations)
+}
+
+function Animate() {
+    for (let i = 600; i < 200000000; i*=1.01)
+    {
+        sleep(16).then(() => {
+            iterations = parseInt(document.getElementById('iterations').value);
+            let output = calculateMandelbrot(iterations, i,600 + i * 1.406548, 500)
+            DrawImage(output,iterations)
+        });
+    }
+}
+
+function DrawImage(values) {
+    for (let x = 0; x < 1000; x++) {
+        for (let y = 0; y < 1000; y++) {
+            let n = values[x][y];
             let index = (y + x * 1000) * 4;
             if (n === -1)
             {
@@ -148,34 +169,8 @@ function MandelbrotSet() {
     ctx.putImageData(imageData, 0, 0);
 }
 
-function BurningShip() {
-    let iterations = parseInt(document.getElementById('iterations').value);
-    let output = calculateShip(iterations)
-
-    for (let x = 0; x < 1000; x++) {
-        for (let y = 0; y < 1000; y++) {
-            let n = output[x][y];
-            let index = (y + x * 1000) * 4;
-            if (n === -1)
-            {
-                //writeColor( x, y, 0, 0, 0, 255);
-                data[index] = 0;
-                data[index+1] = 0;
-                data[index+2] = 0;
-            }
-            else
-            {
-                let hueValue = remap(0,iterations, 0,1, n);
-                let color = hslToRgb(hueValue, 0.8,0.5)
-                //console.log(color, hueValue)
-                data[index] = color[1];
-                data[index+1] = color[2];
-                data[index+2] = color[3];
-            }
-            data[index + 3] = 255;
-        }
-    }
-    ctx.putImageData(imageData, 0, 0);
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function remap(oneS, oneE, twoS, twoE, n) {
