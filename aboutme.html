@@ -4,27 +4,91 @@
     <meta charset="UTF-8">
     <title>About Me</title>
     <link rel="icon" href="img/icon.jpg">
-    <link rel="stylesheet" href="stylebruh.css">
+    <link rel="stylesheet" href="withstyle.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="dropdown" style="float: left">
-    <button class="dropbtn">Menu</button>
-    <div class="dropdown-content">
-        <a href="index.html">Main</a>
-        <a href="pictures/pictures.html">Pictures</a>
+    <div class="main" id="id">
+        <div class="canvas">
+            <script src="background.js" defer></script>
+            <canvas id="bannerCanvas"></canvas>
+        </div>
+
+        <div class="site">
+            <div class="banner">
+                <div class="letters">
+                    <svg aria-hidden="true" role="img" viewBox="0 0 44 114" height="200px" width="78px" class="letter letter-s letter-1" style="opacity: 1;">
+                        <path d="m 2 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#fb14ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 157.102, 31.4204;"/>
+                        <path d="m 42 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#fb14ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 93.2611, 33.4204, 92.2611, 125.681;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 54 114" height="200px" width="95px" class="letter letter-a letter-1" style="opacity: 1;">
+                        <path d="m 27 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#d814ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 62.8407, 95.2611, 30.4204, 125.681;"/>
+                        <path d="m 47 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#d814ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 171, 25;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 29 114" height="200px" width="51px" class="letter letter-r letter-1" style="opacity: 1;">
+                        <path d="m 27 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#b514ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 93.2611, 33.4204, 92.2611, 125.681;"/>
+                        <path d="m 7 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#b514ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 171, 25;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 14 114" height="200px" width="25px" class="letter letter-i letter-1" style="opacity: 1;">
+                        <path d="m 7 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#7214ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 146, 50;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 54 114" height="200px" width="95px" class="letter letter-k letter-1" style="opacity: 1;">
+                        <path d="m 27 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#4714ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 31.4204, 94.2611, 31.4204, 125.681;"/>
+                        <path d="m 7 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#4714ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 134, 62;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 54 114" height="200px" width="95px" class="letter letter-u letter-1" style="opacity: 1;">
+                        <path d="m 27 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#1418ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 31.4204, 94.2611, 31.4204, 125.681;"/>
+                        <path d="m 47 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#1418ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 146, 50;"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="menu">
+                <script src="buttons.js" defer></script>
+                <table class="menuTable">
+                    <td class="menuTD">
+                        <div class="menuButton">
+                            <button type="button" class="menuButton" id="aboutme.html">About me</button>
+                        </div>
+                    </td>
+                    <td class="menuTD">
+                        <div class="menuButton">
+                            <button type="button" class="menuButton" id="index.html">Projects</button>
+                        </div>
+                    </td>
+                    <td class="menuTD">
+                        <div class="menuButton">
+                            <button type="button" class="menuButton" id="pictures/pictures.html">Pictures</button>
+                        </div>
+                    </td>
+                </table>
+            </div>
+            <div class="content">
+                <div class="article">
+                    <table class="articleTable">
+                        <thead>
+                        <th colspan="1">About me</th>
+                        </thead>
+                        <tbody>
+                        <td class="articleTD">
+                            <p>
+                                I just like to make stuff that does stuff, weather its a redstone contraption or a application it's just fun and very rewarding.
+                                So far i haven't finished a lot of projects, but i like to blame that to my low creativity to come up with ideas for them. I am from Spain, Galicia.
+                                Hated English for the most part of my life until not so long ago it just entered my brain thanks to the internet. I'm passionate about tech and languages
+                                (even tho i'm too lazy to study hard). Cum is tasty.<br>
+                                <br>
+                                I am also highly interested in the vr industry. I have been following it since the oculus dk1 and even thought it took me a while to be able to afford a headset,
+                                eventually i was able to buy a humble hp windows mixed reality. Since then i've had the rift s and now the valve index, also with fbt. New trackers are set to
+                                come out soon and I'm waiting impatiently for a newer headset to come out and beat the index :)
+                            </p>
+                        </td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
-<h1 style="text-align: center">About me</h1>
-
-<p style="text-align: justify; width: 40%; padding-left: 30%; font-size: large">
-    I just like to make stuff that does stuff, weather its a redstone contraption or a application it's just fun and very rewarding.
-So far i haven't finished a lot of projects, but i like to blame that to my low creativity to come up with ideas for them. I am from Spain, Galicia.
-Hated English for the most part of my life until not so long ago it just entered my brain thanks to the internet. I'm passionate about tech and languages
-(even tho i'm too lazy to study hard).</p>
 
 </body>
 </html>

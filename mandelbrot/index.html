@@ -7,21 +7,19 @@
 </head>
     <body>
 
-        <div>
-            <div class="controls">
-                <div class="buttons">
-                    <button class="renderButton" type="button" onclick="MandelbrotSet()">Mandelbrot</button>
-                    <button class="renderButton" type="button" onclick="BurningShip()">Burning ship</button>
-                    <button class="renderButton" type="button" onclick="Animate()">Animate</button>
-                </div>
-
-                <input type="number" id="iterations" value="50">
+    <div>
+        <div class="controls">
+            <div class="buttons">
+                <button class="renderButton" type="button" onclick="MandelbrotSet()">Mandelbrot</button>
+                <button class="renderButton" type="button" onclick="BurningShip()">Burning ship</button>
+                <button class="renderButton" type="button" onclick="Animate()">Animate</button>
+                <button class="renderButton" type="button" onclick="location.href = '../index.html';">Go back</button>
             </div>
-
-            <canvas id="canvas" width="1000" height="1000"></canvas>
+            <input type="number" id="iterations" value="50">
         </div>
-
+        <canvas id="canvas" width="1000" height="1000"></canvas>
         <script src="main.js"></script>
+    </div>
 
     </body>
 </html>

@@ -1,6 +1,6 @@
 var canvas = document.getElementById('bannerCanvas')
-let can_w = parseInt(canvas.getAttribute('width')),
-    can_h = parseInt(canvas.getAttribute('height')),
+let can_w = parseInt(document.body.scrollWidth),
+    can_h = parseInt(document.body.scrollHeight),
     ctx = canvas.getContext('2d');
 
 // console.log(typeof can_w);
@@ -229,14 +229,18 @@ function initBalls(num){
 }
 // Init Canvas
 function initCanvas(){
-    canvas.setAttribute('width', window.innerWidth);
-    canvas.setAttribute('height', window.innerHeight * 1.5);
+    canvas.setAttribute('width', Math.max(document.body.scrollWidth, window.innerWidth));
+    canvas.setAttribute('height', Math.max(document.body.scrollHeight, window.innerHeight));
 
     can_w = parseInt(canvas.getAttribute('width'));
     can_h = parseInt(canvas.getAttribute('height'));
 }
 window.addEventListener('resize', function(e){
     console.log('Window Resize...');
+    initCanvas();
+});
+window.addEventListener('load', function(e){
+    console.log('Window loaded...');
     initCanvas();
 });
 
@@ -249,12 +253,12 @@ goMovie();
 
 // Mouse effect
 canvas.addEventListener('mouseenter', function(){
-    console.log('mouseenter');
+    //console.log('mouseenter');
     mouse_in = true;
     balls.push(mouse_ball);
 });
 canvas.addEventListener('mouseleave', function(){
-    console.log('mouseleave');
+    //console.log('mouseleave');
     mouse_in = false;
     var new_balls = [];
     Array.prototype.forEach.call(balls, function(b){
