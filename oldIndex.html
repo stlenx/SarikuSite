@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<title>Sariku - Web</title>
+	<script src="vue.js"></script>
+	<link rel="icon" href="img/icon.jpg">
+	<link rel="stylesheet" href="stylebruh.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="dropdown" style="float: left">
+	<button class="dropbtn">Menu</button>
+	<div class="dropdown-content">
+		<a href="pictures/pictures.html">Pictures</a>
+		<a href="aboutme.html">About me</a>
+		<a href="mandelbrot/index.html">Mandelbrot set</a>
+	</div>
+</div>
+
+<div class="header">
+	<img src="img/logo.png" class="logo">
+
+	<h1 style="text-align: center">- Projects -</h1>
+</div>
+
+<div id="app">
+	<div class="article">
+		<table>
+			<tr>
+				<td>
+					<transition>
+						<div v-if="page">
+							<video width="500" height="280" controls>
+								<source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" type="video/mp4">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+						<div v-if="!page">
+							<img src="img/Mandelbrot.png" class="imageContent">
+						</div>
+					</transition>
+				</td>
+				<td>
+					<transition>
+						<div  v-if="page">
+
+							<p style="text-align: justify; width: 400px; padding-left: 40%;">
+								Discord bot for searching asl or bsl signs for words. Written in C#, it uses DSharp+ to interact with discord, scrappysharp to scrap the elements from signingsavvy.com
+								and external api for Vrchat signs (generally very similar to irl ones but nice to have). The <a href="https://github.com/stlenx/SavvyBot">code</a> is up in my <a href="https://github.com/stlenx">github</a>
+								, feel free to use it at will.
+							</p>
+
+							<div style="text-align: center">
+								<button v-on:click="page = false">Next</button>
+							</div>
+
+						</div>
+						<div v-if="!page">
+
+							<p style="text-align: justify; width: 400px;">
+								Simple C# app to calculate and display the mandelbrot set. Counts with options for color, number of maximum iterations calculated, zoom and offset. By clicking the "Draw"
+								button it will show the set, by clicking somewhere in the form it will shot the respective julia set for that point. Uses multithreading on the cpu for faster load.
+							</p>
+
+							<div style="text-align: center">
+								<button v-on:click="page = true">Back</button>
+							</div>
+
+						</div>
+					</transition>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<script>
+	new Vue({
+		el: app,
+		data: {
+			page: true
+		}
+	})
+</script>
+
+</body>
+</html>

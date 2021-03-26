@@ -1,3 +1,7 @@
+const canvas = document.getElementById('canvas');
+
+const size = canvas.height;
+
 
 const gpu = new GPU();
 const calculateMandelbrot = gpu.createKernel(function (itr, zoom, x, y) {
@@ -24,7 +28,7 @@ const calculateMandelbrot = gpu.createKernel(function (itr, zoom, x, y) {
     if(Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2)
         return -1;
     return n;
-}).setOutput([1000,1000]);
+}).setOutput([size,size]);
 
 const calculateShip = gpu.createKernel(function (itr) {
     let Creal = this.thread.x / 300 -1.95;
@@ -47,7 +51,7 @@ const calculateShip = gpu.createKernel(function (itr) {
     if(Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2)
         return -1;
     return n;
-}).setOutput([1000,1000]);
+}).setOutput([size,size]);
 
 /*
 const calculateJulia = gpu.createKernel(function (itr, Creal, Cimg) {
@@ -109,10 +113,9 @@ function mouseClicked() {
 }
  */
 
-const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const imageData = ctx.createImageData(1000, 1000);
+const imageData = ctx.createImageData(size, size);
 const data = imageData.data;
 
 let iterations = parseInt(document.getElementById('iterations').value);
@@ -143,10 +146,10 @@ function Animate() {
 }
 
 function DrawImage(values) {
-    for (let x = 0; x < 1000; x++) {
-        for (let y = 0; y < 1000; y++) {
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
             let n = values[x][y];
-            let index = (y + x * 1000) * 4;
+            let index = (y + x * size) * 4;
             if (n === -1)
             {
                 //writeColor( x, y, 0, 0, 0, 255);

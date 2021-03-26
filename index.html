@@ -1,89 +1,111 @@
 <!DOCTYPE html>
-<html xmlns:v-on="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
 <head>
-	<title>Sariku - Web</title>
-	<script src="vue.js"></script>
-	<link rel="icon" href="img/icon.jpg">
-	<link rel="stylesheet" href="stylebruh.css">
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>New Index</title>
+    <link rel="stylesheet" href="withstyle.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="dropdown" style="float: left">
-	<button class="dropbtn">Menu</button>
-	<div class="dropdown-content">
-		<a href="pictures/pictures.html">Pictures</a>
-		<a href="aboutme.html">About me</a>
-		<a href="mandelbrot/index.html">Mandelbrot set</a>
-	</div>
-</div>
+    <div class="main" id="id">
+        <div class="canvas">
+            <script src="banner.js" defer></script>
+            <canvas id="bannerCanvas"></canvas>
+        </div>
 
-<div class="header">
-	<img src="img/logo.png" class="logo">
+        <div class="site">
+            <div class="banner">
+                <div class="letters">
+                    <svg aria-hidden="true" role="img" viewBox="0 0 44 114" height="200px" width="78px" class="letter letter-s letter-1" style="opacity: 1;">
+                        <path d="m 2 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#fb14ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 157.102, 31.4204;"/>
+                        <path d="m 42 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#fb14ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 93.2611, 33.4204, 92.2611, 125.681;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 54 114" height="200px" width="95px" class="letter letter-a letter-1" style="opacity: 1;">
+                        <path d="m 27 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#d814ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 62.8407, 95.2611, 30.4204, 125.681;"/>
+                        <path d="m 47 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#d814ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 171, 25;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 29 114" height="200px" width="51px" class="letter letter-r letter-1" style="opacity: 1;">
+                        <path d="m 27 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#b514ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 93.2611, 33.4204, 92.2611, 125.681;"/>
+                        <path d="m 7 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#b514ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 171, 25;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 14 114" height="200px" width="25px" class="letter letter-i letter-1" style="opacity: 1;">
+                        <path d="m 7 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#7214ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 146, 50;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 54 114" height="200px" width="95px" class="letter letter-k letter-1" style="opacity: 1;">
+                        <path d="m 27 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#4714ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 31.4204, 94.2611, 31.4204, 125.681;"/>
+                        <path d="m 7 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#4714ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 134, 62;"/>
+                    </svg>
+                    <svg aria-hidden="true" role="img" viewBox="0 0 54 114" height="200px" width="95px" class="letter letter-u letter-1" style="opacity: 1;">
+                        <path d="m 27 57 m 0 -20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40" stroke-width="10" stroke-linecap="butt" stroke="#1418ff" fill="none" style="stroke-dashoffset: 251.363; stroke-dasharray: 125.681, 31.4204, 94.2611, 31.4204, 125.681;"/>
+                        <path d="m 47 0 l 0 114" stroke-width="10" stroke-linecap="butt" stroke="#1418ff" fill="none" style="stroke-dashoffset: 228; stroke-dasharray: 114, 146, 50;"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="menu">
+                <script src="buttons.js" defer></script>
+                <table class="menuTable">
+                    <td class="menuTD">
+                        <div class="menuButton">
+                            <button type="button" class="menuButton" onclick="location.href = 'aboutme.html';">About me</button>
+                        </div>
+                    </td>
+                    <td class="menuTD">
+                        <div class="menuButton">
+                            <button type="button" class="menuButton" onclick="location.href = 'index.html';">Projects</button>
+                        </div>
+                    </td>
+                    <td class="menuTD">
+                        <div class="menuButton">
+                            <button type="button" class="menuButton" onclick="location.href = 'pictures/pictures.html';">Pictures</button>
+                        </div>
+                    </td>
+                </table>
+            </div>
+            <div class="content">
+                <div class="article">
+                    <table class="articleTable">
+                        <thead>
+                            <th COLSPAN="2">Discord sign language bot</th>
+                        </thead>
+                        <tbody>
+                            <td class="articleTD">
+                                <video width="500" height="280" controls>
+                                    <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </td>
+                            <td class="articleTD">
+                                <p>
+                                    Discord bot for searching asl or bsl signs for words. Written in C#, it uses DSharp+ to interact with discord, scrappysharp to scrap the elements from signingsavvy.com
+                                    and external api for Vrchat signs (generally very similar to irl ones but nice to have). The <a href="https://github.com/stlenx/SavvyBot">code</a> is up in my <a href="https://github.com/stlenx">github</a>
+                                    , feel free to use it at will.
+                                </p>
+                            </td>
+                        </tbody>
+                    </table>
+                </div>
 
-	<h1 style="text-align: center">- Projects -</h1>
-</div>
-
-<div id="app">
-	<div class="article">
-		<table>
-			<tr>
-				<td>
-					<transition>
-						<div v-if="page">
-							<video width="500" height="280" controls>
-								<source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" type="video/mp4">
-								Your browser does not support the video tag.
-							</video>
-						</div>
-						<div v-if="!page">
-							<img src="img/Mandelbrot.png" class="imageContent">
-						</div>
-					</transition>
-				</td>
-				<td>
-					<transition>
-						<div  v-if="page">
-
-							<p style="text-align: justify; width: 400px; padding-left: 40%;">
-								Discord bot for searching asl or bsl signs for words. Written in C#, it uses DSharp+ to interact with discord, scrappysharp to scrap the elements from signingsavvy.com
-								and external api for Vrchat signs (generally very similar to irl ones but nice to have). The <a href="https://github.com/stlenx/SavvyBot">code</a> is up in my <a href="https://github.com/stlenx">github</a>
-								, feel free to use it at will.
-							</p>
-
-							<div style="text-align: center">
-								<button v-on:click="page = false">Next</button>
-							</div>
-
-						</div>
-						<div v-if="!page">
-
-							<p style="text-align: justify; width: 400px;">
-								Simple C# app to calculate and display the mandelbrot set. Counts with options for color, number of maximum iterations calculated, zoom and offset. By clicking the "Draw"
-								button it will show the set, by clicking somewhere in the form it will shot the respective julia set for that point. Uses multithreading on the cpu for faster load.
-							</p>
-
-							<div style="text-align: center">
-								<button v-on:click="page = true">Back</button>
-							</div>
-
-						</div>
-					</transition>
-				</td>
-			</tr>
-		</table>
-	</div>
-</div>
-
-<script>
-	new Vue({
-		el: app,
-		data: {
-			page: true
-		}
-	})
-</script>
-
+                <div class="article">
+                    <table class="articleTable">
+                        <td class="articleTD">
+                            <img src="img/Mandelbrot.png" class="imageContent">
+                        </td>
+                        <td class="articleTD">
+                            <p>
+                                Simple C# app to calculate and display the mandelbrot set and Burning ship fractals.
+                                Counts with options for color, number of maximum iterations calculated, zoom and offset. By clicking "Draw" button it will show the set,
+                                clicking "ship" it will show the Burning ship, after clicking either of those click anywhere in the form to get the respective julia set
+                                from that point, of the last set (either mandelbrot or burning ship). Uses multithreading on the cpu for faster load. <br>
+                                You can check the code <a href="https://github.com/stlenx/Mandelbrot-Set">here</a>,
+                                or try a simplified version on your internet explorer <a href="mandelbrot/index.html">here</a>. This last one will use GPU compute and will be significantly faster.
+                            </p>
+                        </td>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
