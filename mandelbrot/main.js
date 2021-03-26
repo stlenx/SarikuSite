@@ -134,8 +134,38 @@ function BurningShip() {
     DrawImage(output,iterations)
 }
 
+let animationRunning = false;
 function Animate() {
-    for (let i = 600; i < 200000000; i*=1.01)
+    if(!animationRunning) {
+        window.requestAnimationFrame(renderAnimation);
+        document.getElementById('animation').innerHTML = "Stop";
+        animationRunning = true;
+    } else {
+        document.getElementById('animation').innerHTML = "Animate";
+        animationRunning = false;
+    }
+}
+
+let i = 600;
+function renderAnimation() {
+
+    iterations = parseInt(document.getElementById('iterations').value);
+    let output = calculateMandelbrot(iterations, i,600 + i * 1.406548, 500)
+    DrawImage(output,iterations)
+
+    if(i < 200000000 && animationRunning) {
+        i*=1.03
+        window.requestAnimationFrame(renderAnimation);
+    } else {
+        document.getElementById('animation').innerHTML = "Animate";
+        animationRunning = false;
+        i = 600;
+    }
+}
+
+/*
+
+for (let i = 600; i < 200000000; i*=1.01)
     {
         sleep(16).then(() => {
             iterations = parseInt(document.getElementById('iterations').value);
@@ -143,7 +173,8 @@ function Animate() {
             DrawImage(output,iterations)
         });
     }
-}
+
+ */
 
 function DrawImage(values) {
     for (let x = 0; x < size; x++) {

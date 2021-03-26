@@ -99,12 +99,31 @@ span.ripple {
     color: white;
 }
 
+p {
+    font-size: 1.5em;
+}
+
 video, img {
     width: 100%;
 }
 
 th {
+    padding-top: 10px;
+    padding-bottom: 10px;
     font-size: 25pt;
     font-family: 'Comfortaa', cursive;
     color: white;
+}
+
+a {
+    color: #7ebcc3;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000000;
+}
+
+a:active {
+    color: black;
 }

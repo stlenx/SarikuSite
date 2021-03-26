@@ -15,9 +15,11 @@ var ball = {
         phase: 0
     },
     ball_color = {
-        r: 207,
-        g: 255,
-        b: 4
+        r: 4,
+        g: 100,
+        b: 255
+        //4, 100, 255
+        //old rgb = 207, 255,4
     },
     R = 2,
     balls = [],
@@ -26,7 +28,7 @@ var ball = {
 
 // Line
     link_line_width = 0.8,
-    dis_limit = 260,
+    dis_limit = 300, //old 260
     add_mouse_point = true,
     mouse_in = false,
     mouse_ball = {
@@ -40,36 +42,33 @@ var ball = {
 
 // Random speed
 function getRandomSpeed(pos){
-    var  min = -1,
+    let  min = -1,
         max = 1;
     switch(pos){
         case 'top':
             return [randomNumFrom(min, max), randomNumFrom(0.1, max)];
-            break;
         case 'right':
             return [randomNumFrom(min, -0.1), randomNumFrom(min, max)];
-            break;
         case 'bottom':
             return [randomNumFrom(min, max), randomNumFrom(min, -0.1)];
-            break;
         case 'left':
             return [randomNumFrom(0.1, max), randomNumFrom(min, max)];
-            break;
         default:
             return;
-            break;
     }
 }
+
 function randomArrayItem(arr){
     return arr[Math.floor(Math.random() * arr.length)];
 }
+
 function randomNumFrom(min, max){
     return Math.random()*(max - min) + min;
 }
-console.log(randomNumFrom(0, 10));
+
 // Random Ball
 function getRandomBall(){
-    var pos = randomArrayItem(['top', 'right', 'bottom', 'left']);
+    let pos = randomArrayItem(['top', 'right', 'bottom', 'left']);
     switch(pos){
         case 'top':
             return {
@@ -81,7 +80,6 @@ function getRandomBall(){
                 alpha: 1,
                 phase: randomNumFrom(0, 10)
             }
-            break;
         case 'right':
             return {
                 x: can_w + R,
@@ -92,7 +90,6 @@ function getRandomBall(){
                 alpha: 1,
                 phase: randomNumFrom(0, 10)
             }
-            break;
         case 'bottom':
             return {
                 x: randomSidePos(can_w),
@@ -103,7 +100,6 @@ function getRandomBall(){
                 alpha: 1,
                 phase: randomNumFrom(0, 10)
             }
-            break;
         case 'left':
             return {
                 x: -R,
@@ -114,7 +110,6 @@ function getRandomBall(){
                 alpha: 1,
                 phase: randomNumFrom(0, 10)
             }
-            break;
     }
 }
 function randomSidePos(length){
@@ -136,7 +131,7 @@ function renderBalls(){
 
 // Update balls
 function updateBalls(){
-    var new_balls = [];
+    let new_balls = [];
     Array.prototype.forEach.call(balls, function(b){
         b.x += b.vx;
         b.y += b.vy;
@@ -161,9 +156,9 @@ function loopAlphaInf(){
 
 // Draw lines
 function renderLines(){
-    var fraction, alpha;
-    for (var i = 0; i < balls.length; i++) {
-        for (var j = i + 1; j < balls.length; j++) {
+    let fraction, alpha;
+    for (let i = 0; i < balls.length; i++) {
+        for (let j = i + 1; j < balls.length; j++) {
 
             fraction = getDisOf(balls[i], balls[j]) / dis_limit;
 
@@ -185,7 +180,7 @@ function renderLines(){
 
 // calculate distance between two points
 function getDisOf(b1, b2){
-    var  delta_x = Math.abs(b1.x - b2.x),
+    let  delta_x = Math.abs(b1.x - b2.x),
         delta_y = Math.abs(b1.y - b2.y);
 
     return Math.sqrt(delta_x*delta_x + delta_y*delta_y);
@@ -215,7 +210,7 @@ function render(){
 
 // Init Balls
 function initBalls(num){
-    for(var i = 1; i <= num; i++){
+    for(let i = 1; i <= num; i++){
         balls.push({
             x: randomSidePos(can_w),
             y: randomSidePos(can_h),
@@ -239,6 +234,7 @@ window.addEventListener('resize', function(e){
     console.log('Window Resize...');
     initCanvas();
 });
+
 window.addEventListener('load', function(e){
     console.log('Window loaded...');
     initCanvas();
@@ -249,6 +245,7 @@ function goMovie(){
     initBalls(30);
     window.requestAnimationFrame(render);
 }
+
 goMovie();
 
 // Mouse effect
@@ -257,10 +254,11 @@ canvas.addEventListener('mouseenter', function(){
     mouse_in = true;
     balls.push(mouse_ball);
 });
+
 canvas.addEventListener('mouseleave', function(){
     //console.log('mouseleave');
     mouse_in = false;
-    var new_balls = [];
+    let new_balls = [];
     Array.prototype.forEach.call(balls, function(b){
         if(!b.hasOwnProperty('type')){
             new_balls.push(b);
@@ -268,6 +266,7 @@ canvas.addEventListener('mouseleave', function(){
     });
     balls = new_balls.slice(0);
 });
+
 canvas.addEventListener('mousemove', function(e){
     var e = e || window.event;
     mouse_ball.x = e.pageX;
