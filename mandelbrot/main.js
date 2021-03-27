@@ -3,6 +3,7 @@ const canvas = document.getElementById('canvas');
 const size = canvas.height;
 
 let whichSet = 0;
+let veryJulia = false;
 
 const gpu = new GPU();
 const calculateMandelbrot = gpu.createKernel(function (itr, zoom, x, y) {
@@ -181,6 +182,37 @@ function renderAnimation() {
         i = 600;
     }
 }
+
+function alwaysJulia() {
+    if(veryJulia) {
+        document.getElementById('julia').innerHTML = "Enable always Julia";
+        veryJulia = false;
+    } else {
+        document.getElementById('julia').innerHTML = "Disable always Julia";
+        veryJulia = true;
+    }
+}
+
+canvas.addEventListener("mousemove", function (e) {
+    if(veryJulia) {
+        switch (whichSet) {
+            case 1:
+            {
+                let output = calculateJulia(iterations, e.offsetX, e.offsetY);
+                DrawImage(output)
+                break;
+            }
+            case 2:
+            {
+                let output = calculateJuliaShip(iterations, e.offsetX, e.offsetY);
+                DrawImage(output)
+                break;
+            }
+            default:
+                break;
+        }
+    }
+});
 
 canvas.addEventListener("click", function (e) {
     switch (whichSet) {
