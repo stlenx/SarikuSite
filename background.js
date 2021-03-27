@@ -252,13 +252,13 @@ function goMovie(){
 goMovie();
 
 // Mouse effect
-canvas.addEventListener('mouseenter', function(){
+document.body.addEventListener('mouseenter', function(){
     //console.log('mouseenter');
     mouse_in = true;
     balls.push(mouse_ball);
 });
 
-canvas.addEventListener('mouseleave', function(){
+document.body.addEventListener('mouseleave', function(){
     //console.log('mouseleave');
     mouse_in = false;
     let new_balls = [];
@@ -270,7 +270,7 @@ canvas.addEventListener('mouseleave', function(){
     balls = new_balls.slice(0);
 });
 
-canvas.addEventListener('mousemove', function(e){
+document.body.addEventListener('mousemove', function(e){
     var e = e || window.event;
     mouse_ball.x = e.pageX;
     mouse_ball.y = e.pageY;
