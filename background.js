@@ -150,15 +150,9 @@ function updateBalls(){
         // alpha change
         b.phase += alpha_f;
         b.alpha = Math.abs(Math.cos(b.phase));
-        // console.log(b.alpha);
     });
 
     balls = new_balls.slice(0);
-}
-
-// loop alpha
-function loopAlphaInf(){
-
 }
 
 // Draw lines
@@ -169,7 +163,7 @@ function renderLines(){
 
             fraction = getDisOf(balls[i], balls[j]) / dis_limit;
 
-            if(fraction < 1){
+            if(fraction < 1) {
                 alpha = (1 - fraction).toString();
 
                 ctx.strokeStyle = 'rgba(150,150,150,'+alpha+')';
@@ -225,10 +219,12 @@ function initBalls(num){
             vy: getRandomSpeed('top')[1],
             r: R,
             alpha: 1,
-            phase: randomNumFrom(0, 10)
+            phase: randomNumFrom(0, 10),
+            cR: randomNumFrom(0,255)
         });
     }
 }
+
 // Init Canvas
 function initCanvas(){
     canvas.setAttribute('width', Math.max(document.body.scrollWidth, window.innerWidth));
