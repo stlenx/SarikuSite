@@ -2,14 +2,13 @@ const canvas = document.getElementById('canvas');
 
 const size = canvas.height;
 
+let whichSet = 0;
 
 const gpu = new GPU();
 const calculateMandelbrot = gpu.createKernel(function (itr, zoom, x, y) {
-    let xOff = x / zoom;
-    let yOff = y / zoom;
 
-    let Creal = this.thread.x / zoom -xOff;
-    let Cimg = this.thread.y / zoom -yOff;
+    let Creal = this.thread.x / zoom -(x / zoom);
+    let Cimg = this.thread.y / zoom -(y / zoom);
 
     let Zreal = 0;
     let Zimg = 0;
@@ -17,9 +16,8 @@ const calculateMandelbrot = gpu.createKernel(function (itr, zoom, x, y) {
     let n = 0;
     while (Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2 && n < itr)
     {
-        let cringe1 = (Zreal * Zreal) + ((Zimg * Zimg) * -1);
-        let cringe2 = (Zreal * Zimg) + (Zimg * Zreal);
-
+        let cringe1 = Zreal * Zreal -Zimg * Zimg;
+        let cringe2 = Zreal * Zimg * 2;
         Zreal = cringe1 + Creal;
         Zimg = cringe2+ Cimg;
         n++;
@@ -40,9 +38,8 @@ const calculateShip = gpu.createKernel(function (itr) {
     let n = 0;
     while (Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2 && n < itr)
     {
-        let cringe1 = (Zreal * Zreal) + ((Zimg * Zimg) * -1);
-        let cringe2 = Math.abs((Zreal * Zimg) + (Zimg * Zreal));
-
+        let cringe1 = Zreal * Zreal - Zimg * Zimg;
+        let cringe2 = Math.abs(Zreal * Zimg * 2);
         Zreal = cringe1 + Creal;
         Zimg = cringe2+ Cimg;
         n++;
@@ -53,30 +50,50 @@ const calculateShip = gpu.createKernel(function (itr) {
     return n;
 }).setOutput([size,size]);
 
-/*
-const calculateJulia = gpu.createKernel(function (itr, Creal, Cimg) {
-    let xPercent = this.thread.x / 1000;
-    let yPercent = this.thread.y / 1000;
 
-    let Zreal = -2 + (2 + 2) * xPercent;
-    let Zimg = -2 + (2 + 2) * yPercent;
+const calculateJulia = gpu.createKernel(function (itr, x, y) {
+
+    let Zreal = this.thread.x / 300 -1.95;
+    let Zimg = this.thread.y / 300 -1.8;
+
+    let Creal = x / 300 -1.95;
+    let Cimg = y / 300 -1.8;
 
     let n = 0;
     while (Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2 && n < itr)
     {
-        let cringe1 = (Zreal * Zreal) + ((Zimg * Zimg) * -1);
-        let cringe2 = (Zreal * Zimg) + (Zimg * Zreal);
-
-        Zreal = cringe1;
-        Zimg = cringe2;
-
-        Zreal = Zreal + Creal;
-        Zimg = Zimg + Cimg;
+        let cringe1 = Zreal * Zreal -Zimg * Zimg;
+        let cringe2 = Zreal * Zimg * 2;
+        Zreal = cringe1 + Creal;
+        Zimg = cringe2+ Cimg;
         n++;
     }
-    return Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) > 2 ? n : -1;
-}).setOutput([1000,1000]);
-*/
+    if(Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2)
+        return -1;
+    return n;
+}).setOutput([size,size]);
+
+const calculateJuliaShip = gpu.createKernel(function (itr, x, y) {
+
+    let Zreal = this.thread.x / 300 -1.95;
+    let Zimg = this.thread.y / 300 -1.8;
+
+    let Creal = x / 300 -1.95;
+    let Cimg = y / 300 -1.8;
+
+    let n = 0;
+    while (Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2 && n < itr)
+    {
+        let cringe1 = Zreal * Zreal - Zimg * Zimg;
+        let cringe2 = Math.abs(Zreal * Zimg * 2);
+        Zreal = cringe1 + Creal;
+        Zimg = cringe2+ Cimg;
+        n++;
+    }
+    if(Math.sqrt((Zreal * Zreal)+(Zimg * Zimg)) <= 2)
+        return -1;
+    return n;
+}).setOutput([size,size]);
 
 /*
 function mouseClicked() {
@@ -125,6 +142,7 @@ function MandelbrotSet() {
     let output = calculateMandelbrot(iterations, 400,800, 500)
 
     DrawImage(output)
+    whichSet = 1;
 }
 
 function BurningShip() {
@@ -132,6 +150,7 @@ function BurningShip() {
     let output = calculateShip(iterations)
 
     DrawImage(output,iterations)
+    whichSet = 2;
 }
 
 let animationRunning = false;
@@ -163,8 +182,26 @@ function renderAnimation() {
     }
 }
 
-/*
+canvas.addEventListener("click", function (e) {
+    switch (whichSet) {
+        case 1:
+        {
+            let output = calculateJulia(iterations, e.offsetX, e.offsetY);
+            DrawImage(output)
+            break;
+        }
+        case 2:
+        {
+            let output = calculateJuliaShip(iterations, e.offsetX, e.offsetY);
+            DrawImage(output)
+            break;
+        }
+        default:
+            break;
+    }
+});
 
+/*
 for (let i = 600; i < 200000000; i*=1.01)
     {
         sleep(16).then(() => {

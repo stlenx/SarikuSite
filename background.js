@@ -5,7 +5,7 @@ let canvas = document.getElementById('bannerCanvas'),
 
 // console.log(typeof can_w);
 
-var ball = {
+let ball = {
         x: 0,
         y: 0,
         vx: 0,
@@ -271,8 +271,6 @@ document.body.addEventListener('mouseleave', function(){
 });
 
 document.body.addEventListener('mousemove', function(e){
-    var e = e || window.event;
     mouse_ball.x = e.pageX;
     mouse_ball.y = e.pageY;
-    // console.log(mouse_ball);
 });
