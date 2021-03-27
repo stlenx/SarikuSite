@@ -1,5 +1,5 @@
-var canvas = document.getElementById('bannerCanvas')
-let can_w = parseInt(document.body.scrollWidth),
+let canvas = document.getElementById('bannerCanvas'),
+    can_w = parseInt(document.body.scrollWidth),
     can_h = parseInt(document.body.scrollHeight),
     ctx = canvas.getContext('2d');
 
@@ -12,7 +12,8 @@ var ball = {
         vy: 0,
         r: 0,
         alpha: 1,
-        phase: 0
+        phase: 0,
+        cR : 3
     },
     ball_color = {
         r: 4,
@@ -78,7 +79,8 @@ function getRandomBall(){
                 vy: getRandomSpeed('top')[1],
                 r: R,
                 alpha: 1,
-                phase: randomNumFrom(0, 10)
+                phase: randomNumFrom(0, 10),
+                cR : randomNumFrom(0,255)
             }
         case 'right':
             return {
@@ -88,7 +90,8 @@ function getRandomBall(){
                 vy: getRandomSpeed('right')[1],
                 r: R,
                 alpha: 1,
-                phase: randomNumFrom(0, 10)
+                phase: randomNumFrom(0, 10),
+                cR : randomNumFrom(0,255)
             }
         case 'bottom':
             return {
@@ -98,7 +101,8 @@ function getRandomBall(){
                 vy: getRandomSpeed('bottom')[1],
                 r: R,
                 alpha: 1,
-                phase: randomNumFrom(0, 10)
+                phase: randomNumFrom(0, 10),
+                cR : randomNumFrom(0,255)
             }
         case 'left':
             return {
@@ -108,7 +112,8 @@ function getRandomBall(){
                 vy: getRandomSpeed('left')[1],
                 r: R,
                 alpha: 1,
-                phase: randomNumFrom(0, 10)
+                phase: randomNumFrom(0, 10),
+                cR : randomNumFrom(0,255)
             }
     }
 }
@@ -120,7 +125,9 @@ function randomSidePos(length){
 function renderBalls(){
     Array.prototype.forEach.call(balls, function(b){
         if(!b.hasOwnProperty('type')){
-            ctx.fillStyle = 'rgba('+ball_color.r+','+ball_color.g+','+ball_color.b+','+b.alpha+')';
+
+            ctx.fillStyle = 'rgba('+b.cR+','+0+','+255+','+b.alpha+')';
+            //ctx.fillStyle = 'rgba('+ball_color.r+','+ball_color.g+','+ball_color.b+','+b.alpha+')';
             ctx.beginPath();
             ctx.arc(b.x, b.y, R, 0, Math.PI*2, true);
             ctx.closePath();
