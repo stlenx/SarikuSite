@@ -5,20 +5,33 @@ const url='https://5t77ip5on5.execute-api.eu-west-2.amazonaws.com/prod/asl';
 
 Http.onreadystatechange = (e) => {
     let output = JSON.parse(Http.responseText)
-    console.log(output.pageResults.videoURL)
+    console.log(output)
 
-    let video = document.getElementById('video');
-    let source = document.getElementById('source');
+    let URL
+    if(output.searchResults === null) {
+        document.getElementById('statusTEXT').innerHTML = "Status: FAIL";
+    } else {
 
-    source.setAttribute("src", output.pageResults.videoURL)
+        if(output.pageResults.hasOwnProperty('videoURL')) {
+            document.getElementById('statusTEXT').innerHTML = "Status: OK";
+        } else {
+            document.getElementById('statusTEXT').innerHTML = "Status: OK (cannot display video atm)";
+        }
 
-    video.load();
+        let video = document.getElementById('video');
+        let source = document.getElementById('source');
 
-    video.loop = true;
+        source.setAttribute("src", output.pageResults.videoURL)
+
+        video.load();
+
+        video.loop = true;
+    }
 }
 
 const input = document.querySelector('input');
 const log = document.getElementById('log');
+
 
 input.addEventListener('change', updateValue);
 
