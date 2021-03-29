@@ -12,7 +12,7 @@ Http.onreadystatechange = (e) => {
         document.getElementById('statusTEXT').innerHTML = "Status: FAIL";
     } else {
 
-        if(output.pageResults.hasOwnProperty('videoURL')) {
+        if(output.searchResults !== undefined) {
             document.getElementById('statusTEXT').innerHTML = "Status: OK";
         } else {
             document.getElementById('statusTEXT').innerHTML = "Status: OK (cannot display video atm)";
