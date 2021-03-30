@@ -3,16 +3,16 @@ const url='https://5t77ip5on5.execute-api.eu-west-2.amazonaws.com/prod/asl';
 
 
 
-Http.onreadystatechange = (e) => {
-    let output = JSON.parse(Http.responseText)
-    console.log(output)
+Http.onreadystatechange = () => {
+    if (Http.readyState !== 4 || Http.status !== 200) return; // Check for ready because xmlhttprequest gae
 
-    let URL
-    if(output.searchResults === null) {
+    let output = JSON.parse(Http.responseText)
+
+    if(output.pageResults === null) {
         document.getElementById('statusTEXT').innerHTML = "Status: FAIL";
     } else {
 
-        if(output.searchResults !== undefined) {
+        if(output.pageResults !== undefined) {
             document.getElementById('statusTEXT').innerHTML = "Status: OK";
         } else {
             document.getElementById('statusTEXT').innerHTML = "Status: OK (cannot display video atm)";
