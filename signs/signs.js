@@ -8,35 +8,26 @@ Http.onreadystatechange = () => {
 
     let output = JSON.parse(Http.responseText)
 
-    if(output.pageResults === null) {
+    console.log(output)
+    if (output.pageResults === null) {
         document.getElementById('statusTEXT').innerHTML = "Status: FAIL";
     } else {
 
-        if(output.pageResults !== undefined) {
+        if (output.pageResults !== undefined) {
             document.getElementById('statusTEXT').innerHTML = "Status: OK";
+
+            let video = document.getElementById('video');
+            let source = document.getElementById('source');
+
+            source.setAttribute("src", output.pageResults.videoURL)
+
+            video.load();
+
+            video.loop = true;
         } else {
             document.getElementById('statusTEXT').innerHTML = "Status: OK (cannot display video atm)";
         }
-
-        let video = document.getElementById('video');
-        let source = document.getElementById('source');
-
-        source.setAttribute("src", output.pageResults.videoURL)
-
-        video.load();
-
-        video.loop = true;
     }
-}
-
-const input = document.querySelector('input');
-const log = document.getElementById('log');
-
-
-input.addEventListener('change', updateValue);
-
-function updateValue(e) {
-    log.textContent = e.target.value;
 }
 
 function getSign(sign) {
