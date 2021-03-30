@@ -76,7 +76,11 @@
                     <tbody>
                     <tr>
                         <td class="articleTD">
-                            <input placeholder="Enter sign" type="text" onchange="getSign(this.value)">
+                            <input placeholder="Enter sign" type="text" onkeyup="getSign(this.value)">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="articleTD" id="container">
                         </td>
                     </tr>
                     <tr>

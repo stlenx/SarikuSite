@@ -138,3 +138,7 @@ input {
     font-family: 'Comfortaa', cursive;
     margin-bottom: 10px;
 }
+
+input[type="radio"]{
+    -webkit-appearance: radio;
+}

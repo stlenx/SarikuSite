@@ -24,6 +24,16 @@ Http.onreadystatechange = () => {
             video.load();
 
             video.loop = true;
+
+            //let container = document.getElementById("container");
+            //let input = document.createElement("input");
+            //input.id = "test";
+            //input.name = "interpretations";
+            //input.value = "testing";
+            //input.type = "radio";
+            //container.appendChild(input);
+            //container.appendChild(document.createElement("br"));
+
         } else {
             document.getElementById('statusTEXT').innerHTML = "Status: OK (cannot display video atm)";
         }
