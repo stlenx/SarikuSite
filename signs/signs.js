@@ -12,7 +12,7 @@ Http.onreadystatechange = () => {
     if (output.pageResults === null) {
         document.getElementById('statusTEXT').innerHTML = "Status: FAIL";
     } else {
-
+        document.getElementById('statusTEXT').innerHTML = "Status: OK";
         if (output.pageResults !== undefined) {
             document.getElementById('statusTEXT').innerHTML = "Status: OK";
 
@@ -25,17 +25,32 @@ Http.onreadystatechange = () => {
 
             video.loop = true;
 
-            //let container = document.getElementById("container");
-            //let input = document.createElement("input");
-            //input.id = "test";
-            //input.name = "interpretations";
-            //input.value = "testing";
-            //input.type = "radio";
-            //container.appendChild(input);
-            //container.appendChild(document.createElement("br"));
 
         } else {
-            document.getElementById('statusTEXT').innerHTML = "Status: OK (cannot display video atm)";
+
+            let container = document.getElementById("container");
+
+            while (container.hasChildNodes()) {
+                container.removeChild(container.lastChild);
+            }
+
+            Array.prototype.forEach.call(output.searchResults.results, function(i){
+                console.log(i)
+
+                let input = document.createElement("input");
+                input.id = i.context;
+                input.name = "interpretations";
+                input.value = i.pageLink;
+                input.onclick = function() { getSign(this.value); };
+                input.type = "radio";
+
+                let tag = document.createElement("label")
+                tag.innerHTML = i.context;
+
+
+                container.appendChild(input);
+                container.appendChild(tag)
+            });
         }
     }
 }
