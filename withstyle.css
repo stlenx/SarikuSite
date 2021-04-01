@@ -139,4 +139,5 @@ input {
 
 input[type="radio"]{
     -webkit-appearance: radio;
+    margin-left: 20px;
 }

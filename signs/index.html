@@ -66,7 +66,7 @@
         </div>
         <div class="content">
             <div class="article">
-                <script src="signs.js"></script>
+                <script src="signs.js" defer></script>
                 <table class="articleTable">
                     <thead>
                     <tr class="articleTD">
@@ -76,7 +76,7 @@
                     <tbody>
                     <tr>
                         <td class="articleTD">
-                            <input placeholder="Enter sign" type="text" onkeyup="getSign(this.value)">
+                            <input placeholder="Enter sign" type="text" onkeyup="inputChanged(this.value)">
                         </td>
                     </tr>
                     <tr>
@@ -93,9 +93,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <p id="statusTEXT">
-                                Status: none
-                            </p>
+
                         </td>
                     </tr>
                     </tbody>

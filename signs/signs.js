@@ -9,50 +9,65 @@ Http.onreadystatechange = () => {
     let output = JSON.parse(Http.responseText)
 
     console.log(output)
-    if (output.pageResults === null) {
-        document.getElementById('statusTEXT').innerHTML = "Status: FAIL";
+
+    if (output.pageResults !== undefined) {
+
+        let video = document.getElementById('video');
+        let source = document.getElementById('source');
+
+        source.setAttribute("src", output.pageResults.videoURL)
+
+        video.load();
+
+        video.loop = true;
+
+
     } else {
-        document.getElementById('statusTEXT').innerHTML = "Status: OK";
-        if (output.pageResults !== undefined) {
-            document.getElementById('statusTEXT').innerHTML = "Status: OK";
 
-            let video = document.getElementById('video');
-            let source = document.getElementById('source');
+        let container = document.getElementById("container");
 
-            source.setAttribute("src", output.pageResults.videoURL)
+        while (container.hasChildNodes()) {
+            container.removeChild(container.lastChild);
+        }
 
-            video.load();
+        let pos = 0;
+        Array.prototype.forEach.call(output.searchResults.results, function(i){
 
-            video.loop = true;
+            //Make the radio button
+            let input = document.createElement("input");
+            input.id = i.context.slice(7, i.context.length -1);
+            input.name = "interpretations";
+            input.value = i.pageLink;
+            input.onclick = function() { getSign(this.value); };
+            input.type = "radio";
 
-
-        } else {
-
-            let container = document.getElementById("container");
-
-            while (container.hasChildNodes()) {
-                container.removeChild(container.lastChild);
+            //If it's the first button, mark it as checked and get the video
+            if(pos === 0) {
+                input.checked = true;
+                getSign(input.value);
             }
 
-            Array.prototype.forEach.call(output.searchResults.results, function(i){
-                console.log(i)
-
-                let input = document.createElement("input");
-                input.id = i.context;
-                input.name = "interpretations";
-                input.value = i.pageLink;
-                input.onclick = function() { getSign(this.value); };
-                input.type = "radio";
-
-                let tag = document.createElement("label")
-                tag.innerHTML = i.context;
+            //Make the label for the button
+            let tag = document.createElement("label")
+            tag.setAttribute("for", i.context.slice(7, i.context.length -1))
+            tag.innerHTML = i.context.slice(7, i.context.length -1);
 
 
-                container.appendChild(input);
-                container.appendChild(tag)
-            });
-        }
+            //Add the new elements
+            container.appendChild(input)
+            container.appendChild(tag)
+
+            pos++;
+        });
     }
+}
+
+function inputChanged(input) {
+    let container = document.getElementById("container");
+    while (container.hasChildNodes()) {
+        container.removeChild(container.lastChild)
+    }
+    getSign(input)
 }
 
 function getSign(sign) {
