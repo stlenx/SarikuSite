@@ -1,6 +1,6 @@
 const Http = new XMLHttpRequest();
 const url='https://5t77ip5on5.execute-api.eu-west-2.amazonaws.com/prod/asl';
-
+let loadedSign = ""
 
 
 Http.onreadystatechange = () => {
@@ -21,6 +21,43 @@ Http.onreadystatechange = () => {
 
         video.loop = true;
 
+
+        //Variations time
+        let container = document.getElementById("variations");
+
+        while (container.hasChildNodes()) {
+            container.removeChild(container.lastChild);
+        }
+
+        let pos = 0;
+        Array.prototype.forEach.call(output.pageResults.variations, function(i){
+
+            //Make the radio button
+            let input = document.createElement("input");
+            input.id = i.type;
+            input.name = "variations";
+            input.value = i.url;
+            input.onclick = function() { getSign(this.value); };
+            input.type = "radio";
+
+
+            //Check what sign variation we have selected and check it
+            if(i.url.slice(i.url.length - 1) === loadedSign.slice(loadedSign.length - 1)){
+                input.checked = true;
+            }
+
+            //Make the label for the button
+            let tag = document.createElement("label")
+            tag.setAttribute("for", i.type)
+            tag.innerHTML = i.type;
+
+
+            //Add the new elements
+            container.appendChild(input)
+            container.appendChild(tag)
+
+            pos++;
+        });
 
     } else {
 
@@ -71,6 +108,7 @@ function inputChanged(input) {
 }
 
 function getSign(sign) {
+    loadedSign = sign;
     Http.open("GET", url);
     Http.setRequestHeader("sign", sign)
     Http.send();
