@@ -2,8 +2,8 @@ const canvas = document.getElementById('canvas');
 canvas.setAttribute('width', window.innerWidth);
 canvas.setAttribute('height', window.innerHeight);
 
-const cHeight = canvas.height;
-const cWidth = canvas.width;
+let cHeight = canvas.height;
+let cWidth = canvas.width;
 
 ctx = canvas.getContext('2d');
 
@@ -11,17 +11,20 @@ let fakeBall = {
     x: 500,
     y: 500,
     mass: 20000,
+    color: 'red',
     pressed: false,
     mx: -200,
     my: -200
 }
 
+let sunMode = false;
+
 let planets = []
 
 function renderObjects() {
-    ctx.fillStyle = 'rgba(255, 255, 255, .05)';
+    ctx.fillStyle = 'rgba(0, 0, 0, .1)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.clearRect(0, 0, cWidth, cHeight);
+    //ctx.clearRect(0, 0, cWidth, cHeight);
 
     for (let i1 = 0; i1 < planets.length; i1++) {
         for (let i2 = 0; i2 < planets.length; i2++) {
@@ -31,7 +34,7 @@ function renderObjects() {
             }
         }
 
-        ctx.fillStyle = 'blue';
+        ctx.fillStyle = planets[i1].color;
         ctx.beginPath();
         ctx.arc(planets[i1].x, planets[i1].y, getRadius(planets[i1]), 0, Math.PI*2, true);
         ctx.closePath();
@@ -39,7 +42,7 @@ function renderObjects() {
     }
 
     if(fakeBall.pressed) {
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = fakeBall.color;
         ctx.beginPath();
         ctx.arc(fakeBall.x, fakeBall.y, getRadius(fakeBall), 0, Math.PI*2, true);
         ctx.closePath();
@@ -64,30 +67,41 @@ function renderObjects() {
 
 function updateObjects() {
     Array.prototype.forEach.call(planets, function (planet) {
-        planet.x += planet.vx;
-        planet.y += planet.vy;
+        if(planet.planet) {
+            planet.x += planet.vx;
+            planet.y += planet.vy;
 
-        //if(planet.y > 1000) planet.y = 0
-        //if(planet.y < 0) planet.y = 1000
-        //if(planet.x > 1000) planet.x = 0
-        //if(planet.x < 0) planet.x = 1000
+            //if(planet.y > 1000) planet.y = 0
+            //if(planet.y < 0) planet.y = 1000
+            //if(planet.x > 1000) planet.x = 0
+            //if(planet.x < 0) planet.x = 1000
 
-        if(planet.y > cHeight) planet.vy *= -1
-        if(planet.y < 0) planet.vy *= -1
-        if(planet.x > cWidth) planet.vx *= -1
-        if(planet.x < 0) planet.vx *= -1
+            if(planet.y > cHeight) planet.vy *= -1
+            if(planet.y < 0) planet.vy *= -1
+            if(planet.x > cWidth) planet.vx *= -1
+            if(planet.x < 0) planet.vx *= -1
+        }
     })
 }
 
 function mergePlanets(i1,i2) {
     let newPlanets = [];
     let index;
-    if(planets[i1].mass > planets[i2].mass) {
-        planets[i1].mass += planets[i2].mass;
-        index = i2;
+
+    if(planets[i1].planet && planets[i2].planet) {
+        if(planets[i1].mass > planets[i2].mass) {
+            planets[i1].mass += planets[i2].mass;
+            planets[i1].vx /= 2;
+            planets[i1].vy /= 2;
+            index = i2;
+        } else {
+            planets[i2].mass += planets[i1].mass;
+            planets[i2].vx /= 2;
+            planets[i2].vy /= 2;
+            index = i1;
+        }
     } else {
-        planets[i2].mass += planets[i1].mass;
-        index = i1;
+        index = planets[i1].planet ? i1 : i2;
     }
 
     for(let i = 0; i < planets.length; i++) {
@@ -147,10 +161,32 @@ canvas.addEventListener("mousedown", function (e) {
 
 canvas.addEventListener("mouseup", function (e) {
     let vector = getVector2({x: e.offsetX, y: e.offsetY},{x: fakeBall.x, y: fakeBall.y})
-    planets.push(createPlanet(fakeBall.x, fakeBall.y, vector.x / 10,vector.y / 10, fakeBall.mass))
+    if(sunMode) {
+        planets.push(createPlanet(fakeBall.x, fakeBall.y, 0,0, fakeBall.mass, 'yellow', false))
+    } else {
+        planets.push(createPlanet(fakeBall.x, fakeBall.y, vector.x / 10,vector.y / 10, fakeBall.mass, 'blue', true))
+    }
 
     fakeBall.pressed = false;
     fakeBall.mass = 20000;
+});
+
+document.addEventListener("keydown", event => {
+    if(event.key === 's')
+        sunMode = !sunMode;
+});
+
+function initCanvas(){
+    canvas.setAttribute('width', window.innerWidth)
+    canvas.setAttribute('height', window.innerHeight)
+
+    cWidth = parseInt(canvas.getAttribute('width'));
+    cHeight = parseInt(canvas.getAttribute('height'));
+}
+
+window.addEventListener('resize', function(e){
+    console.log('Window Resize...');
+    initCanvas();
 });
 
 function scrollMass(e) {
@@ -158,20 +194,23 @@ function scrollMass(e) {
     if(fakeBall.pressed) {
         if (y > 0) {
             fakeBall.mass -= 3000;
+            if(fakeBall.mass < 0)
+                fakeBall.mass = 1000;
         } else {
             fakeBall.mass += 3000;
         }
-        console.log(fakeBall.mass)
     }
 }
 
-function createPlanet(x,y,vx,vy,mass) {
+function createPlanet(x,y,vx,vy,mass, color, planet) {
     return {
         x: x,
         y: y,
         mass: mass,
+        color: color,
         vx: vx,
-        vy: vy
+        vy: vy,
+        planet: planet
     }
 }
 
