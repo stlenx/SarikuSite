@@ -25,12 +25,15 @@ function renderObjects() {
 
     for (let i1 = 0; i1 < planets.length; i1++) {
         for (let i2 = 0; i2 < planets.length; i2++) {
-            if(i1 !== i2) planets[i1] = addGravity(planets[i1], planets[i2])
+            if(i1 !== i2) {
+                planets[i1] = addGravity(planets[i1], planets[i2])
+                if(checkCollision(planets[i1], planets[i2])) mergePlanets(i1, i2)
+            }
         }
 
         ctx.fillStyle = 'blue';
         ctx.beginPath();
-        ctx.arc(planets[i1].x, planets[i1].y, planets[i1].mass / 5000, 0, Math.PI*2, true);
+        ctx.arc(planets[i1].x, planets[i1].y, getRadius(planets[i1]), 0, Math.PI*2, true);
         ctx.closePath();
         ctx.fill();
     }
@@ -38,7 +41,7 @@ function renderObjects() {
     if(fakeBall.pressed) {
         ctx.fillStyle = 'red';
         ctx.beginPath();
-        ctx.arc(fakeBall.x, fakeBall.y, fakeBall.mass / 5000, 0, Math.PI*2, true);
+        ctx.arc(fakeBall.x, fakeBall.y, getRadius(fakeBall), 0, Math.PI*2, true);
         ctx.closePath();
         ctx.fill();
 
@@ -74,6 +77,33 @@ function updateObjects() {
         if(planet.x > cWidth) planet.vx *= -1
         if(planet.x < 0) planet.vx *= -1
     })
+}
+
+function mergePlanets(i1,i2) {
+    let newPlanets = [];
+    let index;
+    if(planets[i1].mass > planets[i2].mass) {
+        planets[i1].mass += planets[i2].mass;
+        index = i2;
+    } else {
+        planets[i2].mass += planets[i1].mass;
+        index = i1;
+    }
+
+    for(let i = 0; i < planets.length; i++) {
+        if(i !== index) newPlanets.push(planets[i])
+    }
+
+    planets = newPlanets;
+}
+
+function checkCollision(a,b) {
+    let Tr = getRadius(a) + getRadius(b)
+    return Tr > getDistanceBetween(a, b);
+}
+
+function getRadius(planet) {
+    return planet.mass / 5000;
 }
 
 function addGravity(a,b) {
