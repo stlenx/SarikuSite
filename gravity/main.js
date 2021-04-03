@@ -1,4 +1,10 @@
 const canvas = document.getElementById('canvas');
+canvas.setAttribute('width', window.innerWidth);
+canvas.setAttribute('height', window.innerHeight);
+
+const cHeight = canvas.height;
+const cWidth = canvas.width;
+
 ctx = canvas.getContext('2d');
 
 let fakeBall = {
@@ -15,7 +21,7 @@ let planets = []
 function renderObjects() {
     ctx.fillStyle = 'rgba(255, 255, 255, .05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.clearRect(0, 0, 1000, 1000);
+    ctx.clearRect(0, 0, cWidth, cHeight);
 
     for (let i1 = 0; i1 < planets.length; i1++) {
         for (let i2 = 0; i2 < planets.length; i2++) {
@@ -63,9 +69,9 @@ function updateObjects() {
         //if(planet.x > 1000) planet.x = 0
         //if(planet.x < 0) planet.x = 1000
 
-        if(planet.y > 1000) planet.vy *= -1
+        if(planet.y > cHeight) planet.vy *= -1
         if(planet.y < 0) planet.vy *= -1
-        if(planet.x > 1000) planet.vx *= -1
+        if(planet.x > cWidth) planet.vx *= -1
         if(planet.x < 0) planet.vx *= -1
     })
 }
@@ -111,10 +117,23 @@ canvas.addEventListener("mousedown", function (e) {
 
 canvas.addEventListener("mouseup", function (e) {
     let vector = getVector2({x: e.offsetX, y: e.offsetY},{x: fakeBall.x, y: fakeBall.y})
-    planets.push(createPlanet(fakeBall.x, fakeBall.y, vector.x / 10,vector.y / 10, 20000))
+    planets.push(createPlanet(fakeBall.x, fakeBall.y, vector.x / 10,vector.y / 10, fakeBall.mass))
 
     fakeBall.pressed = false;
+    fakeBall.mass = 20000;
 });
+
+function scrollMass(e) {
+    let y = e.deltaY;
+    if(fakeBall.pressed) {
+        if (y > 0) {
+            fakeBall.mass -= 3000;
+        } else {
+            fakeBall.mass += 3000;
+        }
+        console.log(fakeBall.mass)
+    }
+}
 
 function createPlanet(x,y,vx,vy,mass) {
     return {
