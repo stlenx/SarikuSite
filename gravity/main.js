@@ -31,8 +31,6 @@ let sunMode = false;
 let planets = []
 
 function renderObjects() {
-    ctx.fillStyle = 'rgba(0, 0, 0, .1)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.clearRect(0, 0, cWidth, cHeight);
 
     for (let i1 = 0; i1 < planets.length; i1++) {
@@ -98,7 +96,6 @@ function renderObjects() {
     }
 
     updateObjects()
-    //console.log(planet.x,planet.y)
 
     window.requestAnimationFrame(renderObjects);
 }
@@ -125,7 +122,6 @@ function updateObjects() {
 }
 
 function mergePlanets(i1,i2) {
-    let newPlanets = [];
     let index;
 
     if(planets[i1].planet && planets[i2].planet) {
@@ -144,11 +140,7 @@ function mergePlanets(i1,i2) {
         index = planets[i1].planet ? i1 : i2;
     }
 
-    for(let i = 0; i < planets.length; i++) {
-        if(i !== index) newPlanets.push(planets[i])
-    }
-
-    planets = newPlanets;
+    planets.splice(index, 1)
 }
 
 function checkCollision(a,b) {
@@ -199,7 +191,7 @@ function predictTrail() {
     predictiveBall.vx = vector.x / 10;
     predictiveBall.vy = vector.y / 10;
 
-    for (let t = 0; t < 25; t++) {
+    for (let t = 0; t < 100; t++) {
         for (let i = 0; i < planets.length; i++) {
             predictiveBall = addGravity(predictiveBall, planets[i])
         }
@@ -225,9 +217,12 @@ canvas.addEventListener("mousemove", function (e) {
 canvas.addEventListener("mousedown", function (e) {
     fakeBall.x = e.offsetX;
     fakeBall.y = e.offsetY;
+    fakeBall.mx = e.offsetX;
+    fakeBall.my = e.offsetY;
     predictiveBall.x = e.offsetX;
     predictiveBall.y = e.offsetY;
     predictiveBall.mass = fakeBall.mass;
+    predictTrail()
     fakeBall.pressed = true;
 });
 
