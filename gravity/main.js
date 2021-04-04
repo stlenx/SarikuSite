@@ -310,10 +310,9 @@ function createPlanet(x,y,vx,vy,mass, color, planet) {
 function frame() {
 
     updateInputs()
+    renderObjects()
 
     if(!paused) {
-        renderObjects()
-
         updateObjects()
     }
 
