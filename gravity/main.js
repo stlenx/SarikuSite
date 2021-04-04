@@ -4,6 +4,8 @@ canvas.setAttribute('height', window.innerHeight);
 
 let cHeight = canvas.height;
 let cWidth = canvas.width;
+let boundary = 1;
+let maxTrail = 25;
 
 ctx = canvas.getContext('2d');
 
@@ -27,6 +29,7 @@ let predictiveBall = {
 }
 
 let sunMode = false;
+let paused = false;
 
 let planets = []
 
@@ -41,8 +44,7 @@ function renderObjects() {
             }
         }
 
-
-        if(planets[i1].t.length > 25) planets[i1].t.splice(0, 1)
+        while (planets[i1].t.length > maxTrail) planets[i1].t.splice(0, 1)
 
         ctx.strokeStyle = 'rgba(150,150,150,255)';
         ctx.lineWidth = 0.8;
@@ -72,32 +74,28 @@ function renderObjects() {
         ctx.fill();
 
 
-        ctx.strokeStyle = 'rgba(150,150,150,255)';
-        ctx.lineWidth = 0.8;
+        if(!sunMode) {
+            ctx.strokeStyle = 'rgba(150,150,150,255)';
+            ctx.lineWidth = 0.8;
 
-        ctx.beginPath();
-        ctx.moveTo(fakeBall.x, fakeBall.y);
-        ctx.lineTo(fakeBall.mx, fakeBall.my);
-        ctx.stroke();
-        ctx.closePath();
-
-        ctx.strokeStyle = 'rgba(150,150,150,255)';
-        ctx.lineWidth = 0.8;
-
-        ctx.beginPath();
-
-        for (let i = 0; i < predictiveBall.t.length -1; i++) {
-            ctx.moveTo(predictiveBall.t[i].x, predictiveBall.t[i].y);
-            ctx.lineTo(predictiveBall.t[i+1].x, predictiveBall.t[i+1].y);
+            ctx.beginPath();
+            ctx.moveTo(fakeBall.x, fakeBall.y);
+            ctx.lineTo(fakeBall.mx, fakeBall.my);
             ctx.stroke();
+
+            for (let i = 0; i < predictiveBall.t.length -1; i++) {
+                ctx.moveTo(predictiveBall.t[i].x, predictiveBall.t[i].y);
+                ctx.lineTo(predictiveBall.t[i+1].x, predictiveBall.t[i+1].y);
+                ctx.stroke();
+            }
+
+            ctx.closePath();
         }
-
-        ctx.closePath();
     }
+}
 
-    updateObjects()
-
-    window.requestAnimationFrame(renderObjects);
+function updateInputs() {
+    maxTrail = document.getElementById('trail').value;
 }
 
 function updateObjects() {
@@ -108,17 +106,35 @@ function updateObjects() {
 
             planet.t.push(new Vector2(planet.x, planet.y))
 
-            //if(planet.y > 1000) planet.y = 0
-            //if(planet.y < 0) planet.y = 1000
-            //if(planet.x > 1000) planet.x = 0
-            //if(planet.x < 0) planet.x = 1000
-
-            if(planet.y > cHeight) planet.vy *= -1
-            if(planet.y < 0) planet.vy *= -1
-            if(planet.x > cWidth) planet.vx *= -1
-            if(planet.x < 0) planet.vx *= -1
+            planet = boundarySystem(planet)
         }
     })
+}
+
+function boundarySystem(a) {
+    switch (boundary) {
+        case 0:
+        {
+            return a;
+        }
+        case 1:
+        {
+            let radius = getRadius(a)
+            if(a.y + radius > cHeight) a.vy *= -1
+            if(a.y + radius < 0) a.vy *= -1
+            if(a.x + radius > cWidth) a.vx *= -1
+            if(a.x + radius < 0) a.vx *= -1
+            return a;
+        }
+        case 2:
+        {
+            if(a.y > 1000) a.y = 0
+            if(a.y < 0) a.y = 1000
+            if(a.x > 1000) a.x = 0
+            if(a.x < 0) a.x = 1000
+            return a;
+        }
+    }
 }
 
 function mergePlanets(i1,i2) {
@@ -194,6 +210,7 @@ function predictTrail() {
     for (let t = 0; t < 100; t++) {
         for (let i = 0; i < planets.length; i++) {
             predictiveBall = addGravity(predictiveBall, planets[i])
+            if(!planets[i].planet && checkCollision(predictiveBall, planets[i])) return;
         }
 
         predictiveBall.x += predictiveBall.vx;
@@ -201,10 +218,7 @@ function predictTrail() {
 
         predictiveBall.t.push(new Vector2(predictiveBall.x, predictiveBall.y))
 
-        if(predictiveBall.y > cHeight) predictiveBall.vy *= -1
-        if(predictiveBall.y < 0) predictiveBall.vy *= -1
-        if(predictiveBall.x > cWidth) predictiveBall.vx *= -1
-        if(predictiveBall.x < 0) predictiveBall.vx *= -1
+        predictiveBall = boundarySystem(predictiveBall)
     }
 }
 
@@ -270,6 +284,16 @@ window.addEventListener('resize', function(e){
     initCanvas();
 });
 
+function pause() {
+    if(paused) {
+        paused = false;
+        document.getElementById('pause').innerHTML = "Pause";
+    } else {
+        paused = true;
+        document.getElementById('pause').innerHTML = "Unpause";
+    }
+}
+
 function createPlanet(x,y,vx,vy,mass, color, planet) {
     return {
         x: x,
@@ -283,4 +307,17 @@ function createPlanet(x,y,vx,vy,mass, color, planet) {
     }
 }
 
-window.requestAnimationFrame(renderObjects);
+function frame() {
+
+    updateInputs()
+
+    if(!paused) {
+        renderObjects()
+
+        updateObjects()
+    }
+
+    window.requestAnimationFrame(frame)
+}
+
+window.requestAnimationFrame(frame);

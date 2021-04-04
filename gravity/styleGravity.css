@@ -2,3 +2,21 @@ body {
     background-color: black;
     overflow: hidden;
 }
+
+.main {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.site {
+    z-index: 9;
+}
+
+.canvas, .site{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
