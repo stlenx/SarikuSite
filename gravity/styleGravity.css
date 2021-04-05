@@ -11,6 +11,7 @@ body {
 
 .site {
     z-index: 9;
+    color: white;
 }
 
 .canvas, .site{
@@ -19,4 +20,8 @@ body {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.sliders {
+    margin-bottom: 10px;
 }

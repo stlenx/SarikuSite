@@ -6,6 +6,7 @@ let cHeight = canvas.height;
 let cWidth = canvas.width;
 let boundary = 1;
 let maxTrail = 25;
+let maxPrediction = 100;
 
 ctx = canvas.getContext('2d');
 
@@ -37,13 +38,11 @@ function renderObjects() {
     ctx.clearRect(0, 0, cWidth, cHeight);
 
     for (let i1 = 0; i1 < planets.length; i1++) {
-        for (let i2 = 0; i2 < planets.length; i2++) {
+        for(let i2 = 0; i2 < planets.length; i2++) {
             if(i1 !== i2) {
-                planets[i1] = addGravity(planets[i1], planets[i2])
-                if(checkCollision(planets[i1], planets[i2])) mergePlanets(i1, i2)
+                if (checkCollision(planets[i1], planets[i2])) mergePlanets(i1, i2)
             }
         }
-
         while (planets[i1].t.length > maxTrail) planets[i1].t.splice(0, 1)
 
         ctx.strokeStyle = 'rgba(150,150,150,255)';
@@ -96,19 +95,27 @@ function renderObjects() {
 
 function updateInputs() {
     maxTrail = document.getElementById('trail').value;
+    maxPrediction = document.getElementById('prediction').value;
 }
 
 function updateObjects() {
-    Array.prototype.forEach.call(planets, function (planet) {
-        if(planet.planet) {
-            planet.x += planet.vx;
-            planet.y += planet.vy;
-
-            planet.t.push(new Vector2(planet.x, planet.y))
-
-            planet = boundarySystem(planet)
+    for(let i1 = 0; i1 < planets.length; i1++) {
+        for (let i2 = 0; i2 < planets.length; i2++) {
+            if (i1 !== i2) {
+                planets[i1] = addGravity(planets[i1], planets[i2])
+                //if (checkCollision(planets[i1], planets[i2])) mergePlanets(i1, i2)
+            }
         }
-    })
+
+        if(planets[i1].planet) {
+            planets[i1].x += planets[i1].vx;
+            planets[i1].y += planets[i1].vy;
+
+            planets[i1].t.push(new Vector2(planets[i1].x, planets[i1].y))
+
+            planets[i1] = boundarySystem(planets[i1])
+        }
+    }
 }
 
 function boundarySystem(a) {
@@ -207,7 +214,7 @@ function predictTrail() {
     predictiveBall.vx = vector.x / 10;
     predictiveBall.vy = vector.y / 10;
 
-    for (let t = 0; t < 100; t++) {
+    for (let t = 0; t < maxPrediction; t++) {
         for (let i = 0; i < planets.length; i++) {
             predictiveBall = addGravity(predictiveBall, planets[i])
             if(!planets[i].planet && checkCollision(predictiveBall, planets[i])) return;
@@ -266,10 +273,15 @@ function scrollMass(e) {
     }
 }
 
-document.addEventListener("keydown", event => {
-    if(event.key === 's')
-        sunMode = !sunMode;
-});
+function toggleSun() {
+    if(sunMode) {
+        sunMode = false;
+        document.getElementById('sun').innerHTML = "Sun";
+    } else {
+        sunMode = true;
+        document.getElementById('sun').innerHTML = "Planet";
+    }
+}
 
 function initCanvas(){
     canvas.setAttribute('width', window.innerWidth)
@@ -310,11 +322,12 @@ function createPlanet(x,y,vx,vy,mass, color, planet) {
 function frame() {
 
     updateInputs()
-    renderObjects()
 
     if(!paused) {
         updateObjects()
     }
+
+    renderObjects()
 
     window.requestAnimationFrame(frame)
 }

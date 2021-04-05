@@ -15,8 +15,16 @@
         <canvas id="canvas" width="500" height="500"></canvas>
     </div>
     <div class="site">
-        <input type="range" id="trail" name="trail" min="0" max="100" value="25" step="1">
+        <div class="sliders">
+            <div>
+                <label for="trail">Trail size: </label><input type="range" id="trail" name="trail" min="0" max="100" value="25" step="1">
+            </div>
+            <div>
+                <label for="prediction">Prediction time: </label><input type="range" id="prediction" name="prediction" min="0" max="1000" value="100" step="1">
+            </div>
+        </div>
         <button type="button" id="pause" onclick="pause()">Pause</button>
+        <button type="button" id="sun" onclick="toggleSun()">Sun</button>
     </div>
 </div>
 
