@@ -33,17 +33,15 @@ class Fluid {
     renderD() {
         for (let i = 0; i < N; i++) {
             for (let j = 0; j < N; j++) {
-                let x = i * scale;
-                let y = j * scale;
                 let d = this.density[IX(i, j)];
-
                 d = d > 255 ? 255 : d;
 
-                ctx.fillStyle = 'rgb(' + d + ',' + d + ',' + d + ')';
-                ctx.beginPath();
-                ctx.rect(x, y, scale, scale);
-                ctx.closePath();
-                ctx.fill();
+                let index = (i + j * N) * 4;
+
+                data[index] = d;
+                data[index+1] = d;
+                data[index+2] = d;
+                data[index + 3] = 255;
             }
         }
     }
@@ -52,16 +50,21 @@ class Fluid {
 
         diffuse(1, this.Vx0, this.Vx, this.visc, this.dt);
         diffuse(2, this.Vy0, this.Vy, this.visc, this.dt);
+        //20 ms both, about 10 each
 
         project(this.Vx0, this.Vy0, this.Vx, this.Vy);
+        //10 ms
 
         advect(1, this.Vx, this.Vx0, this.Vx0, this.Vy0, this.dt);
         advect(2, this.Vy, this.Vy0, this.Vx0, this.Vy0, this.dt);
+        //10 ms both, about 5 each
 
         project(this.Vx, this.Vy, this.Vx0, this.Vy0);
+        //10 ms
 
         diffuse(0, this.s, this.density, this.diff, this.dt);
         advect(0, this.density, this.s, this.Vx, this.Vy, this.dt);
+        //15 ms both, about 7 each
     }
     
 }
