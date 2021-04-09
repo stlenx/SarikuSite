@@ -13,17 +13,18 @@ ctx = canvas.getContext('2d');
 let fakeBall = {
     x: 500,
     y: 500,
-    mass: 20000,
+    mass: 5.972e+24,
     color: 'red',
     pressed: false,
     mx: -200,
-    my: -200
+    my: -200,
+    n: 1
 }
 
 let predictiveBall = {
     x: 500,
     y: 500,
-    mass: 20000,
+    mass: 1,
     vx: 0,
     vy: 0,
     t: []
@@ -60,7 +61,7 @@ function renderObjects() {
 
         ctx.fillStyle = planets[i1].color;
         ctx.beginPath();
-        ctx.arc(planets[i1].x, planets[i1].y, getRadius(planets[i1]), 0, Math.PI*2, true);
+        ctx.arc(planets[i1].x, planets[i1].y, getRadius2(planets[i1]), 0, Math.PI*2, true);
         ctx.closePath();
         ctx.fill();
     }
@@ -68,7 +69,7 @@ function renderObjects() {
     if(fakeBall.pressed) {
         ctx.fillStyle = fakeBall.color;
         ctx.beginPath();
-        ctx.arc(fakeBall.x, fakeBall.y, getRadius(fakeBall), 0, Math.PI*2, true);
+        ctx.arc(fakeBall.x, fakeBall.y, getRadius2(fakeBall), 0, Math.PI*2, true);
         ctx.closePath();
         ctx.fill();
 
@@ -103,7 +104,6 @@ function updateObjects() {
         for (let i2 = 0; i2 < planets.length; i2++) {
             if (i1 !== i2) {
                 planets[i1] = addGravity(planets[i1], planets[i2])
-                //if (checkCollision(planets[i1], planets[i2])) mergePlanets(i1, i2)
             }
         }
 
@@ -126,7 +126,7 @@ function boundarySystem(a) {
         }
         case 1:
         {
-            let radius = getRadius(a)
+            let radius = getRadius2(a)
             if(a.y + radius > cHeight) a.vy *= -1
             if(a.y + radius < 0) a.vy *= -1
             if(a.x + radius > cWidth) a.vx *= -1
@@ -167,7 +167,7 @@ function mergePlanets(i1,i2) {
 }
 
 function checkCollision(a,b) {
-    let Tr = getRadius(a) + getRadius(b)
+    let Tr = getRadius2(a) + getRadius2(b)
     return Tr > getDistanceBetween(a, b);
 }
 
@@ -175,13 +175,18 @@ function getRadius(planet) {
     return planet.mass / 5000;
 }
 
+function getRadius2(planet) {
+    //console.log(planet.mass)
+    return 0.1659 * Math.pow(1.5, ((planet.mass / 5.972e+24) * 10) - 1)
+}
+
 function addGravity(a,b) {
     let force = getGravitationalForce(a, b)
 
     let direction = getVector2(a, b)
-    //direction.normalize()
-    direction.x *= (force * 100)
-    direction.y *= (force * 100)
+    direction.normalize()
+    direction.x *= (force)
+    direction.y *= (force)
 
     a.vx += direction.x
     a.vy += direction.y
@@ -194,7 +199,7 @@ function getVector2(a, b) {
 }
 
 function getGravitationalForce(a,b) {
-    let r = getDistanceBetween(a,b)
+    let r = getDistanceBetween(a,b) * 500000
     let G = 6.674 * Math.pow(10, -11)
     return G * ((a.mass * b.mass) / (r * r))
 }
@@ -256,18 +261,24 @@ canvas.addEventListener("mouseup", function (e) {
     }
 
     fakeBall.pressed = false;
-    fakeBall.mass = 20000;
+    fakeBall.mass = 1;
+    fakeBall.n = 1;
 });
 
 function scrollMass(e) {
     let y = e.deltaY;
     if(fakeBall.pressed) {
         if (y > 0) {
-            fakeBall.mass -= 3000;
-            if(fakeBall.mass < 0)
-                fakeBall.mass = 1000;
+            fakeBall.n -= 0.01;
+            fakeBall.mass *= fakeBall.n;
+            //fakeBall.mass = 0.74 * Math.pow(3, fakeBall.n-1)
+            if(fakeBall.n < 0.01) {
+                fakeBall.n = 0.01;
+            }
         } else {
-            fakeBall.mass += 3000;
+            fakeBall.n += 0.01;
+            fakeBall.mass *= fakeBall.n;
+            //fakeBall.mass = 0.74 * Math.pow(3, fakeBall.n-1)
         }
         predictiveBall.mass = fakeBall.mass;
     }
