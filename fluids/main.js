@@ -3,7 +3,7 @@ ctx = canvas.getContext('2d');
 
 const N = 500;
 const iter = 5;
-const scale = 10;
+const scale = 2;
 
 let mPressed = false;
 let fluid = new Fluid(0.1, 0, 0.0000001)

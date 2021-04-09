@@ -48,26 +48,85 @@ class Fluid {
 
     step() {
 
+        //var t0 = performance.now()
+
         diffuse(1, this.Vx0, this.Vx, this.visc, this.dt);
         diffuse(2, this.Vy0, this.Vy, this.visc, this.dt);
-        //20 ms both, about 10 each
+        //4 ms both, about 2 each
+
+        //var t1 = performance.now()
+        //console.log((t1 - t0) + " milliseconds.")
 
         project(this.Vx0, this.Vy0, this.Vx, this.Vy);
-        //10 ms
+        //4 ms
 
         advect(1, this.Vx, this.Vx0, this.Vx0, this.Vy0, this.dt);
         advect(2, this.Vy, this.Vy0, this.Vx0, this.Vy0, this.dt);
+        //let output = advectGPU(2, this.Vy, this.Vy0, this.Vx0, this.Vy0, this.dt, N)
+        ////console.log(output)
+//
+        //for(let j = 0; j < N; j++) {
+        //    for(let i = 0; i < N; i++) {
+        //        this.Vy[IX(i, j)] = output[j][i];
+        //        //console.log(output[i][j])
+        //    }
+        //}
+        //set_bnd(2, this.Vy);
         //10 ms both, about 5 each
 
         project(this.Vx, this.Vy, this.Vx0, this.Vy0);
-        //10 ms
+        //4 ms
 
         diffuse(0, this.s, this.density, this.diff, this.dt);
         advect(0, this.density, this.s, this.Vx, this.Vy, this.dt);
-        //15 ms both, about 7 each
+        //6 ms both, about 3 each
     }
-    
 }
+
+const gpu = new GPU();
+const advectGPU = gpu.createKernel(function (b, d, d0, velocX, velocY, dt, N) {
+    function IX(x,y) {
+        return x + y * 500;
+    }
+
+    let dtx = dt * (N - 2);
+    let dty = dt * (N - 2);
+
+    let Nfloat = 500 - 2;
+
+    let tmp1 = dtx * velocX[this.thread.x + this.thread.y * N];
+    let tmp2 = dty * velocY[this.thread.x + this.thread.y * N];
+    let x = this.thread.x - tmp1;
+    let y = this.thread.y - tmp2;
+
+    if (x < 0.5) x = 0.5;
+    if (x > Nfloat + 0.5) x = Nfloat + 0.5;
+
+    let i0 = Math.floor(x);
+
+    let i1 = i0 + 1.0;
+
+    if (y < 0.5) y = 0.5;
+    if (y > Nfloat + 0.5) y = Nfloat + 0.5;
+
+    let j0 = Math.floor(y);
+    let j1 = j0 + 1.0;
+
+    let s1 = x - i0;
+    let s0 = 1.0 - s1;
+    let t1 = y - j0;
+    let t0 = 1.0 - t1;
+
+    let index = IX(this.thread.x,this.thread.y)
+    let s0V = s0 * (t0 * d0[IX(i0, j0)] + t1 * d0[IX(i0, j1)])
+    let s1V = s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)])
+
+    //rD[56] = 43;
+    ////set_bnd(b, d);
+
+    return s0V + s1V;
+
+}).setOutput([500,500]);
 
 function diffuse(b, x, x0, diff, dt) {
     let a = dt * diff * (N - 2) * (N - 2);
@@ -76,21 +135,19 @@ function diffuse(b, x, x0, diff, dt) {
 
 function lin_solve(b, x, x0, a, c) {
     let cRecip = 1.0 / c;
-    for (let t = 0; t < iter; t++) {
-        for (let j = 1; j < N - 1; j++) {
-            for (let i = 1; i < N - 1; i++) {
-                x[IX(i, j)] =
-                    (x0[IX(i, j)] +
-                        a *
-                        (x[IX(i + 1, j)] +
-                            x[IX(i - 1, j)] +
-                            x[IX(i, j + 1)] +
-                            x[IX(i, j - 1)])) *
-                    cRecip;
-            }
+    for (let j = 1; j < N - 1; j++) {
+        for (let i = 1; i < N - 1; i++) {
+            x[IX(i, j)] =
+                (x0[IX(i, j)] +
+                    a *
+                    (x[IX(i + 1, j)] +
+                        x[IX(i - 1, j)] +
+                        x[IX(i, j + 1)] +
+                        x[IX(i, j - 1)])) *
+                cRecip;
         }
-        set_bnd(b, x);
     }
+    set_bnd(b, x);
 }
 
 function project(velocX, velocY, p, div) {
@@ -129,25 +186,26 @@ function advect(b, d, d0, velocX, velocY, dt) {
     let dty = dt * (N - 2);
 
     let s0, s1, t0, t1;
-    let tmp1, tmp2, tmp3, x, y;
+    let tmp1, tmp2, x, y;
 
     let Nfloat = N - 2;
-    let ifloat, jfloat;
-    let i, j, k;
 
-    for (j = 1, jfloat = 1; j < N - 1; j++, jfloat++) {
-        for (i = 1, ifloat = 1; i < N - 1; i++, ifloat++) {
+    for (let j = 1; j < N - 1; j++) {
+        for (let i = 1; i < N - 1; i++) {
             tmp1 = dtx * velocX[IX(i, j)];
             tmp2 = dty * velocY[IX(i, j)];
-            x = ifloat - tmp1;
-            y = jfloat - tmp2;
+            x = i - tmp1;
+            y = j - tmp2;
 
-            if (x < 0.5) x = 0.5;
-            if (x > Nfloat + 0.5) x = Nfloat + 0.5;
+            x = x < 0.5 ? 0.5 : x;
+            x = x > Nfloat + 0.5 ? Nfloat + 0.5 : x;
+
             i0 = Math.floor(x);
             i1 = i0 + 1.0;
-            if (y < 0.5) y = 0.5;
-            if (y > Nfloat + 0.5) y = Nfloat + 0.5;
+
+            y = y < 0.5 ? 0.5 : y;
+            y = y > Nfloat + 0.5 ? Nfloat + 0.5 : y;
+
             j0 = Math.floor(y);
             j1 = j0 + 1.0;
 
@@ -156,17 +214,11 @@ function advect(b, d, d0, velocX, velocY, dt) {
             t1 = y - j0;
             t0 = 1.0 - t1;
 
-            let i0i = parseInt(i0);
-            let i1i = parseInt(i1);
-            let j0i = parseInt(j0);
-            let j1i = parseInt(j1);
-
             d[IX(i, j)] =
-                s0 * (t0 * d0[IX(i0i, j0i)] + t1 * d0[IX(i0i, j1i)]) +
-                s1 * (t0 * d0[IX(i1i, j0i)] + t1 * d0[IX(i1i, j1i)]);
+                s0 * (t0 * d0[IX(i0, j0)] + t1 * d0[IX(i0, j1)]) +
+                s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)]);
         }
     }
-
     set_bnd(b, d);
 }
 
