@@ -17,8 +17,7 @@ let fakeBall = {
     color: 'red',
     pressed: false,
     mx: -200,
-    my: -200,
-    n: 1
+    my: -200
 }
 
 let predictiveBall = {
@@ -149,12 +148,16 @@ function mergePlanets(i1,i2) {
 
     if(planets[i1].planet && planets[i2].planet) {
         if(planets[i1].mass > planets[i2].mass) {
-            planets[i1].mass += planets[i2].mass;
+            let size = (planets[i1].mass += planets[i2].mass) / 5.972e+24;
+            planets[i1].mass *= (size / 20000) + 1;
+            console.log((size / 20000) + 1)
             planets[i1].vx /= 2;
             planets[i1].vy /= 2;
             index = i2;
         } else {
-            planets[i2].mass += planets[i1].mass;
+            let size = (planets[i2].mass += planets[i1].mass) / 5.972e+24;
+            planets[i2].mass *= (size / 20000) + 1;
+            console.log((size / 20000) + 1)
             planets[i2].vx /= 2;
             planets[i2].vy /= 2;
             index = i1;
@@ -185,8 +188,8 @@ function addGravity(a,b) {
 
     let direction = getVector2(a, b)
     direction.normalize()
-    direction.x *= (force)
-    direction.y *= (force)
+    direction.x *= (force / 10)
+    direction.y *= (force / 10)
 
     a.vx += direction.x
     a.vy += direction.y
@@ -199,7 +202,7 @@ function getVector2(a, b) {
 }
 
 function getGravitationalForce(a,b) {
-    let r = getDistanceBetween(a,b) * 500000
+    let r = getDistanceBetween(a,b) * 2000000000000000000
     let G = 6.674 * Math.pow(10, -11)
     return G * ((a.mass * b.mass) / (r * r))
 }
@@ -261,24 +264,17 @@ canvas.addEventListener("mouseup", function (e) {
     }
 
     fakeBall.pressed = false;
-    fakeBall.mass = 1;
-    fakeBall.n = 1;
+    fakeBall.mass = 5.972e+24;
 });
 
 function scrollMass(e) {
     let y = e.deltaY;
     if(fakeBall.pressed) {
         if (y > 0) {
-            fakeBall.n -= 0.01;
-            fakeBall.mass *= fakeBall.n;
-            //fakeBall.mass = 0.74 * Math.pow(3, fakeBall.n-1)
-            if(fakeBall.n < 0.01) {
-                fakeBall.n = 0.01;
-            }
+            fakeBall.mass *= 0.99;
+            fakeBall.mass = fakeBall.mass < 0.1 ? 0.1 : fakeBall.mass;
         } else {
-            fakeBall.n += 0.01;
-            fakeBall.mass *= fakeBall.n;
-            //fakeBall.mass = 0.74 * Math.pow(3, fakeBall.n-1)
+            fakeBall.mass *= 1.01;
         }
         predictiveBall.mass = fakeBall.mass;
     }
@@ -319,13 +315,13 @@ function pause() {
 
 function createPlanet(x,y,vx,vy,mass, color, planet) {
     return {
-        x: x,
-        y: y,
-        mass: mass,
-        color: color,
-        vx: vx,
-        vy: vy,
-        planet: planet,
+        x,
+        y,
+        mass,
+        color,
+        vx,
+        vy,
+        planet,
         t: []
     }
 }
