@@ -46,7 +46,12 @@ function Draw() {
     }
 }
 
+function UpdateInputs() {
+    volume = document.getElementById("volume").value;
+}
+
 function frame() {
+    UpdateInputs()
     Draw()
     window.requestAnimationFrame(frame)
 }
