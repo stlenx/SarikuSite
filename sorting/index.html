@@ -2,12 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="sortingStyle.css">
     <title>Sorting</title>
 </head>
-<body style="overflow: hidden;">
+<body>
 
+<script src="../misc/soundplayer.js" defer></script>
 <script src="main.js" defer></script>
-<canvas id="canvas" width="500" height="500"></canvas>
+
+<div class="main">
+    <div class="canvas">
+        <canvas id="canvas" width="500" height="500"></canvas>
+    </div>
+    <div class="site">
+        <button type="button" id="pause" onclick="run()">RUN</button>
+
+        <input type="radio" id="bubble" name="algorithm" value="0" onclick="WhichSort(this.value)" checked>
+        <label for="bubble">Bubble sort</label>
+
+        <input type="radio" id="cocktail" name="algorithm" value="1" onclick="WhichSort(this.value)">
+        <label for="cocktail">Cocktail sort</label>
+    </div>
+</div>
 
 </body>
 </html>
