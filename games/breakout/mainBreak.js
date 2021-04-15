@@ -23,10 +23,12 @@ let balls = [{
     vy: -5
 }]
 
+let boxes = []
+
 let bricks = []
 
 for (let x = 0; x < 8; x++) {
-    for (let y = 0; y < 10; y++) {
+    for (let y = 0; y < 20; y++) {
         let posX = Remap(x, 0, 8, 0, width) + 7
         let posY = Remap(y, 0, 10, 150, 300)
         bricks.push(CreateBrick(posX,posY,"red",60,5))
@@ -36,7 +38,7 @@ for (let x = 0; x < 8; x++) {
 function frame() {
     Draw()
 
-    UpdateBalls()
+    UpdateThings()
 
     window.requestAnimationFrame(frame)
 }
@@ -73,6 +75,11 @@ function Draw() {
         ctx.fill();
     })
 
+    boxes.forEach(function(box) {
+        ctx.fillStyle = box.color;
+        ctx.fillRect(box.x,box.y,box.w,box.h);
+    })
+
     if(balls.length === 0) {
         ctx.font = "60px Helvetica ";
         ctx.textAlign = "center";
@@ -92,7 +99,7 @@ function Draw() {
     }
 }
 
-function UpdateBalls() {
+function UpdateThings() {
     for (let i = 0; i < balls.length; i++) {
         balls[i].x += balls[i].vx;
         balls[i].y += balls[i].vy;
@@ -100,6 +107,10 @@ function UpdateBalls() {
         if(balls[i].x + ballRadius < 0) balls[i].vx *= -1
         if(balls[i].y + ballRadius < 0) balls[i].vy *= -1
         if(balls[i].y + ballRadius > height) balls.splice(i, 1)
+    }
+    for (let i = 0; i < boxes.length; i++) {
+        boxes[i].y += 3;
+        if(boxes[i].y + boxes[i].h / 2 > height) boxes.splice(i, 1)
     }
     CheckCollision()
 }
@@ -135,10 +146,37 @@ function CheckCollision() {
             let condition4 = ball.x - ballRadius < bricks[i].x + bricks[i].w;
             if(condition1 && condition2 && condition3 && condition4) {
                 ball.vy *= -1;
+                let random = WeightedRandom([0.1,0.2,0.7])
+                switch (random) {
+                    case 0:
+                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'green',10,10,"double"))
+                        break;
+                    case 1:
+                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'red',10,10,"half"))
+                        break;
+                }
                 bricks.splice(i,1)
+
             }
         }
-    });
+    })
+
+    for (let i = 0; i < boxes.length; i++) {
+        if(boxes[i].y + boxes[i].w > platform.y && boxes[i].y + boxes[i].w < platform.y + platform.h && boxes[i].x > platform.x && boxes[i].x < platform.x + platform.w) {
+            switch (boxes[i].s) {
+                case "double":
+                    let size = balls.length;
+                    for (let p = 0; p < size; p++) {
+                        balls.push(CreateBall(balls[p].x,balls[p].y,balls[p].vx * -1, balls[p].vy, balls[p].color))
+                    }
+                    break;
+                case "half":
+                    balls.splice(0,Math.floor(balls.length / 2))
+                    break;
+            }
+            boxes.splice(i,1)
+        }
+    }
 }
 
 document.addEventListener('keydown', function (e) {
@@ -163,6 +201,36 @@ function Remap(value, from1, to1, from2, to2) {
 
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+function normalizeWeights(weights){
+    let normalized = [], sum = weights.reduce((acc, cur) => (acc + cur))
+    weights.forEach((w) => {normalized.push(w / sum)})
+    return normalized
+}
+
+function WeightedRandom(weights) {
+    let w = normalizeWeights(weights), s = 0, random = Math.random()
+
+    for (let i = 0; i < w.length - 1; ++i) {
+        s += w[i];
+        if (random < s) {
+            return i
+        }
+    }
+
+    return w.length - 1
+}
+
+function CreateBox(x,y, color, w, h, s) {
+    return {
+        x,
+        y,
+        color,
+        w,
+        h,
+        s
+    }
 }
 
 function CreateBrick(x,y, color, w, h) {
