@@ -11,7 +11,8 @@ let platform = {
     y: height - 50,
     w: 150,
     h: 10,
-    color: "#616161"
+    color: "#616161",
+    started: false
 }
 
 const ballRadius = 4;
@@ -19,9 +20,12 @@ let balls = [{
     x: width / 2,
     y: height - 100,
     color: "#000000",
-    vx: 5,
-    vy: -5
+    vx: 0,
+    vy: -0,
+    combo: 1
 }]
+
+let score = 0;
 
 let boxes = []
 
@@ -81,6 +85,11 @@ function Draw() {
         ctx.fillRect(box.x,box.y,box.w,box.h);
     })
 
+    ctx.font = "60px Helvetica ";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "black";
+    ctx.fillText(score,width / 2, 60);
+
     if(balls.length === 0) {
         ctx.font = "60px Helvetica ";
         ctx.textAlign = "center";
@@ -119,6 +128,7 @@ function UpdateThings() {
 function CheckCollision() {
     balls.forEach(function(ball) {
         if(ball.y + ballRadius > platform.y && ball.y + ballRadius < platform.y + platform.h && ball.x > platform.x && ball.x < platform.x + platform.w) {
+            ball.combo = 1;
             let vector = getVector2({x: platform.x + platform.w / 2, y: platform.y}, ball)
             ball.vy *= -1;
             if(ball.x < platform.x + platform.w / 2) {
@@ -143,14 +153,22 @@ function CheckCollision() {
             let condition3 = ball.x + ballRadius > bricks[i].x;
             let condition4 = ball.x - ballRadius < bricks[i].x + bricks[i].w;
             if(condition1 && condition2 && condition3 && condition4) {
+                score += 100 * ball.combo;
+                ball.combo++;
                 ball.vy *= -1;
-                let random = WeightedRandom([0.1,0.2,0.7])
+                let random = WeightedRandom([0.1,0.2,0.1,0.2,0.4])
                 switch (random) {
                     case 0:
                         boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'green',10,10,"double"))
                         break;
                     case 1:
                         boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'red',10,10,"half"))
+                        break;
+                    case 2:
+                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'blue',10,10,"bigger"))
+                        break;
+                    case 3:
+                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'pink',10,10,"smaller"))
                         break;
                 }
                 bricks.splice(i,1)
@@ -170,6 +188,12 @@ function CheckCollision() {
                     break;
                 case "half":
                     balls.splice(0,Math.floor(balls.length / 2))
+                    break;
+                case "bigger":
+                    platform.w *= 2;
+                    break;
+                case "smaller":
+                    platform.w /= 2;
                     break;
             }
             boxes.splice(i,1)
@@ -191,6 +215,18 @@ document.addEventListener('keydown', function (e) {
 
 canvas.addEventListener('mousemove', function (e) {
     platform.x = Remap(e.offsetX, 0, width, 0, width - platform.w);
+    if(!platform.started) {
+        balls[0].x = platform.x + platform.w / 2
+        balls[0].y = platform.y - 10
+    }
+})
+
+canvas.addEventListener('mousedown', function (e) {
+    if(!platform.started) {
+        platform.started = true;
+        balls[0].vx = 5;
+        balls[0].vy = -5;
+    }
 })
 
 function Remap(value, from1, to1, from2, to2) {
@@ -258,7 +294,8 @@ function CreateBall(x,y,vx,vy, color) {
         y,
         color,
         vx,
-        vy
+        vy,
+        combo: 1
     }
 }
 
