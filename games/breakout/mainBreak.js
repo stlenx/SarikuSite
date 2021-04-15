@@ -26,6 +26,12 @@ let balls = [{
 }]
 
 let score = 0;
+let HighScore = 0;
+
+savedScore = JSON.parse(localStorage.getItem('pageState'));
+if (savedScore !== null) {
+    HighScore = savedScore.highScore;
+}
 
 let boxes = []
 
@@ -45,7 +51,15 @@ function frame() {
 
     UpdateThings()
 
+    Save()
+
     window.requestAnimationFrame(frame)
+}
+
+function Save() {
+    localStorage.setItem('pageState', JSON.stringify({
+        highScore: HighScore
+    }));
 }
 
 function Draw() {
@@ -85,6 +99,10 @@ function Draw() {
         ctx.fillRect(box.x,box.y,box.w,box.h);
     })
 
+    ctx.font = "20px Helvetica ";
+    ctx.fillStyle = "black";
+    ctx.fillText(HighScore,30,20);
+
     ctx.font = "60px Helvetica ";
     ctx.textAlign = "center";
     ctx.fillStyle = "black";
@@ -92,9 +110,16 @@ function Draw() {
 
     if(balls.length === 0) {
         ctx.font = "60px Helvetica ";
-        ctx.textAlign = "center";
         ctx.fillStyle = "red";
         ctx.fillText("Game Over",width / 2,height / 2);
+
+        ctx.font = "30px Helvetica ";
+        ctx.fillStyle = "black";
+        ctx.fillText("Again?",width / 2,height / 2 + 50);
+
+        ctx.font = "40px Helvetica ";
+        ctx.fillStyle = "black";
+        ctx.fillText(`High score: ${HighScore}`,width / 2,height / 2 + 100);
     }
 
     if(bricks.length === 0) {
@@ -103,13 +128,21 @@ function Draw() {
             ball.vy = 0;
         })
         ctx.font = "60px Helvetica ";
-        ctx.textAlign = "center";
         ctx.fillStyle = "green";
         ctx.fillText("You Win!",width / 2,height / 2);
+
+        ctx.font = "30px Helvetica ";
+        ctx.fillStyle = "black";
+        ctx.fillText("Again?",width / 2,height / 2 + 50);
+
+        ctx.font = "40px Helvetica ";
+        ctx.fillStyle = "black";
+        ctx.fillText(`High score: ${HighScore}`,width / 2,height / 2 + 100);
     }
 }
 
 function UpdateThings() {
+    if(score > HighScore) HighScore = score;
     for (let i = 0; i < balls.length; i++) {
         balls[i].x += balls[i].vx;
         balls[i].y += balls[i].vy;
@@ -201,6 +234,41 @@ function CheckCollision() {
     }
 }
 
+function Restart() {
+    platform = {
+        x: width / 2 - 150 / 2,
+        y: height - 50,
+        w: 150,
+        h: 10,
+        color: "#616161",
+        started: false
+    }
+
+    balls = [{
+        x: width / 2,
+        y: height - 100,
+        color: "#000000",
+        vx: 0,
+        vy: -0,
+        combo: 1
+    }]
+
+    score = 0;
+
+    boxes = []
+
+    bricks = []
+
+    for (let x = 0; x < 8; x++) {
+        for (let y = 0; y < 20; y++) {
+            let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
+            let posX = Remap(x, 0, 8, 0, width) + 7
+            let posY = Remap(y, 0, 10, 150, 300)
+            bricks.push(CreateBrick(posX,posY,color,60,5))
+        }
+    }
+}
+
 document.addEventListener('keydown', function (e) {
     //console.log(e.code)
     switch (e.code) {
@@ -226,6 +294,9 @@ canvas.addEventListener('mousedown', function (e) {
         platform.started = true;
         balls[0].vx = 5;
         balls[0].vy = -5;
+    }
+    if(bricks.length === 0 || balls.length === 0) {
+        Restart()
     }
 })
 
