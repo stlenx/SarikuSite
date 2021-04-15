@@ -197,18 +197,10 @@ function addGravity(a,b) {
     return a;
 }
 
-function getVector2(a, b) {
-    return new Vector2(b.x - a.x, b.y - a.y)
-}
-
 function getGravitationalForce(a,b) {
     let r = getDistanceBetween(a,b) * 2000000000000000000
     let G = 6.674 * Math.pow(10, -11)
     return G * ((a.mass * b.mass) / (r * r))
-}
-
-function getDistanceBetween(a, b) {
-    return Math.sqrt( ((b.x - a.x) * (b.x - a.x)) + ((b.y - a.y) * (b.y - a.y)) )
 }
 
 function predictTrail() {

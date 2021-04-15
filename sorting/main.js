@@ -27,6 +27,9 @@ function Draw() {
         case 1:
             CocktailSort()
             break;
+        case 2:
+            MergeSort()
+            break;
     }
 
     //if(audioCtx !== undefined) playNote(261, 20)
@@ -56,33 +59,19 @@ function frame() {
     window.requestAnimationFrame(frame)
 }
 
-function MergeSort(numbers) {
+function MergeSort() {
     if(!IsSorted(numbers)) {
-        //if(!splitted) {
-        //    numbers = Split(numbers)
-        //    arrays = arrays.filter(function (el) {return el.length !== 0;});
-        //    splitted = true;
-        //    return numbers
-        //} else {
-        //    if(arrays.length > 2) {
-        //        let output = [];
-        //        for (let i = 0; i < arrays.length - 1; i+=2) {
-        //            let result = Merge(arrays[i], arrays[i + 1])
-        //            output.concat(result)
-        //        }
-        //        console.log(output)
-        //        return output;
-        //    }
-        //    return numbers;
-        //}
+        arrays = [];
+        console.log(numbers)
         numbers = Split(numbers)
+        console.log(numbers)
         arrays = arrays.filter(function (el) {return el.length !== 0;});
+        console.log(arrays)
         let output = [];
-        for (let i = 0; i < arrays.length - 1; i+=2) {
-            let result = Merge(arrays[i], arrays[i + 1])
-            output = result;
+        for (let i = 0; i < arrays.length; i++) {
+            output.push(arrays[i][0])
         }
-        return output;
+        numbers = output;
     }
 }
 
@@ -142,10 +131,7 @@ function CocktailSort() {
 
 function BubbleSort() {
     if(!IsSorted(numbers)) {
-        //let end = numbers.length
         for(let i = 0; i < numbers.length; i++) {
-            //let frequency = Remap(numbers[i], 0, height, 0, 1000)
-            //new SoundPlayer(audio).play(frequency, 0.8, "sine").stop(0.1);
             if(numbers[i] > numbers[i + 1]) {
                 let bigNumber = numbers[i];
                 numbers[i] = numbers[i + 1];
@@ -182,6 +168,7 @@ function WhichSort(value) {
 let audio
 function run() {
     numbers = new Array(width);
+    arrays = [];
 
     for(let i = 0; i < numbers.length; i++) {
         numbers[i] = getRandom(1, height)
