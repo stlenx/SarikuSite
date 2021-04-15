@@ -282,7 +282,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 canvas.addEventListener('mousemove', function (e) {
-    platform.x = Remap(e.offsetX, 0, width, 0, width - platform.w);
+    platform.x = Remap(e.offsetX, 20, width - 20, -5, width - (platform.w + 5));
     if(!platform.started) {
         balls[0].x = platform.x + platform.w / 2
         balls[0].y = platform.y - 10
