@@ -28,7 +28,7 @@ let balls = [{
 let score = 0;
 let HighScore = 0;
 
-savedScore = JSON.parse(localStorage.getItem('pageState'));
+savedScore = JSON.parse(localStorage.getItem('saveData'));
 if (savedScore !== null) {
     HighScore = savedScore.highScore;
 }
@@ -57,7 +57,7 @@ function frame() {
 }
 
 function Save() {
-    localStorage.setItem('pageState', JSON.stringify({
+    localStorage.setItem('saveData', JSON.stringify({
         highScore: HighScore
     }));
 }
@@ -123,6 +123,7 @@ function Draw() {
     }
 
     if(bricks.length === 0) {
+        if(score > HighScore) HighScore = score;
         balls.forEach(function(ball) {
             ball.vx = 0;
             ball.vy = 0;
@@ -142,7 +143,6 @@ function Draw() {
 }
 
 function UpdateThings() {
-    if(score > HighScore) HighScore = score;
     for (let i = 0; i < balls.length; i++) {
         balls[i].x += balls[i].vx;
         balls[i].y += balls[i].vy;
