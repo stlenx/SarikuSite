@@ -29,9 +29,10 @@ let bricks = []
 
 for (let x = 0; x < 8; x++) {
     for (let y = 0; y < 20; y++) {
+        let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
         let posX = Remap(x, 0, 8, 0, width) + 7
         let posY = Remap(y, 0, 10, 150, 300)
-        bricks.push(CreateBrick(posX,posY,"red",60,5))
+        bricks.push(CreateBrick(posX,posY,color,60,5))
     }
 }
 
@@ -119,9 +120,6 @@ function CheckCollision() {
     balls.forEach(function(ball) {
         if(ball.y + ballRadius > platform.y && ball.y + ballRadius < platform.y + platform.h && ball.x > platform.x && ball.x < platform.x + platform.w) {
             let vector = getVector2({x: platform.x + platform.w / 2, y: platform.y}, ball)
-            ////vector.normalize()
-            //console.log(vector)
-            //ball.vx *= vector.x / 10;
             ball.vy *= -1;
             if(ball.x < platform.x + platform.w / 2) {
                 if(ball.vx > 0) {
@@ -220,6 +218,17 @@ function WeightedRandom(weights) {
     }
 
     return w.length - 1
+}
+
+function hslToHex(h, s, l) {
+    l /= 100;
+    const a = s * Math.min(l, 1 - l) / 100;
+    const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
 }
 
 function CreateBox(x,y, color, w, h, s) {
