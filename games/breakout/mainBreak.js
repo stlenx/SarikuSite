@@ -225,16 +225,16 @@ function CheckCollision() {
                 let random = WeightedRandom([0.1,0.2,0.1,0.2,0.4])
                 switch (random) {
                     case 0:
-                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'green',boxSize,boxSize,"double"))
+                        boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'green',boxSize,boxSize,"double"))
                         break;
                     case 1:
-                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'red',boxSize,boxSize,"half"))
+                        boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'red',boxSize,boxSize,"half"))
                         break;
                     case 2:
-                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'blue',boxSize,boxSize,"bigger"))
+                        boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'blue',boxSize,boxSize,"bigger"))
                         break;
                     case 3:
-                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'pink',boxSize,boxSize,"smaller"))
+                        boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'pink',boxSize,boxSize,"smaller"))
                         break;
                 }
                 bricks.splice(i,1)
