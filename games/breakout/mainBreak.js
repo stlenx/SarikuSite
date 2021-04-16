@@ -351,13 +351,12 @@ if(check) {
     window.addEventListener("deviceorientation", function(e) {
         e.gamma;
         if(e.gamma > 0) {
-            if(platform.x + platform.w < width) platform.x += 10;
+            if(platform.x + platform.w < width) platform.x += e.gamma;
         } else {
-            if(platform.x > 0) platform.x -= 10;
+            if(platform.x > 0) platform.x -= e.gamma;
         }
     }, true);
 }
-
 
 function Remap(value, from1, to1, from2, to2) {
     return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
