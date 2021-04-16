@@ -264,13 +264,14 @@ function CheckCollision() {
 
 function Restart() {
     platform = {
-        x: width / 2 - 150 / 2,
-        y: height - 50,
-        w: 150,
-        h: 10,
-        color: "#616161",
-        started: false
+    x: width / 2 - platformW / 2,
+    y: height - 50,
+    w: platformW,
+    h: platformW * 0.0666,
+    color: "#616161",
+    started: false
     }
+
 
     balls = [{
         x: width / 2,
@@ -288,13 +289,13 @@ function Restart() {
     bricks = []
 
     for (let x = 0; x < 8; x++) {
-        for (let y = 0; y < 20; y++) {
-            let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
-            let posX = Remap(x, 0, 8, 0, width) + 7
-            let posY = Remap(y, 0, 10, 150, 300)
-            bricks.push(CreateBrick(posX,posY,color,60,5))
-        }
+    for (let y = 0; y < 20; y++) {
+        let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
+        let posX = Remap(x, 0, 8, 0, width) + 7
+        let posY = Remap(y, 0, 10, 150, 300)
+        bricks.push(CreateBrick(posX,posY,color,width * 0.1,5))
     }
+}
 }
 
 document.addEventListener('keydown', function (e) {
