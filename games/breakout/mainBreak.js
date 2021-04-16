@@ -9,6 +9,9 @@ let platform;
 let height
 let width
 
+let ballRadius
+let boxSize
+
 //Set sizes for things accordingly depending on phone or desktop
 if(check) {
     //PHONE
@@ -16,6 +19,8 @@ if(check) {
     canvas.setAttribute('width', window.innerWidth - 18);
     canvas.setAttribute('height', window.innerHeight - 15);
 
+    ballRadius = 7;
+    boxSize = 20;
     height = canvas.height;
     width = canvas.width;
 
@@ -25,6 +30,8 @@ if(check) {
     canvas.setAttribute('width', window.innerWidth * 0.3125);
     canvas.setAttribute('height', window.innerHeight - 18);
 
+    ballRadius = 4;
+    boxSize = 10;
     height = canvas.height;
     width = canvas.width;
 }
@@ -41,8 +48,6 @@ platform = {
 }
 
 ctx = canvas.getContext('2d');
-
-const ballRadius = 4;
 let balls = [{
     x: width / 2,
     y: height - 100,
@@ -220,16 +225,16 @@ function CheckCollision() {
                 let random = WeightedRandom([0.1,0.2,0.1,0.2,0.4])
                 switch (random) {
                     case 0:
-                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'green',10,10,"double"))
+                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'green',boxSize,boxSize,"double"))
                         break;
                     case 1:
-                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'red',10,10,"half"))
+                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'red',boxSize,boxSize,"half"))
                         break;
                     case 2:
-                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'blue',10,10,"bigger"))
+                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'blue',boxSize,boxSize,"bigger"))
                         break;
                     case 3:
-                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'pink',10,10,"smaller"))
+                        boxes.push(CreateBox(bricks[i].x + bricks[i].w / 2,bricks[i].y,'pink',boxSize,boxSize,"smaller"))
                         break;
                 }
                 bricks.splice(i,1)
