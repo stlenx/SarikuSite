@@ -353,7 +353,7 @@ if(check) {
         if(e.gamma > 0) {
             if(platform.x + platform.w < width) platform.x += e.gamma;
         } else {
-            if(platform.x > 0) platform.x -= e.gamma;
+            if(platform.x > 0) platform.x += e.gamma;
         }
     }, true);
 }
