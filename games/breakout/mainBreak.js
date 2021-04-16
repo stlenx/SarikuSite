@@ -318,7 +318,6 @@ canvas.addEventListener('mousemove', function (e) {
 })
 
 document.addEventListener('touchmove', function(e) {
-    console.log(e)
     platform.x = Remap(e.changedTouches[0].pageX, 20, width - 20, -5, width - (platform.w + 5));
     if(!platform.started) {
         balls[0].x = platform.x + platform.w / 2
