@@ -347,6 +347,17 @@ document.addEventListener('touchend', function(e) {
     }
 }, false);
 
+if(check) {
+    window.addEventListener("deviceorientation", function(e) {
+        e.gamma;
+        if(e.gamma > 0) {
+            if(platform.x + platform.w < width) platform.x += 10;
+        } else {
+            if(platform.x > 0) platform.x -= 10;
+        }
+    }, true);
+}
+
 
 function Remap(value, from1, to1, from2, to2) {
     return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
