@@ -95,7 +95,7 @@ menu = {
             y: width * 0.2,
             w:  width * 0.8 - 10,
             h: width * 0.0416 * 1.4,
-            color: "rgba(220,220,220,0.86)",
+            color: "rgba(220,220,220,0)",
             text: "Volume",
             textSize: width * 0.0416,
             tx: 10,
