@@ -355,6 +355,10 @@ function CheckCollision() {
                         break;
                 }
                 bricks.splice(i,1)
+                if(bricks.length === 0) {
+                    let win = new Sound("sounds/win.wav");
+                    win.play()
+                }
             }
         }
     })
