@@ -279,7 +279,7 @@ function CheckCollision() {
             if(condition1 && condition2 && condition3 && condition4) {
                 let destroy = new Sound("sounds/break.wav");
                 destroy.play()
-                score += 100 * ball.combo;
+                score += 100 * ball.combo * balls.length;
                 ball.combo++;
                 ball.vy *= -1;
                 let random = WeightedRandom([0.1,0.2,0.1,0.2,0.4])
