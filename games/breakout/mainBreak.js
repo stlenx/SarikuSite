@@ -247,18 +247,18 @@ function UpdateThings() {
     for (let i = 0; i < balls.length; i++) {
         balls[i].x += balls[i].vx;
         balls[i].y += balls[i].vy;
-        if(balls[i].x + ballRadius > width) {
-            if(balls[i].vx > 0) balls[i].vx *= -1
+        if(balls[i].x + ballRadius > width && balls[i].vx > 0) {
+            balls[i].vx *= -1
             let bounce = new Sound("sounds/bounce.wav");
             bounce.play()
         }
-        if(balls[i].x + ballRadius < 0) {
-            if(balls[i].vx < 0) balls[i].vx *= -1
+        if(balls[i].x + ballRadius < 0 && balls[i].vx < 0) {
+            balls[i].vx *= -1
             let bounce = new Sound("sounds/bounce.wav");
             bounce.play()
         }
-        if(balls[i].y + ballRadius < 0) {
-            if(balls[i].vy < 0) balls[i].vy *= -1
+        if(balls[i].y + ballRadius < 0 && balls[i].vy < 0) {
+            balls[i].vy *= -1
             let bounce = new Sound("sounds/bounce.wav");
             bounce.play()
         }
