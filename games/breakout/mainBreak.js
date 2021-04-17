@@ -75,6 +75,18 @@ menu = {
             textSize: width * 0.0416,
             tx: 10,
             ty: width * 0.1 + width * 0.0416
+        },
+        {
+            id: "plays",
+            x: 0,
+            y: 0,
+            w: 0,
+            h: 0,
+            color: "rgba(196,196,196,0)",
+            text: "Times played: ",
+            textSize: width * 0.0416,
+            tx: 10,
+            ty: height * 0.5 - 15
         }
     ]
 }
@@ -102,6 +114,7 @@ let balls = [{
 
 let score = 0;
 let HighScore = 0;
+let plays = 1;
 
 savedScore = JSON.parse(localStorage.getItem('saveData'));
 if (savedScore !== null) {
@@ -135,8 +148,15 @@ function frame() {
 }
 
 function Save() {
+
+    let saveData = JSON.parse(localStorage.getItem('saveData'));
+    if (saveData !== null && saveData.plays !== undefined) {
+        plays = saveData.plays
+    }
+
     localStorage.setItem('saveData', JSON.stringify({
-        highScore: HighScore
+        highScore: HighScore,
+        plays: plays
     }));
 }
 
@@ -232,6 +252,19 @@ function Draw() {
         ctx.fillText(menu.text,menu.ox + menu.ow / 2, menu.oy + 40);
 
         menu.elements.forEach(function (el){
+            let plays = 1;
+            switch (el.id) {
+                case "plays":
+                    let data = JSON.parse(localStorage.getItem('saveData'));
+                    if (data !== null) {
+                        plays = data.plays;
+                    }
+                    el.text = `Times played: ${plays}`;
+                    break;
+                default:
+                    break;
+            }
+
             ctx.fillStyle = el.color;
             ctx.fillRect(menu.ox + el.x,menu.oy + el.y,el.w,el.h);
 
@@ -429,6 +462,7 @@ canvas.addEventListener('mousedown', function (e) {
                     highScore: HighScore,
                     plays: saveData.plays + 1
                 }));
+                plays = saveData.plays + 1
             } else {
                 console.log("what2")
                 localStorage.setItem('saveData', JSON.stringify({
@@ -450,7 +484,6 @@ canvas.addEventListener('mousedown', function (e) {
     if(!menu.on) {
         if(e.offsetX > menu.x && e.offsetX < menu.x + menu.w && e.offsetY > menu.y && e.offsetY < menu.y + menu.h) {
             menu.on = true;
-            console.log("i cummed")
         }
     } else {
         menu.elements.forEach(function (el) {
