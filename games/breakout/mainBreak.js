@@ -248,17 +248,17 @@ function UpdateThings() {
         balls[i].x += balls[i].vx;
         balls[i].y += balls[i].vy;
         if(balls[i].x + ballRadius > width) {
-            balls[i].vx *= -1
+            if(balls[i].vx > 0) balls[i].vx *= -1
             let bounce = new Sound("sounds/bounce.wav");
             bounce.play()
         }
         if(balls[i].x + ballRadius < 0) {
-            balls[i].vx *= -1
+            if(balls[i].vx < 0) balls[i].vx *= -1
             let bounce = new Sound("sounds/bounce.wav");
             bounce.play()
         }
         if(balls[i].y + ballRadius < 0) {
-            balls[i].vy *= -1
+            if(balls[i].vy < 0) balls[i].vy *= -1
             let bounce = new Sound("sounds/bounce.wav");
             bounce.play()
         }
@@ -278,7 +278,7 @@ function CheckCollision() {
             let vector = getVector2({x: platform.x + platform.w / 2, y: platform.y}, ball)
             let bounce = new Sound("sounds/bounce.wav");
             bounce.play()
-            ball.vy *= -1;
+            if(ball.vy > 0) ball.vy *= -1
             if(ball.x < platform.x + platform.w / 2) {
                 if(ball.vx > 0) {
                     ball.vx *= -1;
