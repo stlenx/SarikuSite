@@ -44,6 +44,9 @@ menu = {
     y: 10,
     w: width * 0.0833,
     h: width * 0.0833,
+    color: "rgba(255,255,255,0.8)",
+    ocolor: "rgba(255,255,255,0.8)",
+    text: "Menu",
     ox: width / 2 - (width * 0.8) / 2,
     oy: height / 2 - (height * 0.5) / 2,
     ow: width * 0.8,
@@ -51,12 +54,27 @@ menu = {
     elements: [
         {
             id: "close",
-            x: 0,
-            y: 0,
-            w: 50,
-            h: 50,
+            x: width * 0.8 - width * 0.0833 - 5,
+            y: 5,
+            w: width * 0.0833,
+            h: width * 0.0833,
             color: "red",
-            text: "Close"
+            text: "",
+            textSize: 0,
+            tx: 0,
+            ty: 0
+        },
+        {
+            id: "resetScore",
+            x: 5,
+            y: width * 0.1,
+            w: 16 * width * 0.0416 * 0.52,
+            h: width * 0.0416 * 1.4,
+            color: "rgb(196,196,196)",
+            text: "Reset High Score",
+            textSize: width * 0.0416,
+            tx: 10,
+            ty: width * 0.1 + width * 0.0416
         }
     ]
 }
@@ -160,8 +178,9 @@ function Draw() {
     })
 
     ctx.font = "20px Helvetica ";
+    ctx.textAlign = "start";
     ctx.fillStyle = "black";
-    ctx.fillText(HighScore,30,20);
+    ctx.fillText(HighScore,5,20);
 
     ctx.font = "60px Helvetica ";
     ctx.textAlign = "center";
@@ -202,19 +221,24 @@ function Draw() {
     }
 
     if(!menu.on) {
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = menu.color;
         ctx.fillRect(menu.x,menu.y,menu.w,menu.h);
     } else {
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = menu.ocolor;
         ctx.fillRect(menu.ox,menu.oy,menu.ow,menu.oh);
+
+        ctx.font = "40px Helvetica ";
+        ctx.fillStyle = "black";
+        ctx.fillText(menu.text,menu.ox + menu.ow / 2, menu.oy + 40);
 
         menu.elements.forEach(function (el){
             ctx.fillStyle = el.color;
             ctx.fillRect(menu.ox + el.x,menu.oy + el.y,el.w,el.h);
 
-            //ctx.font = "40px Helvetica ";
-            //ctx.fillStyle = "black";
-            //ctx.fillText(el.text,menu.ox + el.x,menu.oy + el.y);
+            ctx.font = `${el.textSize}px Helvetica`;
+            ctx.fillStyle = "black";
+            ctx.textAlign = "start";
+            ctx.fillText(el.text,menu.ox + el.tx,menu.oy + el.ty);
         })
     }
 }
@@ -435,6 +459,9 @@ canvas.addEventListener('mousedown', function (e) {
                     case "close":
                         menu.on = false;
                         break;
+                    case "resetScore":
+                        HighScore = 0;
+                        break;
                     default:
                         console.log("WHAT THE FUCK DID YOU DO YOU DUMBASS >:(")
                 }
@@ -492,6 +519,10 @@ function WeightedRandom(weights) {
     }
 
     return w.length - 1
+}
+
+function getLength(number) {
+    return number.toString().length;
 }
 
 function hslToHex(h, s, l) {
