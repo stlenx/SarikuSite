@@ -70,7 +70,7 @@ menu = {
             y: width * 0.1,
             w: 16 * width * 0.0416 * 0.52,
             h: width * 0.0416 * 1.4,
-            color: "rgb(196,196,196)",
+            color: "rgba(220,220,220,0.86)",
             text: "Reset High Score",
             textSize: width * 0.0416,
             tx: 10,
@@ -87,9 +87,24 @@ menu = {
             textSize: width * 0.0416,
             tx: 10,
             ty: height * 0.5 - 15
+        },
+        {
+            id: "volume",
+            value: 0.5,
+            x: 5,
+            y: width * 0.2,
+            w:  width * 0.8 - 10,
+            h: width * 0.0416 * 1.4,
+            color: "rgba(220,220,220,0.86)",
+            text: "Volume",
+            textSize: width * 0.0416,
+            tx: 10,
+            ty: width * 0.2 + width * 0.0416
         }
     ]
 }
+
+let volume = 0.5;
 
 //Platform values are the same on both versions
 platformW = width * 0.25;
@@ -115,6 +130,7 @@ let balls = [{
 let score = 0;
 let HighScore = 0;
 let plays = 1;
+let volumeClicked = false;
 
 savedScore = JSON.parse(localStorage.getItem('saveData'));
 if (savedScore !== null) {
@@ -252,6 +268,9 @@ function Draw() {
         ctx.fillText(menu.text,menu.ox + menu.ow / 2, menu.oy + 40);
 
         menu.elements.forEach(function (el){
+            ctx.fillStyle = el.color;
+            ctx.fillRect(menu.ox + el.x,menu.oy + el.y,el.w,el.h);
+
             let plays = 1;
             switch (el.id) {
                 case "plays":
@@ -261,12 +280,29 @@ function Draw() {
                     }
                     el.text = `Times played: ${plays}`;
                     break;
+                case "volume":
+                    ctx.fillStyle = "rgb(71,71,71)";
+                    ctx.fillRect(menu.ox + el.x + 110,menu.oy + el.y + el.h / 2 - 2,el.w - 130,4);
+
+                    let pos = (el.w - 130) * volume;
+                    ctx.fillStyle = "rgb(0,180,255)";
+                    ctx.fillRect(menu.ox + el.x + 110,menu.oy + el.y + el.h / 2 - 2,pos,4);
+
+                    ctx.fillStyle = "rgb(170,170,170)";
+                    ctx.beginPath();
+                    ctx.arc(menu.ox + el.x + 110 + pos, menu.oy + el.y + el.h / 2, 10, 0, Math.PI*2, true);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = "rgb(208,208,208)";
+                    ctx.beginPath();
+                    ctx.arc(menu.ox + el.x + 110 + pos, menu.oy + el.y + el.h / 2, 8, 0, Math.PI*2, true);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
                 default:
                     break;
             }
-
-            ctx.fillStyle = el.color;
-            ctx.fillRect(menu.ox + el.x,menu.oy + el.y,el.w,el.h);
 
             ctx.font = `${el.textSize}px Helvetica`;
             ctx.fillStyle = "black";
@@ -282,17 +318,17 @@ function UpdateThings() {
         balls[i].y += balls[i].vy;
         if(balls[i].x + ballRadius > width && balls[i].vx > 0) {
             balls[i].vx *= -1
-            let bounce = new Sound("sounds/bounce.wav");
+            let bounce = new Sound("sounds/bounce.wav", volume);
             bounce.play()
         }
         if(balls[i].x + ballRadius < 0 && balls[i].vx < 0) {
             balls[i].vx *= -1
-            let bounce = new Sound("sounds/bounce.wav");
+            let bounce = new Sound("sounds/bounce.wav", volume);
             bounce.play()
         }
         if(balls[i].y + ballRadius < 0 && balls[i].vy < 0) {
             balls[i].vy *= -1
-            let bounce = new Sound("sounds/bounce.wav");
+            let bounce = new Sound("sounds/bounce.wav", volume);
             bounce.play()
         }
         if(balls[i].y + ballRadius > height) balls.splice(i, 1)
@@ -309,7 +345,7 @@ function CheckCollision() {
         if(ball.y + ballRadius > platform.y && ball.y + ballRadius < platform.y + platform.h && ball.x > platform.x && ball.x < platform.x + platform.w) {
             ball.combo = 1;
             let vector = getVector2({x: platform.x + platform.w / 2, y: platform.y}, ball)
-            let bounce = new Sound("sounds/bounce.wav");
+            let bounce = new Sound("sounds/bounce.wav", volume);
             bounce.play()
             if(ball.vy > 0) ball.vy *= -1
             if(ball.x < platform.x + platform.w / 2) {
@@ -334,7 +370,7 @@ function CheckCollision() {
             let condition3 = ball.x + ballRadius > bricks[i].x;
             let condition4 = ball.x - ballRadius < bricks[i].x + bricks[i].w;
             if(condition1 && condition2 && condition3 && condition4) {
-                let destroy = new Sound("sounds/break.wav");
+                let destroy = new Sound("sounds/break.wav", volume);
                 destroy.play()
                 score += 100 * ball.combo * balls.length;
                 ball.combo++;
@@ -356,7 +392,7 @@ function CheckCollision() {
                 }
                 bricks.splice(i,1)
                 if(bricks.length === 0) {
-                    let win = new Sound("sounds/win.wav");
+                    let win = new Sound("sounds/win.wav", volume);
                     win.play()
                 }
             }
@@ -389,12 +425,12 @@ function CheckCollision() {
 
 function Restart() {
     platform = {
-    x: width / 2 - platformW / 2,
-    y: height - 50,
-    w: platformW,
-    h: platformW * 0.0666,
-    color: "#616161",
-    started: false
+        x: width / 2 - platformW / 2,
+        y: height - 50,
+        w: platformW,
+        h: platformW * 0.0666,
+        color: "#616161",
+        started: false
     }
 
     balls = [{
@@ -413,13 +449,13 @@ function Restart() {
     bricks = []
 
     for (let x = 0; x < 8; x++) {
-    for (let y = 0; y < 20; y++) {
-        let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
-        let posX = Remap(x, 0, 8, 0, width) + 7
-        let posY = Remap(y, 0, 10, 150, 300)
-        bricks.push(CreateBrick(posX,posY,color,width * 0.1,5))
+        for (let y = 0; y < 20; y++) {
+            let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
+            let posX = Remap(x, 0, 8, 0, width) + 7
+            let posY = Remap(y, 0, 10, 150, 300)
+            bricks.push(CreateBrick(posX,posY,color,width * 0.1,5))
+        }
     }
-}
 }
 
 document.addEventListener('keydown', function (e) {
@@ -440,6 +476,12 @@ canvas.addEventListener('mousemove', function (e) {
         balls[0].x = platform.x + platform.w / 2
         balls[0].y = platform.y - 10
     }
+    if(volumeClicked) {
+        if(e.offsetX > menu.ox + menu.elements[3].x + 110 && e.offsetX < menu.ox + menu.elements[3].x + 110 + menu.elements[3].w - 130) {
+            let pos = Remap(e.offsetX,menu.ox + menu.elements[3].x + 110,menu.ox + menu.elements[3].x + 110 + menu.elements[3].w - 130, 0, 100)
+            volume = pos / 100;
+        }
+    }
 })
 
 document.addEventListener('touchmove', function(e) {
@@ -451,43 +493,44 @@ document.addEventListener('touchmove', function(e) {
 }, false);
 
 canvas.addEventListener('mousedown', function (e) {
-    if(!platform.started) {
-        platform.started = true;
-        balls[0].vx = 5;
-        balls[0].vy = -5;
-
-        //Cringe plays counter thingy please make better
-        let saveData = JSON.parse(localStorage.getItem('saveData'));
-        console.log("what")
-        if (saveData !== null) {
-            if(saveData.plays !== undefined) {
-                console.log("what1")
-                localStorage.setItem('saveData', JSON.stringify({
-                    highScore: HighScore,
-                    plays: saveData.plays + 1
-                }));
-                plays = saveData.plays + 1
-            } else {
-                console.log("what2")
-                localStorage.setItem('saveData', JSON.stringify({
-                    highScore: HighScore,
-                    plays: 1
-                }));
-            }
-        } else {
-            console.log("How")
-            localStorage.setItem('saveData', JSON.stringify({
-                highScore: HighScore,
-                plays: 1
-            }));
-        }
-    }
-    if(bricks.length === 0 || balls.length === 0) {
-        Restart()
-    }
     if(!menu.on) {
         if(e.offsetX > menu.x && e.offsetX < menu.x + menu.w && e.offsetY > menu.y && e.offsetY < menu.y + menu.h) {
             menu.on = true;
+        } else {
+            if(!platform.started) {
+                platform.started = true;
+                balls[0].vx = 5;
+                balls[0].vy = -5;
+
+                //Cringe plays counter thingy please make better
+                let saveData = JSON.parse(localStorage.getItem('saveData'));
+                console.log("what")
+                if (saveData !== null) {
+                    if(saveData.plays !== undefined) {
+                        console.log("what1")
+                        localStorage.setItem('saveData', JSON.stringify({
+                            highScore: HighScore,
+                            plays: saveData.plays + 1
+                        }));
+                        plays = saveData.plays + 1
+                    } else {
+                        console.log("what2")
+                        localStorage.setItem('saveData', JSON.stringify({
+                            highScore: HighScore,
+                            plays: 1
+                        }));
+                    }
+                } else {
+                    console.log("How")
+                    localStorage.setItem('saveData', JSON.stringify({
+                        highScore: HighScore,
+                        plays: 1
+                    }));
+                }
+            }
+            if(bricks.length === 0 || balls.length === 0) {
+                Restart()
+            }
         }
     } else {
         menu.elements.forEach(function (el) {
@@ -499,12 +542,24 @@ canvas.addEventListener('mousedown', function (e) {
                     case "resetScore":
                         HighScore = 0;
                         break;
+                    case "volume":
+                        break;
                     default:
                         console.log("WHAT THE FUCK DID YOU DO YOU DUMBASS >:(")
                 }
             }
         })
+
+        let posX = menu.ox + menu.elements[3].x + 110 + (menu.elements[3].w - 130) * volume;
+        let posY = menu.oy + menu.elements[3].y + menu.elements[3].h / 2;
+        if(e.offsetX > posX - 10 && e.offsetX < posX + 10 && e.offsetY > posY - 10 && e.offsetY < posY + 10) {
+            volumeClicked = true
+        }
     }
+})
+
+document.addEventListener('mouseup', function (e) {
+    if(volumeClicked) volumeClicked = false;
 })
 
 document.addEventListener('touchend', function(e) {

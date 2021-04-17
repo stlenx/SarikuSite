@@ -68,12 +68,13 @@ SoundPlayer.prototype.stop = function(when) {
     return this;
 };
 
-function Sound(src) {
+function Sound(src, volume) {
     this.sound = document.createElement("audio");
     this.sound.src = src;
     this.sound.setAttribute("preload", "auto");
     this.sound.setAttribute("controls", "none");
     this.sound.style.display = "none";
+    this.sound.volume = volume;
     this.sound.onended = function() { this.remove(); }
     document.body.appendChild(this.sound);
     this.play = function(){
