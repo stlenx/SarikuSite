@@ -8,7 +8,7 @@ let check = false;
 
 //#region Phone/Desktop canvas config
 
-let platformW = 150, platform, ballRadius, boxSize
+let ballRadius, boxSize
 
 //Set sizes for things accordingly depending on phone or desktop
 if(check) {
@@ -112,25 +112,9 @@ let menu = {
     ]
 }
 
-//Platform values are the same on both versions
-platformW = width * 0.25;
-platform = {
-    x: width / 2 - platformW / 2,
-    y: height - 50,
-    w: platformW,
-    h: platformW * 0.0666,
-    color: "#616161",
-    started: false
-}
+let platform = new Platform(width, height)
 
-let balls = [{
-    x: width / 2,
-    y: height - 100,
-    color: "#000000",
-    vx: 0,
-    vy: 0,
-    combo: 1
-}]
+let balls = [new Ball(width / 2, height - 100, "#000000", 0, 0, ballRadius)]
 
 let score = 0, HighScore = 0, plays = 1, volumeClicked = false, hardMode = false;
 
@@ -147,7 +131,7 @@ for (let x = 0; x < 8; x++) {
         let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
         let posX = Remap(x, 0, 8, 0, width) + 7
         let posY = Remap(y, 0, 10, 150, 300)
-        bricks.push(CreateBrick(posX,posY,color,width * 0.1,5))
+        bricks.push(new Brick(posX, posY, color, width * 0.1, 5))
     }
 }
 
@@ -213,7 +197,7 @@ function Draw() {
     //Draw boxes
     boxes.forEach(function(box) {
         ctx.fillStyle = box.color;
-        ctx.fillRect(box.x,box.y,box.w,box.h);
+        ctx.fillRect(box.x,box.y,box.r,box.r);
     })
 
     //Draw UI
@@ -374,7 +358,7 @@ function CheckCollision() {
             if(ball.vy > 0) ball.vy *= -1
             let vector = getVector2({x: platform.x + platform.w / 2, y: platform.y}, ball)
             new Sound("sounds/bounce.wav", volume).play();
-            //Fancy ball bounce thingie
+            //Fancy ball bounce thingy
             if(ball.x < platform.x + platform.w / 2) {
                 if(ball.vx > 0) ball.vx *= -1;
                 ball.vx -= vector.x / 10;
@@ -403,16 +387,16 @@ function CheckCollision() {
                 }
                 switch (random) {
                     case 0:
-                        boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'green',boxSize,boxSize,"double"))
+                        boxes.push(new Box(getRandom(bricks[i].x, bricks[i].x + bricks[i].w), bricks[i].y, 'green', boxSize, "double"))
                         break;
                     case 1:
-                        boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'red',boxSize,boxSize,"half"))
+                        boxes.push(new Box(getRandom(bricks[i].x, bricks[i].x + bricks[i].w), bricks[i].y, 'red', boxSize, "half"))
                         break;
                     case 2:
-                        boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'blue',boxSize,boxSize,"bigger"))
+                        boxes.push(new Box(getRandom(bricks[i].x, bricks[i].x + bricks[i].w), bricks[i].y, 'blue', boxSize, "bigger"))
                         break;
                     case 3:
-                        boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'pink',boxSize,boxSize,"smaller"))
+                        boxes.push(new Box(getRandom(bricks[i].x, bricks[i].x + bricks[i].w), bricks[i].y, 'pink', boxSize, "smaller"))
                         break;
                 }
                 bricks.splice(i,1)
@@ -422,12 +406,12 @@ function CheckCollision() {
     })
 
     for (let i = 0; i < boxes.length; i++) {
-        if(boxes[i].y + boxes[i].w > platform.y && boxes[i].y + boxes[i].w < platform.y + platform.h && boxes[i].x > platform.x && boxes[i].x < platform.x + platform.w) {
+        if(CheckBoxCollision(boxes[i], platform)) {
             switch (boxes[i].s) {
                 case "double":
                     let size = balls.length;
                     for (let p = 0; p < size; p++) {
-                        balls.push(CreateBall(balls[p].x,balls[p].y,balls[p].vx * -1, balls[p].vy, balls[p].color))
+                        balls.push(new Ball(balls[p].x, balls[p].y, balls[p].color, balls[p].vx * -1, balls[p].vy, ballRadius))
                     }
                     break;
                 case "half":
@@ -446,34 +430,19 @@ function CheckCollision() {
 }
 
 function Restart() {
-    platform = {
-        x: width / 2 - platformW / 2,
-        y: height - 50,
-        w: platformW,
-        h: platformW * 0.0666,
-        color: "#616161",
-        started: false
-    }
-
-    balls = [{
-        x: width / 2,
-        y: height - 100,
-        color: "#000000",
-        vx: 0,
-        vy: -0,
-        combo: 1
-    }]
+    platform = new Platform(width, height)
+    balls = [new Ball(width / 2, height - 100, "#000000", 0, 0, ballRadius)]
 
     score = 0;
-    boxes = []
-    bricks = []
+    boxes = [];
+    bricks = [];
 
     for (let x = 0; x < 8; x++) {
         for (let y = 0; y < 20; y++) {
             let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
             let posX = Remap(x, 0, 8, 0, width) + 7
             let posY = Remap(y, 0, 10, 150, 300)
-            bricks.push(CreateBrick(posX,posY,color,width * 0.1,5))
+            bricks.push(new Brick(posX, posY, color, width * 0.1, 5))
         }
     }
 }
@@ -632,42 +601,6 @@ if(check) {
             if(platform.x > 0) platform.x += e.gamma;
         }
     }, true);
-}
-
-//#endregion
-
-//#region Create Elements
-
-function CreateBox(x,y, color, w, h, s) {
-    return {
-        x,
-        y,
-        color,
-        w,
-        h,
-        s
-    }
-}
-
-function CreateBrick(x,y, color, w, h) {
-    return {
-        x,
-        y,
-        color,
-        w,
-        h
-    }
-}
-
-function CreateBall(x,y,vx,vy, color) {
-    return {
-        x,
-        y,
-        color,
-        vx,
-        vy,
-        combo: 1
-    }
 }
 
 //#endregion

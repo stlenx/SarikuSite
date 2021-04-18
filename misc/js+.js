@@ -4,6 +4,8 @@ let getLength = number => number.toString().length;
 
 let getRandom = (min, max) => Math.random() * (max - min) + min;
 
+let CheckBoxCollision = (object1, object2) => object1.y + object1.r > object2.y && object1.y + object1.r < object2.y + object2.h && object1.x > object2.x && object1.x < object2.x + object2.w
+
 function WeightedRandom(weights) {
     let w = normalizeWeights(weights), s = 0, random = Math.random()
     for (let i = 0; i < w.length - 1; ++i) {
