@@ -30,7 +30,7 @@ if(check) {
     boxSize = 10;
 }
 
-let height = canvas.height, width = canvas.width, volume = 0.5;;
+let height = canvas.height, width = canvas.width, volume = 0.5;
 //#endregion
 
 let menu = {
@@ -513,13 +513,13 @@ canvas.addEventListener('mousedown', (e) => {
             }
         }
     })
-
-    let posX = menu.ox + menu.elements[3].x + 110 + (menu.elements[3].w - 130) * volume;
-    let posY = menu.oy + menu.elements[3].y + menu.elements[3].h / 2;
-    if(e.offsetX > posX - 10 && e.offsetX < posX + 10 && e.offsetY > posY - 10 && e.offsetY < posY + 10) {
+    let x = menu.ox + menu.elements[3].x + 110;
+    let w = menu.elements[3].w - 130;
+    let y = menu.oy + menu.elements[3].y + menu.elements[3].h / 2 - 10;
+    let h = 20
+    if(e.offsetX > x && e.offsetX < x + w && e.offsetY > y && e.offsetY < y + h) {
         volumeClicked = true
     }
-
 })
 
 document.addEventListener('mouseup', (e) => {
