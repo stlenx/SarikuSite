@@ -557,6 +557,7 @@ canvas.addEventListener('mousedown', (e) => {
     if(e.offsetX > Hx && e.offsetX < Hx + Hw && e.offsetY > Hy && e.offsetY < Hy + Hh) {
         menu.elements[4].value = !menu.elements[4].value;
         hardMode = !hardMode;
+        Restart()
     }
 })
 
