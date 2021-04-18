@@ -54,10 +54,10 @@ let menu = {
             w: width * 0.0833,
             h: width * 0.0833,
             color: "red",
-            text: "",
-            textSize: 0,
-            tx: 0,
-            ty: 0
+            text: "✖",
+            textSize: width * 0.0666,
+            tx: width * 0.8 - width * 0.0833 - 5 + width * 0.0666 / 4,
+            ty: 5 + width * 0.0666
         },
         {
             id: "resetScore",
@@ -101,8 +101,8 @@ let menu = {
             value: false,
             x: width * 0.0416 * 7,
             y: width * 0.3 + 5,
-            w: 50,
-            h: 30,
+            w: width * 0.0833,
+            h: width * 0.05,
             color: "rgba(71,71,71,1)",
             text: "Hard mode ",
             textSize: width * 0.0416,
@@ -288,20 +288,20 @@ function Draw() {
                 break;
             case "volume":
                 ctx.fillStyle = "rgb(71,71,71)";
-                ctx.fillRect(menu.ox + el.x + 110,menu.oy + el.y + el.h / 2 - 2,el.w - 130,4);
+                ctx.fillRect(menu.ox + el.x + width * 0.18,menu.oy + el.y + el.h / 2 - 2,el.w - width * 0.21,4);
 
-                let pos = (el.w - 130) * volume;
+                let pos = (el.w - width * 0.21) * volume;
                 ctx.fillStyle = "rgb(0,180,255)";
-                ctx.fillRect(menu.ox + el.x + 110,menu.oy + el.y + el.h / 2 - 2,pos,4);
+                ctx.fillRect(menu.ox + el.x + width * 0.18,menu.oy + el.y + el.h / 2 - 2,pos,4);
 
                 ctx.fillStyle = "rgb(170,170,170)";
                 let volumeCircle = new Path2D()
-                volumeCircle.arc(menu.ox + el.x + 110 + pos, menu.oy + el.y + el.h / 2, 10, 0, Math.PI*2)
+                volumeCircle.arc(menu.ox + el.x + width * 0.18 + pos, menu.oy + el.y + el.h / 2, 10, 0, Math.PI*2)
                 ctx.fill(volumeCircle);
 
                 ctx.fillStyle = "rgb(208,208,208)";
                 volumeCircle = new Path2D()
-                volumeCircle.arc(menu.ox + el.x + 110 + pos, menu.oy + el.y + el.h / 2, 8, 0, Math.PI*2);
+                volumeCircle.arc(menu.ox + el.x + width * 0.18 + pos, menu.oy + el.y + el.h / 2, 8, 0, Math.PI*2);
                 ctx.fill(volumeCircle);
                 break;
             case "hardMode":
@@ -480,33 +480,6 @@ function Restart() {
 
 //#region Event Listeners
 
-canvas.addEventListener('mousemove', (e) => {
-    platform.x = Remap(e.offsetX, 20, width - 20, -5, width - (platform.w + 5));
-    if(!platform.started) {
-        balls[0].x = platform.x + platform.w / 2
-        balls[0].y = platform.y - 10
-    }
-    if(volumeClicked) {
-        if(e.offsetX > menu.ox + menu.elements[3].x + 110 && e.offsetX < menu.ox + menu.elements[3].x + 110 + menu.elements[3].w - 130) {
-            let pos = Remap(e.offsetX,menu.ox + menu.elements[3].x + 110,menu.ox + menu.elements[3].x + 110 + menu.elements[3].w - 130, 0, 100)
-            volume = pos / 100;
-            localStorage.setItem('saveData', JSON.stringify({
-                highScore: HighScore,
-                plays: plays,
-                volume: volume
-            }));
-        }
-    }
-})
-
-document.addEventListener('touchmove', (e) => {
-    platform.x = Remap(e.changedTouches[0].pageX, 20, width - 20, -5, width - (platform.w + 5));
-    if(!platform.started) {
-        balls[0].x = platform.x + platform.w / 2
-        balls[0].y = platform.y - 10
-    }
-}, false);
-
 canvas.addEventListener('mousedown', (e) => {
     if(!menu.on) {
         if(e.offsetX > menu.x && e.offsetX < menu.x + menu.w && e.offsetY > menu.y && e.offsetY < menu.y + menu.h) {
@@ -587,9 +560,58 @@ canvas.addEventListener('mousedown', (e) => {
     }
 })
 
+canvas.addEventListener('mousemove', (e) => {
+    platform.x = Remap(e.offsetX, 20, width - 20, -5, width - (platform.w + 5));
+    if(!platform.started) {
+        balls[0].x = platform.x + platform.w / 2
+        balls[0].y = platform.y - 10
+    }
+    if(volumeClicked) {
+        if(e.offsetX > menu.ox + menu.elements[3].x + width * 0.18 && e.offsetX < menu.ox + menu.elements[3].x + width * 0.18 + menu.elements[3].w - width * 0.21) {
+            let pos = Remap(e.offsetX,menu.ox + menu.elements[3].x + width * 0.18,menu.ox + menu.elements[3].x + width * 0.18 + menu.elements[3].w - width * 0.21, 0, 100)
+            volume = pos / 100;
+            localStorage.setItem('saveData', JSON.stringify({
+                highScore: HighScore,
+                plays: plays,
+                volume: volume
+            }));
+        }
+    }
+})
+
 document.addEventListener('mouseup', (e) => {
     if(volumeClicked) volumeClicked = false;
 })
+
+document.addEventListener('touchstart', (e) => {
+    let Vx = menu.ox + menu.elements[3].x + 110;
+    let Vw = menu.elements[3].w - 130;
+    let Vy = menu.oy + menu.elements[3].y + menu.elements[3].h / 2 - 10;
+    let Vh = 20
+    if(e.changedTouches[0].pageX > Vx && e.changedTouches[0].pageX < Vx + Vw && e.changedTouches[0].pageY > Vy && e.changedTouches[0].pageY < Vy + Vh) {
+        volumeClicked = true
+    }
+}, false);
+
+document.addEventListener('touchmove', (e) => {
+    platform.x = Remap(e.changedTouches[0].pageX, 20, width - 20, -5, width - (platform.w + 5));
+    if(!platform.started) {
+        balls[0].x = platform.x + platform.w / 2
+        balls[0].y = platform.y - 10
+    }
+
+    if(volumeClicked) {
+        if(e.changedTouches[0].pageX > menu.ox + menu.elements[3].x + width * 0.18 && e.changedTouches[0].pageX < menu.ox + menu.elements[3].x + width * 0.18 + menu.elements[3].w - width * 0.21) {
+            let pos = Remap(e.changedTouches[0].pageX,menu.ox + menu.elements[3].x + width * 0.18,menu.ox + menu.elements[3].x + width * 0.18 + menu.elements[3].w - width * 0.21, 0, 100)
+            volume = pos / 100;
+            localStorage.setItem('saveData', JSON.stringify({
+                highScore: HighScore,
+                plays: plays,
+                volume: volume
+            }));
+        }
+    }
+}, false);
 
 document.addEventListener('touchend', (e) => {
     if(!platform.started) {
@@ -598,6 +620,7 @@ document.addEventListener('touchend', (e) => {
         balls[0].vy = -5;
     }
     if(bricks.length === 0 || balls.length === 0) Restart()
+    if(volumeClicked) volumeClicked = false;
 }, false);
 
 if(check) {
