@@ -95,6 +95,19 @@ let menu = {
             textSize: width * 0.0416,
             tx: 10,
             ty: width * 0.2 + width * 0.0416
+        },
+        {
+            id: "hardMode",
+            value: false,
+            x: width * 0.0416 * 7,
+            y: width * 0.3 + 5,
+            w: 50,
+            h: 30,
+            color: "rgba(71,71,71,1)",
+            text: "Hard mode ",
+            textSize: width * 0.0416,
+            tx: 10,
+            ty: width * 0.3 + width * 0.0416
         }
     ]
 }
@@ -137,6 +150,8 @@ for (let x = 0; x < 8; x++) {
         bricks.push(CreateBrick(posX,posY,color,width * 0.1,5))
     }
 }
+
+new Sound("sounds/bounce.wav", volume);
 
 //#endregion Init
 
@@ -280,14 +295,39 @@ function Draw() {
                 ctx.fillRect(menu.ox + el.x + 110,menu.oy + el.y + el.h / 2 - 2,pos,4);
 
                 ctx.fillStyle = "rgb(170,170,170)";
-                let circle = new Path2D()
-                circle.arc(menu.ox + el.x + 110 + pos, menu.oy + el.y + el.h / 2, 10, 0, Math.PI*2)
-                ctx.fill(circle);
+                let volumeCircle = new Path2D()
+                volumeCircle.arc(menu.ox + el.x + 110 + pos, menu.oy + el.y + el.h / 2, 10, 0, Math.PI*2)
+                ctx.fill(volumeCircle);
 
                 ctx.fillStyle = "rgb(208,208,208)";
-                circle = new Path2D()
-                circle.arc(menu.ox + el.x + 110 + pos, menu.oy + el.y + el.h / 2, 8, 0, Math.PI*2);
-                ctx.fill(circle);
+                volumeCircle = new Path2D()
+                volumeCircle.arc(menu.ox + el.x + 110 + pos, menu.oy + el.y + el.h / 2, 8, 0, Math.PI*2);
+                ctx.fill(volumeCircle);
+                break;
+            case "hardMode":
+                let hardCircleL = new Path2D()
+                hardCircleL.arc(el.x + menu.ox,el.y + menu.oy + el.h / 2,el.h / 2,0,Math.PI * 2)
+
+                let hardCircleR = new Path2D()
+                hardCircleR.arc(el.x + menu.ox + el.w, el.y + menu.oy + el.h / 2, el.h / 2, 0, Math.PI * 2)
+
+                if(el.value) {
+                    el.color = "rgba(0,180,255,1)";
+
+                    ctx.fillStyle = "rgb(0,180,255)";
+                    ctx.fill(hardCircleL)
+
+                    ctx.fillStyle = "rgb(208,208,208)";
+                    ctx.fill(hardCircleR)
+                } else {
+                    el.color = "rgba(71,71,71,1)";
+
+                    ctx.fillStyle = "rgb(208,208,208)";
+                    ctx.fill(hardCircleL)
+
+                    ctx.fillStyle = "rgb(71,71,71)";
+                    ctx.fill(hardCircleR)
+                }
                 break;
             default:
                 break;
@@ -350,10 +390,18 @@ function CheckCollision() {
             let condition4 = ball.x - ballRadius < bricks[i].x + bricks[i].w;
             if(condition1 && condition2 && condition3 && condition4) {
                 new Sound("sounds/break.wav", volume).play();
-                score += 100 * ball.combo * balls.length;
+                if(menu.elements[4].value) {
+                    score += 100 * ball.combo * balls.length * 2;
+                } else {
+                    score += 100 * ball.combo * balls.length;
+                }
                 ball.combo++;
                 ball.vy *= -1;
-                switch (WeightedRandom([0.1,0.2,0.1,0.2,0.4])) {
+                let random = WeightedRandom([0.1,0.2,0.1,0.2,0.4]);
+                if(menu.elements[4].value) {
+                    random = WeightedRandom([0.1,0.3,0.1,0.3,0.4]);
+                }
+                switch (random) {
                     case 0:
                         boxes.push(CreateBox(getRandom(bricks[i].x, bricks[i].x + bricks[i].w),bricks[i].y,'green',boxSize,boxSize,"double"))
                         break;
@@ -467,8 +515,14 @@ canvas.addEventListener('mousedown', (e) => {
         }
         if(!platform.started) {
             platform.started = true;
-            balls[0].vx = 5;
-            balls[0].vy = -5;
+            //Set velocity of balls if hard mode is enabled or not
+            if(menu.elements[4].value) {
+                balls[0].vx = 10;
+                balls[0].vy = -10;
+            } else {
+                balls[0].vx = 5;
+                balls[0].vy = -5;
+            }
 
             //Cringe plays counter thingy please make better
             let saveData = JSON.parse(localStorage.getItem('saveData'));
@@ -508,17 +562,27 @@ canvas.addEventListener('mousedown', (e) => {
                     break;
                 case "volume":
                     break;
+                case "hardMode":
+                    break;
                 default:
                     console.log("WHAT THE FUCK DID YOU DO YOU DUMBASS >:(")
             }
         }
     })
-    let x = menu.ox + menu.elements[3].x + 110;
-    let w = menu.elements[3].w - 130;
-    let y = menu.oy + menu.elements[3].y + menu.elements[3].h / 2 - 10;
-    let h = 20
-    if(e.offsetX > x && e.offsetX < x + w && e.offsetY > y && e.offsetY < y + h) {
+    let Vx = menu.ox + menu.elements[3].x + 110;
+    let Vw = menu.elements[3].w - 130;
+    let Vy = menu.oy + menu.elements[3].y + menu.elements[3].h / 2 - 10;
+    let Vh = 20
+    if(e.offsetX > Vx && e.offsetX < Vx + Vw && e.offsetY > Vy && e.offsetY < Vy + Vh) {
         volumeClicked = true
+    }
+
+    let Hx = menu.elements[4].x + menu.ox - menu.elements[4].h / 2;
+    let Hw = menu.elements[4].w + menu.elements[4].h / 2;
+    let Hy = menu.elements[4].y + menu.oy;
+    let Hh = menu.elements[4].h;
+    if(e.offsetX > Hx && e.offsetX < Hx + Hw && e.offsetY > Hy && e.offsetY < Hy + Hh) {
+        menu.elements[4].value = !menu.elements[4].value;
     }
 })
 
