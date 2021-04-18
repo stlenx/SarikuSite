@@ -132,7 +132,7 @@ let balls = [{
     combo: 1
 }]
 
-let score = 0, HighScore = 0, plays = 1, volumeClicked = false;
+let score = 0, HighScore = 0, plays = 1, volumeClicked = false, hardMode = false;
 
 savedScore = JSON.parse(localStorage.getItem('saveData'));
 if (savedScore !== null) {
@@ -390,7 +390,7 @@ function CheckCollision() {
             let condition4 = ball.x - ballRadius < bricks[i].x + bricks[i].w;
             if(condition1 && condition2 && condition3 && condition4) {
                 new Sound("sounds/break.wav", volume).play();
-                if(menu.elements[4].value) {
+                if(hardMode) {
                     score += 100 * ball.combo * balls.length * 2;
                 } else {
                     score += 100 * ball.combo * balls.length;
@@ -398,7 +398,7 @@ function CheckCollision() {
                 ball.combo++;
                 ball.vy *= -1;
                 let random = WeightedRandom([0.1,0.2,0.1,0.2,0.4]);
-                if(menu.elements[4].value) {
+                if(hardMode) {
                     random = WeightedRandom([0.1,0.3,0.1,0.3,0.4]);
                 }
                 switch (random) {
@@ -516,7 +516,7 @@ canvas.addEventListener('mousedown', (e) => {
         if(!platform.started) {
             platform.started = true;
             //Set velocity of balls if hard mode is enabled or not
-            if(menu.elements[4].value) {
+            if(hardMode) {
                 balls[0].vx = 10;
                 balls[0].vy = -10;
             } else {
@@ -583,6 +583,7 @@ canvas.addEventListener('mousedown', (e) => {
     let Hh = menu.elements[4].h;
     if(e.offsetX > Hx && e.offsetX < Hx + Hw && e.offsetY > Hy && e.offsetY < Hy + Hh) {
         menu.elements[4].value = !menu.elements[4].value;
+        hardMode = !hardMode;
     }
 })
 
