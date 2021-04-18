@@ -33,84 +33,86 @@ if(check) {
 let height = canvas.height, width = canvas.width, volume = 0.5;
 //#endregion
 
-let menu = {
-    on: false,
-    x: width - width * 0.0833 - 10,
-    y: 10,
-    w: width * 0.0833,
-    h: width * 0.0833,
-    color: "rgba(255,255,255,0.8)",
-    ocolor: "rgba(255,255,255,0.8)",
-    text: "Menu",
-    ox: width / 2 - (width * 0.8) / 2,
-    oy: height / 2 - (height * 0.5) / 2,
-    ow: width * 0.8,
-    oh: height * 0.5,
-    elements: [
-        {
-            id: "close",
-            x: width * 0.8 - width * 0.0833 - 5,
-            y: 5,
-            w: width * 0.0833,
-            h: width * 0.0833,
-            color: "red",
-            text: "✖",
-            textSize: width * 0.0666,
-            tx: width * 0.8 - width * 0.0833 - 5 + width * 0.0666 / 4,
-            ty: 5 + width * 0.0666
-        },
-        {
-            id: "resetScore",
-            x: 5,
-            y: width * 0.1,
-            w: 16 * width * 0.0416 * 0.52,
-            h: width * 0.0416 * 1.4,
-            color: "rgba(220,220,220,0.86)",
-            text: "Reset High Score",
-            textSize: width * 0.0416,
-            tx: 10,
-            ty: width * 0.1 + width * 0.0416
-        },
-        {
-            id: "plays",
-            x: 0,
-            y: 0,
-            w: 0,
-            h: 0,
-            color: "rgba(196,196,196,0)",
-            text: "Times played: ",
-            textSize: width * 0.0416,
-            tx: 10,
-            ty: height * 0.5 - 15
-        },
-        {
-            id: "volume",
-            value: 0.5,
-            x: 5,
-            y: width * 0.2,
-            w:  width * 0.8 - 10,
-            h: width * 0.0416 * 1.4,
-            color: "rgba(220,220,220,0)",
-            text: "Volume",
-            textSize: width * 0.0416,
-            tx: 10,
-            ty: width * 0.2 + width * 0.0416
-        },
-        {
-            id: "hardMode",
-            value: false,
-            x: width * 0.0416 * 7,
-            y: width * 0.3 + 5,
-            w: width * 0.0833,
-            h: width * 0.05,
-            color: "rgba(71,71,71,1)",
-            text: "Hard mode ",
-            textSize: width * 0.0416,
-            tx: 10,
-            ty: width * 0.3 + width * 0.0416
-        }
-    ]
-}
+let menu = new Menu(
+    width - width * 0.0833 - 10,
+    10,
+    width * 0.0833,
+    width * 0.0833,
+    "rgba(255,255,255,0.8)",
+    "rgba(255,255,255,0.8)",
+    "Menu",
+    width / 2 - (width * 0.8) / 2,
+    height / 2 - (height * 0.5) / 2,
+    width * 0.8,
+    height * 0.5
+)
+
+menu.AddElement(new MenuElement(
+    "close",
+    width * 0.8 - width * 0.0833 - 5,
+    5,
+    width * 0.0833,
+    width * 0.0833,
+    "red",
+    "✖",
+    width * 0.0666,
+    width * 0.8 - width * 0.0833 - 5 + width * 0.0666 / 4,
+    5 + width * 0.0666
+))
+
+menu.AddElement(new MenuElement(
+    "resetScore",
+    5,
+    width * 0.1,
+    16 * width * 0.0416 * 0.52,
+    width * 0.0416 * 1.4,
+    "rgba(220,220,220,0.86)",
+    "Reset High Score",
+    width * 0.0416,
+    10,
+    width * 0.1 + width * 0.0416
+))
+
+menu.AddElement(new MenuElement(
+    "plays",
+    0,
+    0,
+    0,
+    0,
+    "rgba(196,196,196,0)",
+    "Times played: ",
+    width * 0.0416,
+    10,
+    height * 0.5 - 15
+))
+
+menu.AddElement(new MenuElement(
+    "volume",
+    5,
+    width * 0.2,
+    width * 0.8 - 10,
+    width * 0.0416 * 1.4,
+    "rgba(220,220,220,0)",
+    "Volume",
+    width * 0.0416,
+    10,
+    width * 0.2 + width * 0.0416,
+    0.5
+))
+
+menu.AddElement(new MenuElement(
+    "hardMode",
+    width * 0.0416 * 7,
+    width * 0.3 + 5,
+    width * 0.0833,
+    width * 0.05,
+    "rgba(71,71,71,1)",
+    "Hard mode ",
+    width * 0.0416,
+    10,
+    width * 0.3 + width * 0.0416,
+    false
+))
 
 let platform = new Platform(width, height)
 
@@ -171,33 +173,26 @@ function Draw() {
     let grd = ctx.createLinearGradient(0,0,0,height);
     grd.addColorStop(0,"#75e3ff");
     grd.addColorStop(1,"#e6f7ff");
-
     // Fill with gradient
     ctx.fillStyle = grd;
     ctx.fillRect(0,0,width,height);
 
     // Draw player platform
-    ctx.fillStyle = platform.color;
-    ctx.fillRect(platform.x,platform.y,platform.w,platform.h);
+    platform.Draw()
 
     //Draw bricks
-    bricks.forEach(function (brick) {
-        ctx.fillStyle = brick.color;
-        ctx.fillRect(brick.x,brick.y,brick.w,brick.h);
+    bricks.forEach((brick) => {
+        brick.Draw()
     })
 
     //Draw balls
-    balls.forEach(function(ball) {
-        ctx.fillStyle = ball.color;
-        let circle = new Path2D()
-        circle.arc(ball.x, ball.y, ballRadius, 0, Math.PI*2);
-        ctx.fill(circle);
+    balls.forEach((ball) => {
+        ball.Draw()
     })
 
     //Draw boxes
-    boxes.forEach(function(box) {
-        ctx.fillStyle = box.color;
-        ctx.fillRect(box.x,box.y,box.r,box.r);
+    boxes.forEach((box) => {
+        box.Draw()
     })
 
     //Draw UI
@@ -326,8 +321,7 @@ function Draw() {
 
 function UpdateThings() {
     for (let i = 0; i < balls.length; i++) {
-        balls[i].x += balls[i].vx;
-        balls[i].y += balls[i].vy;
+        balls[i].AddSpeed()
 
         //Check for collisions
         if(balls[i].x + ballRadius > width && balls[i].vx > 0) {

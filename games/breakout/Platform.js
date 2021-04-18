@@ -7,5 +7,10 @@ class Platform {
         this.color = "#616161";
         this.started = false;
     }
+
+    Draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x,this.y,this.w,this.h);
+    }
 }
 

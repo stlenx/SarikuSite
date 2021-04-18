@@ -6,4 +6,9 @@ class Box {
         this.r = r;
         this.s = s;
     }
+
+    Draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x,this.y,this.r,this.r);
+    }
 }

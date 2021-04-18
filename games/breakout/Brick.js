@@ -6,4 +6,9 @@ class Brick {
         this.w = w;
         this.h = h;
     }
+
+    Draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x,this.y,this.w,this.h);
+    }
 }
