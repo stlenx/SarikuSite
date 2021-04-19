@@ -133,7 +133,7 @@ let boxes = [], bricks = [];
 for (let x = 0; x < 8; x++) {
     for (let y = 0; y < 20; y++) {
         let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
-        let posX = Remap(x, 0, 8, 0, width) + 7
+        let posX = Remap(x, 0, 8, 0, width) + width * 0.0116
         let posY = Remap(y, 0, 10, 150, 300)
         bricks.push(new Brick(posX, posY, color, width * 0.1, 5))
     }
