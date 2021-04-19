@@ -23,8 +23,12 @@ if(check) {
 } else {
     //DESKTOP
     //Set canvas size to be 31.25% of the screen
-    canvas.setAttribute('width', window.innerWidth * 0.3125);
+    //canvas.setAttribute('width', window.innerWidth * 0.3125);
+    let width = window.innerHeight * 0.630914826 > window.innerWidth ? window.innerWidth : window.innerHeight * 0.630914826
+    canvas.setAttribute('width', width);
     canvas.setAttribute('height', window.innerHeight - 18);
+    console.log(canvas.width)
+    console.log(canvas.height)
 
     ballRadius = 4;
     boxSize = 10;
