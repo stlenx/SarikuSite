@@ -18,4 +18,24 @@ class Menu {
     AddElement(element) {
         this.elements.push(element)
     }
+
+    Draw() {
+        if(!this.on) {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x,this.y,this.w,this.h);
+            return;
+        }
+
+        //Draw open menu
+        ctx.fillStyle = this.ocolor;
+        ctx.fillRect(this.ox,this.oy,this.ow,this.oh);
+
+        ctx.font = "40px Helvetica ";
+        ctx.fillStyle = "black";
+        ctx.fillText(this.text,this.ox + this.ow / 2, this.oy + 40);
+
+        this.elements.forEach((element) => {
+            element.Draw()
+        })
+    }
 }

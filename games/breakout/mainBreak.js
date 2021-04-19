@@ -120,6 +120,8 @@ let balls = [new Ball(width / 2, height - 100, "#000000", 0, 0, ballRadius)]
 
 let score = 0, HighScore = 0, plays = 1, volumeClicked = false, hardMode = false;
 
+let lastTick = Date.now();
+
 savedScore = JSON.parse(localStorage.getItem('saveData'));
 if (savedScore !== null) {
     HighScore = savedScore.highScore;
@@ -142,11 +144,15 @@ new Sound("sounds/bounce.wav", volume);
 //#endregion Init
 
 function frame() {
+    let now = Date.now()
+    let delta = now - lastTick;
+    lastTick = now;
+
     Draw()
 
     //If the menu is open pause the game
     if(!menu.on) {
-        UpdateThings()
+        UpdateThings(delta)
     }
 
     Save()
@@ -222,124 +228,37 @@ function Draw() {
     //If there's no more bricks you won
     if(bricks.length === 0) {
         if(score > HighScore) HighScore = score;
+
         balls.forEach(function(ball) {
-            ball.vx = 0;
-            ball.vy = 0;
+            ball.ResetSpeed()
         })
-        ctx.font = "60px Helvetica ";
+
+        ctx.font = "60px Helvetica";
         ctx.fillStyle = "green";
         ctx.fillText("You Win!",width / 2,height / 2);
 
-        ctx.font = "30px Helvetica ";
+        ctx.font = "30px Helvetica";
         ctx.fillStyle = "black";
         ctx.fillText("Again?",width / 2,height / 2 + 50);
 
-        ctx.font = "40px Helvetica ";
+        ctx.font = "40px Helvetica";
         ctx.fillText(`High score: ${HighScore}`,width / 2,height / 2 + 100);
     }
 
-    //Draw menu - ALWAYS LEAVE THIS AS LAST OR CHANGE TO ELSE
-    if(!menu.on) {
-        ctx.fillStyle = menu.color;
-        ctx.fillRect(menu.x,menu.y,menu.w,menu.h);
-        return;
-    }
-    //Draw open menu
-    ctx.fillStyle = menu.ocolor;
-    ctx.fillRect(menu.ox,menu.oy,menu.ow,menu.oh);
-
-    ctx.font = "40px Helvetica ";
-    ctx.fillStyle = "black";
-    ctx.fillText(menu.text,menu.ox + menu.ow / 2, menu.oy + 40);
-
-    menu.elements.forEach((el) => {
-        ctx.fillStyle = el.color;
-        ctx.fillRect(menu.ox + el.x,menu.oy + el.y,el.w,el.h);
-
-        let plays = 1;
-        switch (el.id) {
-            case "plays":
-                let data = JSON.parse(localStorage.getItem('saveData'));
-                if (data !== null) {
-                    plays = data.plays;
-                }
-                el.text = `Times played: ${plays}`;
-                break;
-            case "volume":
-                ctx.fillStyle = "rgb(71,71,71)";
-                ctx.fillRect(menu.ox + el.x + width * 0.18,menu.oy + el.y + el.h / 2 - 2,el.w - width * 0.21,4);
-
-                let pos = (el.w - width * 0.21) * volume;
-                ctx.fillStyle = "rgb(0,180,255)";
-                ctx.fillRect(menu.ox + el.x + width * 0.18,menu.oy + el.y + el.h / 2 - 2,pos,4);
-
-                ctx.fillStyle = "rgb(170,170,170)";
-                let volumeCircle = new Path2D()
-                volumeCircle.arc(menu.ox + el.x + width * 0.18 + pos, menu.oy + el.y + el.h / 2, 10, 0, Math.PI*2)
-                ctx.fill(volumeCircle);
-
-                ctx.fillStyle = "rgb(208,208,208)";
-                volumeCircle = new Path2D()
-                volumeCircle.arc(menu.ox + el.x + width * 0.18 + pos, menu.oy + el.y + el.h / 2, 8, 0, Math.PI*2);
-                ctx.fill(volumeCircle);
-                break;
-            case "hardMode":
-                let hardCircleL = new Path2D()
-                hardCircleL.arc(el.x + menu.ox,el.y + menu.oy + el.h / 2,el.h / 2,0,Math.PI * 2)
-
-                let hardCircleR = new Path2D()
-                hardCircleR.arc(el.x + menu.ox + el.w, el.y + menu.oy + el.h / 2, el.h / 2, 0, Math.PI * 2)
-
-                if(el.value) {
-                    el.color = "rgba(0,180,255,1)";
-
-                    ctx.fillStyle = "rgb(0,180,255)";
-                    ctx.fill(hardCircleL)
-
-                    ctx.fillStyle = "rgb(208,208,208)";
-                    ctx.fill(hardCircleR)
-                } else {
-                    el.color = "rgba(71,71,71,1)";
-
-                    ctx.fillStyle = "rgb(208,208,208)";
-                    ctx.fill(hardCircleL)
-
-                    ctx.fillStyle = "rgb(71,71,71)";
-                    ctx.fill(hardCircleR)
-                }
-                break;
-            default:
-                break;
-        }
-
-        ctx.font = `${el.textSize}px Helvetica`;
-        ctx.fillStyle = "black";
-        ctx.textAlign = "start";
-        ctx.fillText(el.text,menu.ox + el.tx,menu.oy + el.ty);
-    })
+    //Draw menu - ALWAYS LEAVE THIS AS LAST
+    menu.Draw()
 }
 
-function UpdateThings() {
+function UpdateThings(dt) {
     for (let i = 0; i < balls.length; i++) {
-        balls[i].AddSpeed()
+        balls[i].AddSpeed(dt)
 
         //Check for collisions
-        if(balls[i].x + ballRadius > width && balls[i].vx > 0) {
-            balls[i].vx *= -1
-            new Sound("sounds/bounce.wav", volume).play();
-        }
-        if(balls[i].x + ballRadius < 0 && balls[i].vx < 0) {
-            balls[i].vx *= -1
-            new Sound("sounds/bounce.wav", volume).play();
-        }
-        if(balls[i].y + ballRadius < 0 && balls[i].vy < 0) {
-            balls[i].vy *= -1
-            new Sound("sounds/bounce.wav", volume).play();
-        }
+        balls[i].Wall()
         if(balls[i].y + ballRadius > height) balls.splice(i, 1)
     }
     for (let i = 0; i < boxes.length; i++) {
-        boxes[i].y += 3;
+        boxes[i].y += 3 * (dt / 16);
         if(boxes[i].y + boxes[i].h / 2 > height) boxes.splice(i, 1)
     }
     CheckCollision()
@@ -348,33 +267,11 @@ function UpdateThings() {
 function CheckCollision() {
     balls.forEach(function(ball) {
         if(ball.y + ballRadius > platform.y && ball.y + ballRadius < platform.y + platform.h && ball.x > platform.x && ball.x < platform.x + platform.w) {
-            ball.combo = 1;
-            if(ball.vy > 0) ball.vy *= -1
-            let vector = getVector2({x: platform.x + platform.w / 2, y: platform.y}, ball)
-            new Sound("sounds/bounce.wav", volume).play();
-            //Fancy ball bounce thingy
-            if(ball.x < platform.x + platform.w / 2) {
-                if(ball.vx > 0) ball.vx *= -1;
-                ball.vx -= vector.x / 10;
-            } else {
-                if(ball.vx < 0) ball.vx *= -1;
-                ball.vx += vector.x / 10;
-            }
+            ball.PlatformCollide()
         }
+
         for (let i = 0; i < bricks.length; i++) {
-            let condition1 = ball.y + ballRadius > bricks[i].y;
-            let condition2 = ball.y - ballRadius < bricks[i].y + bricks[i].h;
-            let condition3 = ball.x + ballRadius > bricks[i].x;
-            let condition4 = ball.x - ballRadius < bricks[i].x + bricks[i].w;
-            if(condition1 && condition2 && condition3 && condition4) {
-                new Sound("sounds/break.wav", volume).play();
-                if(hardMode) {
-                    score += 100 * ball.combo * balls.length * 2;
-                } else {
-                    score += 100 * ball.combo * balls.length;
-                }
-                ball.combo++;
-                ball.vy *= -1;
+            if(ball.BrickCollide(i)) {
                 let random = WeightedRandom([0.1,0.2,0.1,0.2,0.4]);
                 if(hardMode) {
                     random = WeightedRandom([0.1,0.3,0.1,0.3,0.4]);
