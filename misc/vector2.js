@@ -9,6 +9,11 @@ class Vector2 {
         this.x /= h;
         this.y /= h;
     }
+
+    mult(vector) {
+        this.x *= vector.x;
+        this.y *= vector.y;
+    }
 }
 
 function getVector2(a, b) {

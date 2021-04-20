@@ -67,6 +67,31 @@ class MenuElement {
                     ctx.fill(hardCircleR)
                 }
                 break;
+            case "shadows":
+                let shadowsCircleL = new Path2D()
+                shadowsCircleL.arc(this.x + menu.ox,this.y + menu.oy + this.h / 2,this.h / 2,0,Math.PI * 2)
+
+                let shadowsCircleR = new Path2D()
+                shadowsCircleR.arc(this.x + menu.ox + this.w, this.y + menu.oy + this.h / 2, this.h / 2, 0, Math.PI * 2)
+
+                if(this.value) {
+                    this.color = "rgba(0,180,255,1)";
+
+                    ctx.fillStyle = "rgb(0,180,255)";
+                    ctx.fill(shadowsCircleL)
+
+                    ctx.fillStyle = "rgb(208,208,208)";
+                    ctx.fill(shadowsCircleR)
+                } else {
+                    this.color = "rgba(71,71,71,1)";
+
+                    ctx.fillStyle = "rgb(208,208,208)";
+                    ctx.fill(shadowsCircleL)
+
+                    ctx.fillStyle = "rgb(71,71,71)";
+                    ctx.fill(shadowsCircleR)
+                }
+                break;
             default:
                 break;
         }

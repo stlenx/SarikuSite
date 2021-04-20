@@ -27,15 +27,17 @@ if(check) {
     let width = window.innerHeight * 0.630914826 > window.innerWidth ? window.innerWidth : window.innerHeight * 0.630914826
     canvas.setAttribute('width', width);
     canvas.setAttribute('height', window.innerHeight - 18);
-    console.log(canvas.width)
-    console.log(canvas.height)
 
     ballRadius = 4;
     boxSize = 10;
 }
 
-let height = canvas.height, width = canvas.width, volume = 0.5;
+let height = canvas.height, width = canvas.width, volume = 0.5, shadows = true, hardMode = false;
 //#endregion
+
+let saveData = JSON.parse(localStorage.getItem('saveData'));
+if (saveData !== null && saveData.shadows !== undefined) shadows = saveData.shadows
+if (saveData !== null && saveData.shadows !== undefined) hardMode = saveData.hardMode
 
 let menu = new Menu(
     width - width * 0.0833 - 10,
@@ -115,14 +117,28 @@ menu.AddElement(new MenuElement(
     width * 0.0416,
     10,
     width * 0.3 + width * 0.0416,
-    false
+    hardMode
+))
+
+menu.AddElement(new MenuElement(
+    "shadows",
+    width * 0.0416 * 7,
+    width * 0.4 + 5,
+    width * 0.0833,
+    width * 0.05,
+    "rgba(71,71,71,1)",
+    "Shadows ",
+    width * 0.0416,
+    10,
+    width * 0.4 + width * 0.0416,
+    shadows
 ))
 
 let platform = new Platform(width, height)
 
-let balls = [new Ball(width / 2, height - 100, "#000000", 0, 0, ballRadius)]
+let balls = [new Ball(width / 2, height - 100, "#000000", new Vector2(0,0), ballRadius)]
 
-let score = 0, HighScore = 0, plays = 1, volumeClicked = false, hardMode = false;
+let score = 0, HighScore = 0, plays = 1, volumeClicked = false;
 
 let lastTick = Date.now();
 
@@ -173,7 +189,9 @@ function Save() {
     localStorage.setItem('saveData', JSON.stringify({
         highScore: HighScore,
         plays: plays,
-        volume: volume
+        volume: volume,
+        shadows: shadows,
+        hardMode: hardMode
     }));
 }
 
@@ -306,7 +324,7 @@ function CheckCollision() {
                 case "double":
                     let size = balls.length;
                     for (let p = 0; p < size; p++) {
-                        balls.push(new Ball(balls[p].x, balls[p].y, balls[p].color, balls[p].vx * -1, balls[p].vy, ballRadius))
+                        balls.push(new Ball(balls[p].x, balls[p].y, balls[p].color, new Vector2(balls[p].v.x * -1, balls[p].v.y), ballRadius))
                     }
                     break;
                 case "half":
@@ -326,7 +344,7 @@ function CheckCollision() {
 
 function Restart() {
     platform = new Platform(width, height)
-    balls = [new Ball(width / 2, height - 100, "#000000", 0, 0, ballRadius)]
+    balls = [new Ball(width / 2, height - 100, "#000000", new Vector2(0,0), ballRadius)]
 
     score = 0;
     boxes = [];
@@ -353,13 +371,7 @@ canvas.addEventListener('mousedown', (e) => {
         if(!platform.started) {
             platform.started = true;
             //Set velocity of balls if hard mode is enabled or not
-            if(hardMode) {
-                balls[0].vx = 10;
-                balls[0].vy = -10;
-            } else {
-                balls[0].vx = 5;
-                balls[0].vy = -5;
-            }
+            balls[0].v = hardMode ? new Vector2(10,-10) : new Vector2(5, -5)
 
             //Cringe plays counter thingy please make better
             let saveData = JSON.parse(localStorage.getItem('saveData'));
@@ -367,19 +379,28 @@ canvas.addEventListener('mousedown', (e) => {
                 if(saveData.plays !== undefined) {
                     localStorage.setItem('saveData', JSON.stringify({
                         highScore: HighScore,
-                        plays: saveData.plays + 1
+                        plays: saveData.plays + 1,
+                        volume: volume,
+                        shadows: shadows,
+                        hardMode: hardMode
                     }));
                     plays = saveData.plays + 1
                 } else {
                     localStorage.setItem('saveData', JSON.stringify({
                         highScore: HighScore,
-                        plays: 1
+                        plays: plays,
+                        volume: volume,
+                        shadows: shadows,
+                        hardMode: hardMode
                     }));
                 }
             } else {
                 localStorage.setItem('saveData', JSON.stringify({
                     highScore: HighScore,
-                    plays: 1
+                    plays: plays,
+                    volume: volume,
+                    shadows: shadows,
+                    hardMode: hardMode
                 }));
             }
         }
@@ -423,6 +444,15 @@ canvas.addEventListener('mousedown', (e) => {
         hardMode = !hardMode;
         Restart()
     }
+
+    let Sx = menu.elements[5].x + menu.ox - menu.elements[5].h / 2;
+    let Sw = menu.elements[5].w + menu.elements[5].h / 2;
+    let Sy = menu.elements[5].y + menu.oy;
+    let Sh = menu.elements[5].h;
+    if(e.offsetX > Sx && e.offsetX < Sx + Sw && e.offsetY > Sy && e.offsetY < Sy + Sh) {
+        menu.elements[5].value = !menu.elements[5].value;
+        shadows = !shadows;
+    }
 })
 
 canvas.addEventListener('mousemove', (e) => {
@@ -438,7 +468,9 @@ canvas.addEventListener('mousemove', (e) => {
             localStorage.setItem('saveData', JSON.stringify({
                 highScore: HighScore,
                 plays: plays,
-                volume: volume
+                volume: volume,
+                shadows: shadows,
+                hardMode: hardMode
             }));
         }
     }
@@ -472,7 +504,9 @@ document.addEventListener('touchmove', (e) => {
             localStorage.setItem('saveData', JSON.stringify({
                 highScore: HighScore,
                 plays: plays,
-                volume: volume
+                volume: volume,
+                shadows: shadows,
+                hardMode: hardMode
             }));
         }
     }
@@ -481,8 +515,7 @@ document.addEventListener('touchmove', (e) => {
 document.addEventListener('touchend', (e) => {
     if(!platform.started) {
         platform.started = true;
-        balls[0].vx = 5;
-        balls[0].vy = -5;
+        balls[0].v = hardMode ? new Vector2(10,-10) : new Vector2(5, -5)
     }
     if(bricks.length === 0 || balls.length === 0) Restart()
     if(volumeClicked) volumeClicked = false;
