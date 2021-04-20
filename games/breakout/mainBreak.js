@@ -427,16 +427,16 @@ canvas.addEventListener('mousedown', (e) => {
             }
         }
     })
-    let Vx = menu.ox + menu.elements[3].x + 110;
-    let Vw = menu.elements[3].w - 130;
+    let Vx = menu.ox + menu.elements[3].x + width * 0.18;
+    let Vw = menu.elements[3].w - width * 0.21;
     let Vy = menu.oy + menu.elements[3].y + menu.elements[3].h / 2 - 10;
-    let Vh = 20
+    let Vh = 20;
     if(e.offsetX > Vx && e.offsetX < Vx + Vw && e.offsetY > Vy && e.offsetY < Vy + Vh) {
         volumeClicked = true
     }
 
     let Hx = menu.elements[4].x + menu.ox - menu.elements[4].h / 2;
-    let Hw = menu.elements[4].w + menu.elements[4].h / 2;
+    let Hw = menu.elements[4].w + menu.elements[4].h;
     let Hy = menu.elements[4].y + menu.oy;
     let Hh = menu.elements[4].h;
     if(e.offsetX > Hx && e.offsetX < Hx + Hw && e.offsetY > Hy && e.offsetY < Hy + Hh) {
@@ -446,7 +446,7 @@ canvas.addEventListener('mousedown', (e) => {
     }
 
     let Sx = menu.elements[5].x + menu.ox - menu.elements[5].h / 2;
-    let Sw = menu.elements[5].w + menu.elements[5].h / 2;
+    let Sw = menu.elements[5].w + menu.elements[5].h;
     let Sy = menu.elements[5].y + menu.oy;
     let Sh = menu.elements[5].h;
     if(e.offsetX > Sx && e.offsetX < Sx + Sw && e.offsetY > Sy && e.offsetY < Sy + Sh) {
@@ -481,8 +481,8 @@ document.addEventListener('mouseup', (e) => {
 })
 
 document.addEventListener('touchstart', (e) => {
-    let Vx = menu.ox + menu.elements[3].x + 110;
-    let Vw = menu.elements[3].w - 130;
+    let Vx = menu.ox + menu.elements[3].x + width * 0.18;
+    let Vw = menu.elements[3].w - width * 0.21;
     let Vy = menu.oy + menu.elements[3].y + menu.elements[3].h / 2 - 10;
     let Vh = 20
     if(e.changedTouches[0].pageX > Vx && e.changedTouches[0].pageX < Vx + Vw && e.changedTouches[0].pageY > Vy && e.changedTouches[0].pageY < Vy + Vh) {

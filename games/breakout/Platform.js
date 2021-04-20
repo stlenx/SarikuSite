@@ -12,7 +12,7 @@ class Platform {
         if(shadows) {
             let vector = getVector2({x: width / 2, y: 0},{x: this.x + this.w / 2, y: this. y})
 
-            let grd = ctx.createLinearGradient(this.x,this.y,this.x,this.y + this.h + 30);
+            let grd = ctx.createLinearGradient(this.x,this.y,this.x,this.y + this.h + width * 0.05);
             grd.addColorStop(0,"rgba(0,0,0,0.17)");
             grd.addColorStop(1,"rgba(255,255,255,0)");
             // Fill with gradient

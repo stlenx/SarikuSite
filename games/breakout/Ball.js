@@ -16,7 +16,7 @@ class Ball {
             let pos1 = new Vector2(this.x - nVector.x * this.r, this.y - nVector.y * this.r)
             let pos2 = new Vector2(this.x + nVector.x * this.r, this.y + nVector.y * this.r)
 
-            let grd = ctx.createLinearGradient(this.x,this.y,this.x,this.y + this.r + 20);
+            let grd = ctx.createLinearGradient(this.x,this.y,this.x,this.y + this.r + width * 0.0333);
             grd.addColorStop(0,"rgba(0,0,0,0.17)");
             grd.addColorStop(1,"rgba(255,255,255,0)");
             // Fill with gradient
