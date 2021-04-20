@@ -533,4 +533,21 @@ if(check) {
 
 //#endregion
 
+window.onresize = () => {
+    console.log("resize")
+    if(check) {
+        //PHONE
+        //Set canvas size to be the whole screen
+        canvas.setAttribute('width', window.innerWidth - 18);
+        canvas.setAttribute('height', window.innerHeight - 15);
+    } else {
+        //DESKTOP
+        //Set canvas size to be 31.25% of the screen
+        //canvas.setAttribute('width', window.innerWidth * 0.3125);
+        let width = window.innerHeight * 0.630914826 > window.innerWidth ? window.innerWidth : window.innerHeight * 0.630914826
+        canvas.setAttribute('width', width);
+        canvas.setAttribute('height', window.innerHeight - 18);
+    }
+};
+
 window.requestAnimationFrame(frame)

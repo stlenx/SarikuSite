@@ -1,4 +1,4 @@
-class Object {
+class Cube {
     constructor(x, y, z, w, h, d) {
         this.x = x;
         this.y = y;
