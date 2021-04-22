@@ -1,5 +1,7 @@
 class MenuElement {
-    constructor(id, x, y, w, h, color, text, textSize, tx, ty, value = 0) {
+    type;
+
+    constructor(id, x, y, w, h, color, text, textSize, tx, ty, type, value = 0) {
         this.id = id;
         this.value = value;
         this.x = x;
@@ -11,6 +13,7 @@ class MenuElement {
         this.textSize = textSize;
         this.tx = tx;
         this.ty = ty;
+        this.type = type;
     }
 
     Draw() {
@@ -100,5 +103,22 @@ class MenuElement {
         ctx.fillStyle = "black";
         ctx.textAlign = "start";
         ctx.fillText(this.text,menu.ox + this.tx,menu.oy + this.ty);
+    }
+
+    ClickCheck(x,y) {
+        switch (this.type) {
+            case "button":
+                return x > this.x + menu.ox && x < this.x + menu.ox + this.w && y > this.y + menu.oy && y < this.y + menu.oy + this.h;
+            case "slider":
+                console.log(this.y + menu.oy, y)
+                let Vx = menu.ox + this.x + width * 0.18;
+                let Vw = this.w - width * 0.21;
+                let Vy = this.y + menu.oy;
+                return x > Vx && x < Vx + Vw && y > this.y + menu.oy && y < Vy + this.h;
+            case "check":
+                return x > this.x + menu.ox - this.h / 2 && x < this.x + menu.ox - this.h / 2 + this.w + this.h && y > this.y + menu.oy && y < this.y + menu.oy + this.h;
+            default:
+                return false;
+        }
     }
 }

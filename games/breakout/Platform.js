@@ -37,5 +37,24 @@ class Platform {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x,this.y,this.w,this.h);
     }
+
+    Start() {
+        platform.started = true;
+
+        //Set velocity of balls if hard mode is enabled or not
+        balls[0].v = hardMode ? new Vector2(10,-10) : new Vector2(5, -5)
+
+        //Good plays counter thing very nice me good job past me you are so gae
+        let saveData = JSON.parse(localStorage.getItem('saveData'));
+        if (saveData !== null && saveData.plays !== undefined) plays = saveData.plays + 1
+
+        localStorage.setItem('saveData', JSON.stringify({
+            highScore: HighScore,
+            plays: plays,
+            volume: volume,
+            shadows: shadows,
+            hardMode: hardMode
+        }));
+    }
 }
 

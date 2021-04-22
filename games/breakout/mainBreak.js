@@ -7,26 +7,23 @@ let check = false;
 (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
 
 //#region Phone/Desktop canvas config
-
 let ballRadius, boxSize
 
 //Set sizes for things accordingly depending on phone or desktop
 if(check) {
     //PHONE
     //Set canvas size to be the whole screen
-    canvas.setAttribute('width', window.innerWidth - 18);
-    canvas.setAttribute('height', window.innerHeight - 15);
+    canvas.setAttribute('width', window.innerWidth);
+    canvas.setAttribute('height', window.innerHeight);
 
     ballRadius = 7;
     boxSize = 20;
-
 } else {
     //DESKTOP
-    //Set canvas size to be 31.25% of the screen
-    //canvas.setAttribute('width', window.innerWidth * 0.3125);
+    //Set the canvas to the correct aspect ratio
     let width = window.innerHeight * 0.630914826 > window.innerWidth ? window.innerWidth : window.innerHeight * 0.630914826
     canvas.setAttribute('width', width);
-    canvas.setAttribute('height', window.innerHeight - 18);
+    canvas.setAttribute('height', window.innerHeight);
 
     ballRadius = 4;
     boxSize = 10;
@@ -34,10 +31,6 @@ if(check) {
 
 let height = canvas.height, width = canvas.width, volume = 0.5, shadows = true, hardMode = false;
 //#endregion
-
-let saveData = JSON.parse(localStorage.getItem('saveData'));
-if (saveData !== null && saveData.shadows !== undefined) shadows = saveData.shadows
-if (saveData !== null && saveData.shadows !== undefined) hardMode = saveData.hardMode
 
 let menu = new Menu(
     width - width * 0.0833 - 10,
@@ -63,7 +56,8 @@ menu.AddElement(new MenuElement(
     "✖",
     width * 0.0666,
     width * 0.8 - width * 0.0833 - 5 + width * 0.0666 / 4,
-    5 + width * 0.0666
+    5 + width * 0.0666,
+    "button"
 ))
 
 menu.AddElement(new MenuElement(
@@ -76,7 +70,8 @@ menu.AddElement(new MenuElement(
     "Reset High Score",
     width * 0.0416,
     10,
-    width * 0.1 + width * 0.0416
+    width * 0.1 + width * 0.0416,
+    "button"
 ))
 
 menu.AddElement(new MenuElement(
@@ -89,7 +84,8 @@ menu.AddElement(new MenuElement(
     "Times played: ",
     width * 0.0416,
     10,
-    height * 0.5 - 15
+    height * 0.5 - 15,
+    "text"
 ))
 
 menu.AddElement(new MenuElement(
@@ -103,6 +99,7 @@ menu.AddElement(new MenuElement(
     width * 0.0416,
     10,
     width * 0.2 + width * 0.0416,
+    "slider",
     0.5
 ))
 
@@ -117,6 +114,7 @@ menu.AddElement(new MenuElement(
     width * 0.0416,
     10,
     width * 0.3 + width * 0.0416,
+    "check",
     hardMode
 ))
 
@@ -131,6 +129,7 @@ menu.AddElement(new MenuElement(
     width * 0.0416,
     10,
     width * 0.4 + width * 0.0416,
+    "check",
     shadows
 ))
 
@@ -142,10 +141,10 @@ let score = 0, HighScore = 0, plays = 1, volumeClicked = false;
 
 let lastTick = Date.now();
 
-savedScore = JSON.parse(localStorage.getItem('saveData'));
-if (savedScore !== null) {
-    HighScore = savedScore.highScore;
-}
+let saveData = JSON.parse(localStorage.getItem('saveData'));
+if (saveData !== null && saveData.shadows !== undefined) shadows = saveData.shadows
+if (saveData !== null && saveData.shadows !== undefined) hardMode = saveData.hardMode
+if (saveData !== null && saveData.highScore !== undefined) HighScore = saveData.highScore
 
 let boxes = [], bricks = [];
 
@@ -155,7 +154,7 @@ for (let x = 0; x < 8; x++) {
         let color = hslToHex(Remap(y, 0,20, 0,130),100,50)
         let posX = Remap(x, 0, 8, 0, width) + width * 0.0116
         let posY = Remap(y, 0, 10, 150, 300)
-        bricks.push(new Brick(posX, posY, color, width * 0.1, 5))
+        bricks.push(new Brick(posX, posY, color, width * 0.1, width * 0.008333))
     }
 }
 
@@ -363,55 +362,27 @@ function Restart() {
 //#region Event Listeners
 
 canvas.addEventListener('mousedown', (e) => {
+    //If the menu is not on, then do game shit. Otherwise, do menu shit
     if(!menu.on) {
+        //If you click on the menu, open the menu
         if(e.offsetX > menu.x && e.offsetX < menu.x + menu.w && e.offsetY > menu.y && e.offsetY < menu.y + menu.h) {
             menu.on = true;
             return;
         }
+        //If the game hasn't started, start the game
         if(!platform.started) {
-            platform.started = true;
-            //Set velocity of balls if hard mode is enabled or not
-            balls[0].v = hardMode ? new Vector2(10,-10) : new Vector2(5, -5)
-
-            //Cringe plays counter thingy please make better
-            let saveData = JSON.parse(localStorage.getItem('saveData'));
-            if (saveData !== null) {
-                if(saveData.plays !== undefined) {
-                    localStorage.setItem('saveData', JSON.stringify({
-                        highScore: HighScore,
-                        plays: saveData.plays + 1,
-                        volume: volume,
-                        shadows: shadows,
-                        hardMode: hardMode
-                    }));
-                    plays = saveData.plays + 1
-                } else {
-                    localStorage.setItem('saveData', JSON.stringify({
-                        highScore: HighScore,
-                        plays: plays,
-                        volume: volume,
-                        shadows: shadows,
-                        hardMode: hardMode
-                    }));
-                }
-            } else {
-                localStorage.setItem('saveData', JSON.stringify({
-                    highScore: HighScore,
-                    plays: plays,
-                    volume: volume,
-                    shadows: shadows,
-                    hardMode: hardMode
-                }));
-            }
+            platform.Start()
         }
+        //If you won/lost, restart the game
         if(bricks.length === 0 || balls.length === 0) {
             Restart()
         }
         return;
     }
-    menu.elements.forEach(function (el) {
-        if(e.offsetX > el.x + menu.ox && e.offsetX < el.x + menu.ox + el.w && e.offsetY > el.y + menu.oy && e.offsetY < el.y + menu.oy + el.h) {
-            switch (el.id) {
+    menu.elements.forEach(function (element) {
+        //Check if you click with your mouse and then do the do
+        if(element.ClickCheck(e.offsetX, e.offsetY)) {
+            switch (element.id) {
                 case "close":
                     menu.on = false;
                     break;
@@ -419,40 +390,22 @@ canvas.addEventListener('mousedown', (e) => {
                     HighScore = 0;
                     break;
                 case "volume":
+                    volumeClicked = true
                     break;
                 case "hardMode":
+                    menu.elements[4].value = !menu.elements[4].value;
+                    hardMode = !hardMode;
+                    Restart()
+                    break;
+                case "shadows":
+                    menu.elements[5].value = !menu.elements[5].value;
+                    shadows = !shadows;
                     break;
                 default:
                     console.log("WHAT THE FUCK DID YOU DO YOU DUMBASS >:(")
             }
         }
     })
-    let Vx = menu.ox + menu.elements[3].x + width * 0.18;
-    let Vw = menu.elements[3].w - width * 0.21;
-    let Vy = menu.oy + menu.elements[3].y + menu.elements[3].h / 2 - 10;
-    let Vh = 20;
-    if(e.offsetX > Vx && e.offsetX < Vx + Vw && e.offsetY > Vy && e.offsetY < Vy + Vh) {
-        volumeClicked = true
-    }
-
-    let Hx = menu.elements[4].x + menu.ox - menu.elements[4].h / 2;
-    let Hw = menu.elements[4].w + menu.elements[4].h;
-    let Hy = menu.elements[4].y + menu.oy;
-    let Hh = menu.elements[4].h;
-    if(e.offsetX > Hx && e.offsetX < Hx + Hw && e.offsetY > Hy && e.offsetY < Hy + Hh) {
-        menu.elements[4].value = !menu.elements[4].value;
-        hardMode = !hardMode;
-        Restart()
-    }
-
-    let Sx = menu.elements[5].x + menu.ox - menu.elements[5].h / 2;
-    let Sw = menu.elements[5].w + menu.elements[5].h;
-    let Sy = menu.elements[5].y + menu.oy;
-    let Sh = menu.elements[5].h;
-    if(e.offsetX > Sx && e.offsetX < Sx + Sw && e.offsetY > Sy && e.offsetY < Sy + Sh) {
-        menu.elements[5].value = !menu.elements[5].value;
-        shadows = !shadows;
-    }
 })
 
 canvas.addEventListener('mousemove', (e) => {
@@ -481,13 +434,7 @@ document.addEventListener('mouseup', (e) => {
 })
 
 document.addEventListener('touchstart', (e) => {
-    let Vx = menu.ox + menu.elements[3].x + width * 0.18;
-    let Vw = menu.elements[3].w - width * 0.21;
-    let Vy = menu.oy + menu.elements[3].y + menu.elements[3].h / 2 - 10;
-    let Vh = 20
-    if(e.changedTouches[0].pageX > Vx && e.changedTouches[0].pageX < Vx + Vw && e.changedTouches[0].pageY > Vy && e.changedTouches[0].pageY < Vy + Vh) {
-        volumeClicked = true
-    }
+    if(menu.elements[3].ClickCheck(e.changedTouches[0].pageX, e.changedTouches[0].pageY)) volumeClicked = true
 }, false);
 
 document.addEventListener('touchmove', (e) => {
@@ -514,8 +461,7 @@ document.addEventListener('touchmove', (e) => {
 
 document.addEventListener('touchend', (e) => {
     if(!platform.started) {
-        platform.started = true;
-        balls[0].v = hardMode ? new Vector2(10,-10) : new Vector2(5, -5)
+        platform.Start()
     }
     if(bricks.length === 0 || balls.length === 0) Restart()
     if(volumeClicked) volumeClicked = false;
@@ -523,11 +469,7 @@ document.addEventListener('touchend', (e) => {
 
 if(check) {
     window.addEventListener("deviceorientation", (e) => {
-        if(e.gamma > 0) {
-            if(platform.x + platform.w < width) platform.x += e.gamma;
-        } else {
-            if(platform.x > 0) platform.x += e.gamma;
-        }
+        if(platform.x + platform.w < width && platform.x > 0) platform.x += e.gamma;
     }, true);
 }
 
@@ -537,17 +479,13 @@ window.onresize = () => {
     console.log("resize")
     if(check) {
         //PHONE
-        //Set canvas size to be the whole screen
-        canvas.setAttribute('width', window.innerWidth - 18);
-        canvas.setAttribute('height', window.innerHeight - 15);
+        canvas.setAttribute('width', window.innerWidth);
     } else {
         //DESKTOP
-        //Set canvas size to be 31.25% of the screen
-        //canvas.setAttribute('width', window.innerWidth * 0.3125);
         let width = window.innerHeight * 0.630914826 > window.innerWidth ? window.innerWidth : window.innerHeight * 0.630914826
         canvas.setAttribute('width', width);
-        canvas.setAttribute('height', window.innerHeight - 18);
     }
+    canvas.setAttribute('height', window.innerHeight);
 };
 
 window.requestAnimationFrame(frame)
