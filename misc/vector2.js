@@ -14,6 +14,11 @@ class Vector2 {
         this.x *= vector.x;
         this.y *= vector.y;
     }
+
+    add(vector) {
+        this.x += vector.x;
+        this.y += vector.y;
+    }
 }
 
 function getVector2(a, b) {
