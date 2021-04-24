@@ -3,6 +3,7 @@ class Universe {
         this.width = width;
         this.height = height;
         this.objects = [];
+        this.id = 0;
     }
 
     Draw() {
@@ -15,8 +16,29 @@ class Universe {
 
     UpdateObjects(d) {
         this.objects.forEach((e) => {
-            e.Update(d)
+            if(e.ready) e.Update(d)
         })
+    }
+
+    CheckCollision = (a, b) => (this.GetRadius(a.mass) + this.GetRadius(b.mass)) > getDistanceBetween(a, b)
+
+    MergeObjects(a, b) {
+        let indexA = 0;
+        let indexB = 0;
+        for (let i = 0; i < this.objects.length; i++) {
+            if(a.id === this.objects[i].id) indexA = i;
+            if(b.id === this.objects[i].id) indexB = i;
+        }
+
+        if(a.mass > b.mass) {
+            this.objects[indexA].mass += b.mass;
+            this.objects[indexA].v.mult(new Vector2(0.5, 0.5))
+            this.objects.splice(indexB, 1)
+        } else {
+            this.objects[indexB].mass += a.mass;
+            this.objects[indexB].v.mult(new Vector2(0.5, 0.5))
+            this.objects.splice(indexA, 1)
+        }
     }
 
     UpdateSize(width, height) {
@@ -31,6 +53,7 @@ class Universe {
     }
 
     GetRadius(mass) {
+        console.log(mass)
         return mass / 1000;
     }
 }

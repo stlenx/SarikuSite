@@ -133,6 +133,20 @@ menu.AddElement(new MenuElement(
     shadows
 ))
 
+menu.AddElement(new MenuElement(
+    "back",
+    5,
+    width * 0.5,
+    10 * width * 0.0416 * 0.52,
+    width * 0.0416 * 1.4,
+    "rgba(220,220,220,0.86)",
+    "Quit game",
+    width * 0.0416,
+    10,
+    width * 0.5 + width * 0.0416,
+    "button"
+))
+
 let platform = new Platform(width, height)
 
 let balls = [new Ball(width / 2, height - 100, "#000000", new Vector2(0,0), ballRadius)]
@@ -400,6 +414,9 @@ canvas.addEventListener('mousedown', (e) => {
                 case "shadows":
                     menu.elements[5].value = !menu.elements[5].value;
                     shadows = !shadows;
+                    break;
+                case "back":
+                    location.href = "../index.html";
                     break;
                 default:
                     console.log("WHAT THE FUCK DID YOU DO YOU DUMBASS >:(")

@@ -9,9 +9,21 @@ class Planet {
         this.v = new Vector2(0,0)
         this.color = "red";
         this.t = [];
+        this.id = universe.id;
+        universe.id++;
     }
 
     Draw() {
+        if(!this.ready) {
+            ctx.strokeStyle = 'rgb(150,150,150)'
+            ctx.lineWidth = 0.8;
+            ctx.beginPath()
+            ctx.moveTo(this.x, this.y)
+            ctx.lineTo(this.mx, this.my)
+            ctx.stroke()
+            ctx.closePath()
+        }
+
         ctx.strokeStyle = 'rgba(150,150,150,255)';
         ctx.lineWidth = 0.8;
         ctx.beginPath();
@@ -42,8 +54,11 @@ class Planet {
         if(this.y + radius > universe.height && this.v.y > 0) this.v.y *= -1;
 
         universe.objects.forEach((e) => {
-            if(e !== this) {
+            if(e !== this && e.ready) {
                 this.AddGravity(e)
+                if(universe.CheckCollision(this, e)) {
+                    universe.MergeObjects(this, e)
+                }
             }
         })
     }
@@ -62,5 +77,16 @@ class Planet {
         this.v = new Vector2(vector.x / 10, vector.y / 10)
         this.ready = true;
         this.color = "blue";
+        this.t = [];
+    }
+
+    Predict() {
+        this.t = [];
+        let fakeP = new Planet(this.x, this.y, this.mx, this.my, this.mass);
+        fakeP.InitObject(this.mx, this.my)
+        for(let t = 0; t < maxPrediction; t++) {
+            fakeP.Update(16)
+            this.t.push(fakeP.t[fakeP.t.length -1 ])
+        }
     }
 }
