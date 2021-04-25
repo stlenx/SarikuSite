@@ -6,6 +6,7 @@ class Planet {
         this.my = my;
         this.mass = mass;
         this.ready = false;
+        this.planet = true;
         this.v = new Vector2(0,0)
         this.color = "red";
         this.t = [];
@@ -36,7 +37,7 @@ class Planet {
 
         ctx.fillStyle = this.color;
         let circle = new Path2D()
-        circle.arc(this.x, this.y, 4, 0, Math.PI*2);
+        circle.arc(this.x, this.y, universe.GetRadius(this.mass), 0, Math.PI*2);
         ctx.fill(circle);
     }
 
@@ -56,9 +57,6 @@ class Planet {
         universe.objects.forEach((e) => {
             if(e !== this && e.ready) {
                 this.AddGravity(e)
-                if(universe.CheckCollision(this, e)) {
-                    universe.MergeObjects(this, e)
-                }
             }
         })
     }

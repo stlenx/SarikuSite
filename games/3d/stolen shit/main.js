@@ -594,8 +594,8 @@ function setGeometry(gl) {
   matrix = m4.translate(matrix, -50, -75, -15);
 
   for (var ii = 0; ii < positions.length; ii += 3) {
-    var vector = m4.vectorMultiply([positions[ii + 0], positions[ii + 1], positions[ii + 2], 1], matrix);
-    positions[ii + 0] = vector[0];
+    var vector = m4.vectorMultiply([positions[ii], positions[ii + 1], positions[ii + 2], 1], matrix);
+    positions[ii] = vector[0];
     positions[ii + 1] = vector[1];
     positions[ii + 2] = vector[2];
   }

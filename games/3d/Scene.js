@@ -109,10 +109,14 @@ class Scene {
         this.gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.buffers.indices);
 
         {
-            const vertexCount = 36;
-            const type = this.gl.UNSIGNED_SHORT;
-            const offset = 0;
-            this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset)
+            for(let i = 0; i < 5; i+=5) {
+                mat4.translate(modelViewMatrix, modelViewMatrix, [i, 0, 0]);
+
+                const vertexCount = 36;
+                const type = this.gl.UNSIGNED_SHORT;
+                const offset = 0;
+                this.gl.drawElements(this.gl.TRIANGLES, vertexCount, type, offset)
+            }
         }
 
         this.gl.useProgram(this.programInfo.program)

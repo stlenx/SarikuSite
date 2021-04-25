@@ -9,6 +9,7 @@ let CreatedObject = new Planet(0,0,0,0,0);
 let maxTrail = 10;
 let maxPrediction = 100;
 let lastTick = Date.now()
+let sunMode = false;
 
 function frame() {
     let now = Date.now()
@@ -22,17 +23,29 @@ function frame() {
     window.requestAnimationFrame(frame)
 }
 
+function ToggleSun() {
+    if(sunMode) {
+        sunMode = false;
+        document.getElementById('sun').innerHTML = "Sun";
+    } else {
+        sunMode = true;
+        document.getElementById('sun').innerHTML = "Planet";
+    }
+}
+
 canvas.addEventListener("mousedown", (e) => {
     clicked = true;
-    CreatedObject = new Planet(e.offsetX, e.offsetY, e.offsetX, e.offsetY, 500);
+    CreatedObject = sunMode ? new Sun(e.offsetX, e.offsetY, 500) : new Planet(e.offsetX, e.offsetY, e.offsetX, e.offsetY, 500);
     universe.objects.push(CreatedObject)
-    CreatedObject.Predict()
+    if(!sunMode) CreatedObject.Predict()
 })
 
 canvas.addEventListener("mousemove", (e) => {
-    CreatedObject.mx = e.offsetX;
-    CreatedObject.my = e.offsetY;
-    if(clicked) CreatedObject.Predict()
+    if(clicked && !sunMode) {
+        CreatedObject.mx = e.offsetX;
+        CreatedObject.my = e.offsetY;
+        CreatedObject.Predict()
+    }
 })
 
 canvas.addEventListener("mouseup", (e) => {

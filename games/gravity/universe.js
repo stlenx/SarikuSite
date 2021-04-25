@@ -15,30 +15,34 @@ class Universe {
     }
 
     UpdateObjects(d) {
-        this.objects.forEach((e) => {
-            if(e.ready) e.Update(d)
-        })
+        for (let i1 = 0; i1 <  this.objects.length; i1++) {
+            if(this.objects[i1].ready) this.objects[i1].Update(d);
+            for (let i2 = 0; i2 < this.objects.length; i2++) {
+                if(i1 !== i2) {
+                    if(this.CheckCollision(this.objects[i1], this.objects[i2])) this.MergeObjects(i1, i2)
+                }
+            }
+        }
     }
 
     CheckCollision = (a, b) => (this.GetRadius(a.mass) + this.GetRadius(b.mass)) > getDistanceBetween(a, b)
 
     MergeObjects(a, b) {
-        let indexA = 0;
-        let indexB = 0;
-        for (let i = 0; i < this.objects.length; i++) {
-            if(a.id === this.objects[i].id) indexA = i;
-            if(b.id === this.objects[i].id) indexB = i;
+        let index;
+
+        if(this.objects[a].planet && this.objects[b].planet) {
+            if(this.objects[a].mass > this.objects[b].mass) {
+                this.objects[a].mass += this.objects[b].mass;
+                index = b;
+            } else {
+                this.objects[b].mass += this.objects[a].mass;
+                index = a;
+            }
+        } else {
+            index = this.objects[a].planet ? a : b;
         }
 
-        if(a.mass > b.mass) {
-            this.objects[indexA].mass += b.mass;
-            this.objects[indexA].v.mult(new Vector2(0.5, 0.5))
-            this.objects.splice(indexB, 1)
-        } else {
-            this.objects[indexB].mass += a.mass;
-            this.objects[indexB].v.mult(new Vector2(0.5, 0.5))
-            this.objects.splice(indexA, 1)
-        }
+        this.objects.splice(index, 1)
     }
 
     UpdateSize(width, height) {
@@ -53,7 +57,6 @@ class Universe {
     }
 
     GetRadius(mass) {
-        console.log(mass)
-        return mass / 1000;
+        return mass / 100;
     }
 }
