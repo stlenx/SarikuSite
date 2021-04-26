@@ -23,6 +23,6 @@ class Board {
         ctx.stroke();
         ctx.closePath()
 
-        
+
     }
 }
