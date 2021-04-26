@@ -42,20 +42,26 @@ window.addEventListener('mousemove',
     });
 
 ctx.font = 'bold 16px Verdana';
-ctx.fillText('CUM', 5, 30);
+var gradient = ctx.createLinearGradient(0, 0, 70, 0);
+gradient.addColorStop("0", "magenta");
+gradient.addColorStop("1", "blue");
+// Fill with gradient
+ctx.fillStyle = gradient;
+ctx.fillText('SARIKU', 5, 30);
 const data = ctx.getImageData(0, 0, canvas.width, 100);
 
 class Particle {
-    constructor(x, y){
+    constructor(x, y, color){
         this.x = x + 200;
         this.y = y - 100;
-        this.size = 8;
+        this.color = color;
+        this.size = 2;
         this.baseX = this.x;
         this.baseY = this.y;
-        this.density = ((Math.random() * 30) + 1);
+        this.density = ((Math.random() * 60) + 1);
     }
     draw() {
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.closePath();
@@ -99,19 +105,26 @@ class Particle {
     }
 }
 function init(){
+    console.log(data)
     particleArray = [];
 
     for (var y = 0, y2 = data.height; y < y2; y++) {
         for (var x = 0, x2 = data.width; x < x2; x++) {
-            if (data.data[(y * 4 * data.width) + (x * 4) + 3] > 128) {
+            if (data.data[((x + y * data.width) * 4) + 3] > 128) {
                 let positionX = x + adjustX;
                 let positionY = y + adjustY;
+                let index = (x + y * data.width) * 4;
+                let R = data.data[index];
+                let G = data.data[index + 1];
+                let B = data.data[index + 2];
+                let color = "rgb(" + R + "," + G + "," + B + ")";
                 //let positionX = x;
                 //let positionY = y;
-                particleArray.push(new Particle(positionX * 15, positionY * 15));
+                particleArray.push(new Particle(positionX * 15, positionY * 15, color));
             }
         }
     }
+    console.log(data.height, data.width)
 
 }
 function animate(){
@@ -119,11 +132,23 @@ function animate(){
     //ctx.fillRect(0,0,innerWidth,innerHeight);
     ctx.clearRect(0,0,innerWidth,innerHeight);
 
+    connect();
+
     for (let i = 0; i < particleArray.length; i++){
         particleArray[i].update();
         particleArray[i].draw();
     }
-    connect();
+
+    ctx.font = 'bold 16px Verdana';
+    var gradient = ctx.createLinearGradient(0, 0, 50, 0);
+    gradient.addColorStop("0", "magenta");
+    gradient.addColorStop("0.5", "blue");
+    gradient.addColorStop("1.0", "red");
+// Fill with gradient
+    ctx.fillStyle = gradient;
+    ctx.fillText('SARIKU', 5, 30);
+    const data = ctx.getImageData(0, 0, canvas.width, 100);
+
     requestAnimationFrame(animate);
 }
 init();
@@ -164,7 +189,7 @@ function connect(){
                     particleArray[a].size = 8;
                     ctx.strokeStyle='rgba(255,255,255,' + opacityValue + ')';
                 }
-                ctx.lineWidth = 20;
+                ctx.lineWidth = 5;
                 ctx.beginPath();
                 ctx.moveTo(particleArray[a].x, particleArray[a].y);
                 ctx.lineTo(particleArray[b].x, particleArray[b].y);
