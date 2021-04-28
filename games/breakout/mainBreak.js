@@ -182,7 +182,6 @@ function frame() {
     let delta = now - lastTick;
     lastTick = now;
 
-    console.log(document.hasFocus())
     if(document.hasFocus()) {
 
         Draw()
