@@ -3,8 +3,6 @@ let canvas = document.getElementById('bannerCanvas'),
     can_h = parseInt(document.body.scrollHeight),
     ctx = canvas.getContext('2d');
 
-// console.log(typeof can_w);
-
 let ball = {
         x: 0,
         y: 0,
@@ -40,6 +38,121 @@ let ball = {
         r: 0,
         type: 'mouse'
     };
+
+//#region Banner
+
+let particleArray = [];
+let particleSize = 10;
+let mouse = {
+    x: null,
+    y: null,
+    radius: 150
+}
+
+{
+    ctx.font = 'bold 16px Verdana';
+    let gradient = ctx.createLinearGradient(0, 0, 70, 0);
+    gradient.addColorStop(0, "magenta");
+    gradient.addColorStop(1, "blue");
+    ctx.fillStyle = gradient;
+    ctx.fillText('SARIKU', 5, 30);
+}
+
+const data = ctx.getImageData(0, 0, 500, 100);
+
+class Particle {
+    constructor(x, y, color){
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.size = particleSize;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.density = ((Math.random() * 60) + 1);
+    }
+
+    Draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    Update() {
+        let distance = getDistanceBetween(new Vector2(this.x, this.y), new Vector2(mouse.x, mouse.y))
+
+        let direction = getVector2(new Vector2(this.x, this.y), new Vector2(mouse.x, mouse.y))
+        direction = new Vector2(direction.x / distance, direction.y / distance)
+
+        // distance past which the force is zero
+        let force = (mouse.radius - distance) / mouse.radius;
+
+        // if we went below zero, set it to zero.
+        force = force < 0 ? 0 : force;
+
+        direction.mult(new Vector2(force * this.density, force * this.density))
+
+        if (distance < mouse.radius + this.size){
+            this.x -= direction.x;
+            this.y -= direction.y;
+            return;
+        }
+
+        if (this.x !== this.baseX ) {
+            let dx = this.x - this.baseX;
+            this.x -= dx/10;
+        }
+
+        if (this.y !== this.baseY) {
+            let dy = this.y - this.baseY;
+            this.y -= dy/10;
+        }
+    }
+}
+
+for (let y = 0; y < data.height; y++) {
+    for (let x = 0; x < data.width; x++) {
+        if (data.data[((x + y * data.width) * 4) + 3] > 128) {
+            let index = (x + y * data.width) * 4;
+            let R = data.data[index];
+            let G = data.data[index + 1];
+            let B = data.data[index + 2];
+            let color = "rgb(" + R + "," + G + "," + B + ")";
+            particleArray.push(new Particle(x * 15 - 110 + (window.innerWidth /4), y * 15 - 150, color));
+        }
+    }
+}
+
+function connect() {
+    for (let a = 0; a < particleArray.length; a++) {
+        for (let b = a; b < particleArray.length; b++) {
+            let distance = ((particleArray[a].x - particleArray[b].x) * (particleArray[a].x - particleArray[b].x))
+                + ((particleArray[a].y - particleArray[b].y) * (particleArray[a].y - particleArray[b].y));
+
+            if (distance < 3600) {
+                let opacityValue = 1 - (distance / 3600);
+                let dx = mouse.x - particleArray[a].x;
+                let dy = mouse.y - particleArray[a].y;
+                let mouseDistance = Math.sqrt(dx * dx + dy * dy);
+                if (mouseDistance < mouse.radius) {
+                    particleArray[a].size = Remap(mouseDistance, 0, mouse.radius, 30, particleSize);
+                } else {
+                    particleArray[a].size = particleSize;
+                }
+
+                ctx.strokeStyle = 'rgba(255,255,255,' + opacityValue + ')';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(particleArray[a].x, particleArray[a].y);
+                ctx.lineTo(particleArray[b].x, particleArray[b].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+//#endregion
 
 // Random speed
 function getRandomSpeed(pos){
@@ -206,6 +319,13 @@ function render(){
 
     addBallIfy();
 
+    connect();
+
+    particleArray.forEach((particle) => {
+        particle.Update()
+        particle.Draw()
+    })
+
     window.requestAnimationFrame(render);
 }
 
@@ -273,4 +393,6 @@ document.body.addEventListener('mouseleave', function(){
 document.body.addEventListener('mousemove', function(e){
     mouse_ball.x = e.pageX;
     mouse_ball.y = e.pageY;
+    mouse.x = e.pageX;
+    mouse.y = e.pageY;
 });
