@@ -1,5 +1,5 @@
 const canvas = document.getElementById('canvas');
-ctx = canvas.getContext('2d');
+Bctx = canvas.getContext('2d');
 
 const N = 500;
 const iter = 5;

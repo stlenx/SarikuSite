@@ -1,28 +1,7 @@
-//let canvas = document.getElementById("canvas");
-//canvas.setAttribute('width', window.innerHeight)
-//canvas.setAttribute('height', window.innerHeight)
-//let ctx = canvas.getContext('2d')
-//
-//let board = new Board(canvas.width, canvas.height)
-//
-//function frame() {
-//    Draw()
-//
-//    window.requestAnimationFrame(frame)
-//}
-//
-//function Draw() {
-//    ctx.clearRect(0,0,canvas.width, canvas.height)
-//
-//    board.Draw()
-//}
-//
-//window.requestAnimationFrame(frame)
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const Bcanvas = document.getElementById("textCanvas");
+Bcanvas.setAttribute('width', window.innerWidth);
+Bcanvas.setAttribute('height', 400);
+const Bctx = Bcanvas.getContext("2d");
 let particleArray = [];
 let particleSize = 10;
 
@@ -33,19 +12,19 @@ let mouse = {
     radius: 150
 }
 
-window.addEventListener('mousemove', (e) => {
-        mouse.x = e.offsetX
-        mouse.y = e.offsetY;
+Bcanvas.addEventListener('mousemove', (e) => {
+    mouse.x = e.offsetX
+    mouse.y = e.offsetY;
 });
 
-ctx.font = 'bold 16px Verdana';
-var gradient = ctx.createLinearGradient(0, 0, 70, 0);
+Bctx.font = 'bold 16px Verdana';
+var gradient = Bctx.createLinearGradient(0, 0, 70, 0);
 gradient.addColorStop("0", "magenta");
 gradient.addColorStop("1", "blue");
 // Fill with gradient
-ctx.fillStyle = gradient;
-ctx.fillText('SARIKU', 5, 30);
-const data = ctx.getImageData(0, 0, canvas.width, 100);
+Bctx.fillStyle = gradient;
+Bctx.fillText('SARIKU', 5, 30);
+const data = Bctx.getImageData(0, 0, Bcanvas.width, 100);
 
 class Particle {
     constructor(x, y, color){
@@ -59,11 +38,11 @@ class Particle {
     }
 
     Draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.fill();
+        Bctx.fillStyle = this.color;
+        Bctx.beginPath();
+        Bctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        Bctx.closePath();
+        Bctx.fill();
     }
 
     Update() {
@@ -98,17 +77,15 @@ class Particle {
     }
 }
 
-function init(){
-    for (let y = 0; y < data.height; y++) {
-        for (let x = 0; x < data.width; x++) {
-            if (data.data[((x + y * data.width) * 4) + 3] > 128) {
-                let index = (x + y * data.width) * 4;
-                let R = data.data[index];
-                let G = data.data[index + 1];
-                let B = data.data[index + 2];
-                let color = "rgb(" + R + "," + G + "," + B + ")";
-                particleArray.push(new Particle(x * 15, y * 15, color));
-            }
+for (let y = 0; y < data.height; y++) {
+    for (let x = 0; x < data.width; x++) {
+        if (data.data[((x + y * data.width) * 4) + 3] > 128) {
+            let index = (x + y * data.width) * 4;
+            let R = data.data[index];
+            let G = data.data[index + 1];
+            let B = data.data[index + 2];
+            let color = "rgb(" + R + "," + G + "," + B + ")";
+            particleArray.push(new Particle(x * 15 - 80 + (Bcanvas.width /4), y * 15 - 150, color));
         }
     }
 }
@@ -129,19 +106,19 @@ function connect() {
                     particleArray[a].size = particleSize;
                 }
 
-                ctx.strokeStyle = 'rgba(255,255,255,' + opacityValue + ')';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(particleArray[a].x, particleArray[a].y);
-                ctx.lineTo(particleArray[b].x, particleArray[b].y);
-                ctx.stroke();
+                Bctx.strokeStyle = 'rgba(255,255,255,' + opacityValue + ')';
+                Bctx.lineWidth = 2;
+                Bctx.beginPath();
+                Bctx.moveTo(particleArray[a].x, particleArray[a].y);
+                Bctx.lineTo(particleArray[b].x, particleArray[b].y);
+                Bctx.stroke();
             }
         }
     }
 }
 
 function animate(){
-    ctx.clearRect(0,0,innerWidth,innerHeight);
+    Bctx.clearRect(0,0,innerWidth,innerHeight);
 
     connect();
 
@@ -152,5 +129,4 @@ function animate(){
 
     requestAnimationFrame(animate);
 }
-init();
 animate();

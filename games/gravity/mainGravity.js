@@ -8,7 +8,7 @@ let boundary = 1;
 let maxTrail = 25;
 let maxPrediction = 100;
 
-ctx = canvas.getContext('2d');
+Bctx = canvas.getContext('2d');
 
 let fakeBall = {
     x: 500,

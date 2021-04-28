@@ -1,7 +1,7 @@
 const canvas = document.getElementById("canvas");
 canvas.setAttribute('width', window.innerWidth)
 canvas.setAttribute('height', window.innerHeight)
-ctx = canvas.getContext('2d');
+Bctx = canvas.getContext('2d');
 
 let clicked = false;
 let universe = new Universe(canvas.width, canvas.height);

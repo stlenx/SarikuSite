@@ -16,29 +16,29 @@ class Planet {
 
     Draw() {
         if(!this.ready) {
-            ctx.strokeStyle = 'rgb(150,150,150)'
-            ctx.lineWidth = 0.8;
-            ctx.beginPath()
-            ctx.moveTo(this.x, this.y)
-            ctx.lineTo(this.mx, this.my)
-            ctx.stroke()
-            ctx.closePath()
+            Bctx.strokeStyle = 'rgb(150,150,150)'
+            Bctx.lineWidth = 0.8;
+            Bctx.beginPath()
+            Bctx.moveTo(this.x, this.y)
+            Bctx.lineTo(this.mx, this.my)
+            Bctx.stroke()
+            Bctx.closePath()
         }
 
-        ctx.strokeStyle = 'rgba(150,150,150,255)';
-        ctx.lineWidth = 0.8;
-        ctx.beginPath();
+        Bctx.strokeStyle = 'rgba(150,150,150,255)';
+        Bctx.lineWidth = 0.8;
+        Bctx.beginPath();
         for (let i = 0; i < this.t.length -1; i++) {
-            ctx.moveTo(this.t[i].x, this.t[i].y);
-            ctx.lineTo(this.t[i+1].x, this.t[i+1].y);
-            ctx.stroke();
+            Bctx.moveTo(this.t[i].x, this.t[i].y);
+            Bctx.lineTo(this.t[i+1].x, this.t[i+1].y);
+            Bctx.stroke();
         }
-        ctx.closePath();
+        Bctx.closePath();
 
-        ctx.fillStyle = this.color;
+        Bctx.fillStyle = this.color;
         let circle = new Path2D()
         circle.arc(this.x, this.y, universe.GetRadius(this.mass), 0, Math.PI*2);
-        ctx.fill(circle);
+        Bctx.fill(circle);
     }
 
     Update(d) {

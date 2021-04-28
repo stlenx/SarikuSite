@@ -7,7 +7,7 @@ class Universe {
     }
 
     Draw() {
-        ctx.clearRect(0,0, this.width, this.height)
+        Bctx.clearRect(0,0, this.width, this.height)
 
         this.objects.forEach((e) => {
             e.Draw();
