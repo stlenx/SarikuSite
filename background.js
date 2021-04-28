@@ -42,7 +42,7 @@ let ball = {
 //#region Banner
 
 let particleArray = [];
-let particleSize = 10;
+let particleSize = window.innerWidth * 0.0052;
 let mouse = {
     x: null,
     y: null,
@@ -119,7 +119,7 @@ for (let y = 0; y < data.height; y++) {
             let G = data.data[index + 1];
             let B = data.data[index + 2];
             let color = "rgb(" + R + "," + G + "," + B + ")";
-            particleArray.push(new Particle(x * 15 - 110 + (window.innerWidth /4), y * 15 - 150, color));
+            particleArray.push(new Particle(x * (window.innerWidth * 0.0078) - (window.innerWidth * 0.057) + (window.innerWidth /4), y * (window.innerWidth * 0.0078) - (window.innerWidth * 0.078), color));
         }
     }
 }
@@ -142,7 +142,7 @@ function connect() {
                 }
 
                 ctx.strokeStyle = 'rgba(255,255,255,' + opacityValue + ')';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = window.innerWidth * 0.001;
                 ctx.beginPath();
                 ctx.moveTo(particleArray[a].x, particleArray[a].y);
                 ctx.lineTo(particleArray[b].x, particleArray[b].y);
