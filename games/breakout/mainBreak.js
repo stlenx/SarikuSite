@@ -177,18 +177,23 @@ new Sound("sounds/bounce.wav", volume);
 //#endregion Init
 
 function frame() {
+
     let now = Date.now()
     let delta = now - lastTick;
     lastTick = now;
 
-    Draw()
+    console.log(document.hasFocus())
+    if(document.hasFocus()) {
 
-    //If the menu is open pause the game
-    if(!menu.on) {
-        UpdateThings(delta)
+        Draw()
+
+        //If the menu is open pause the game
+        if(!menu.on) {
+            UpdateThings(delta)
+        }
+
+        Save()
     }
-
-    Save()
 
     window.requestAnimationFrame(frame)
 }
