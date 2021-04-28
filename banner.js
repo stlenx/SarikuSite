@@ -18,7 +18,7 @@ Bcanvas.addEventListener('mousemove', (e) => {
 });
 
 Bctx.font = 'bold 16px Verdana';
-var gradient = Bctx.createLinearGradient(0, 0, 70, 0);
+let gradient = Bctx.createLinearGradient(0, 0, 70, 0);
 gradient.addColorStop("0", "magenta");
 gradient.addColorStop("1", "blue");
 // Fill with gradient
@@ -46,33 +46,33 @@ class Particle {
     }
 
     Update() {
-        // check mouse position/particle position - collision detection
-        let dx = mouse.x - this.x;
-        let dy = mouse.y - this.y;
-        let distance = Math.sqrt(dx*dx + dy*dy);
-        let forceDirectionX = dx / distance;
-        let forceDirectionY = dy / distance;
+        let distance = getDistanceBetween(new Vector2(this.x, this.y), new Vector2(mouse.x, mouse.y))
+
+        let direction = getVector2(new Vector2(this.x, this.y), new Vector2(mouse.x, mouse.y))
+        direction = new Vector2(direction.x / distance, direction.y / distance)
+
         // distance past which the force is zero
-        let maxDistance = mouse.radius;
-        let force = (maxDistance - distance) / maxDistance;
+        let force = (mouse.radius - distance) / mouse.radius;
 
         // if we went below zero, set it to zero.
         force = force < 0 ? 0 : force;
 
-        let directionX = (forceDirectionX * force * this.density)
-        let directionY = (forceDirectionY * force * this.density);
+        direction.mult(new Vector2(force * this.density, force * this.density))
 
         if (distance < mouse.radius + this.size){
-            this.x -= directionX;
-            this.y -= directionY;
-        } else {
-            if (this.x !== this.baseX ) {
-                let dx = this.x - this.baseX;
-                this.x -= dx/10;
-            } if (this.y !== this.baseY) {
-                let dy = this.y - this.baseY;
-                this.y -= dy/10;
-            }
+            this.x -= direction.x;
+            this.y -= direction.y;
+            return;
+        }
+
+        if (this.x !== this.baseX ) {
+            let dx = this.x - this.baseX;
+            this.x -= dx/10;
+        }
+
+        if (this.y !== this.baseY) {
+            let dy = this.y - this.baseY;
+            this.y -= dy/10;
         }
     }
 }
@@ -95,6 +95,7 @@ function connect() {
         for (let b = a; b < particleArray.length; b++) {
             let distance = ((particleArray[a].x - particleArray[b].x) * (particleArray[a].x - particleArray[b].x))
                 + ((particleArray[a].y - particleArray[b].y) * (particleArray[a].y - particleArray[b].y));
+
             if (distance < 3600) {
                 let opacityValue = 1 - (distance / 3600);
                 let dx = mouse.x - particleArray[a].x;
