@@ -2,7 +2,6 @@ const Http = new XMLHttpRequest();
 const url='https://5t77ip5on5.execute-api.eu-west-2.amazonaws.com/prod/asl';
 let loadedSign = ""
 
-
 Http.onreadystatechange = () => {
     if (Http.readyState !== 4 || Http.status !== 200) return; // Check for ready because xmlhttprequest gae
 

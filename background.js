@@ -46,7 +46,7 @@ let particleSize = window.innerWidth * 0.0052;
 let mouse = {
     x: null,
     y: null,
-    radius: 150
+    radius: window.innerWidth * 0.078
 }
 
 {
@@ -125,13 +125,15 @@ for (let y = 0; y < data.height; y++) {
 }
 
 function connect() {
+    let maxD = window.innerWidth * 1.87;
+    let lineWidth = window.innerWidth * 0.001;
     for (let a = 0; a < particleArray.length; a++) {
         for (let b = a; b < particleArray.length; b++) {
             let distance = ((particleArray[a].x - particleArray[b].x) * (particleArray[a].x - particleArray[b].x))
                 + ((particleArray[a].y - particleArray[b].y) * (particleArray[a].y - particleArray[b].y));
 
-            if (distance < 3600) {
-                let opacityValue = 1 - (distance / 3600);
+            if (distance < maxD) {
+                let opacityValue = 1 - (distance / maxD);
                 let dx = mouse.x - particleArray[a].x;
                 let dy = mouse.y - particleArray[a].y;
                 let mouseDistance = Math.sqrt(dx * dx + dy * dy);
@@ -142,7 +144,7 @@ function connect() {
                 }
 
                 ctx.strokeStyle = 'rgba(255,255,255,' + opacityValue + ')';
-                ctx.lineWidth = window.innerWidth * 0.001;
+                ctx.lineWidth = lineWidth;
                 ctx.beginPath();
                 ctx.moveTo(particleArray[a].x, particleArray[a].y);
                 ctx.lineTo(particleArray[b].x, particleArray[b].y);
