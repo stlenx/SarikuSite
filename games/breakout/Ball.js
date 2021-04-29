@@ -2,6 +2,8 @@ class Ball {
     constructor(x, y, color, v, r) {
         this.x = x;
         this.y = y;
+        this.lx = null;
+        this.ly = null;
         this.color = color;
         this.v = v;
         this.r = r;
@@ -39,6 +41,8 @@ class Ball {
 
     AddSpeed(dt) {
         let interval = dt / 16;
+        this.lx = this.x;
+        this.ly = this.y;
         this.x += this.v.x * interval;
         this.y += this.v.y * interval
     }

@@ -308,6 +308,24 @@ function CheckCollision() {
         if(ball.y + ballRadius > platform.y && ball.y + ballRadius < platform.y + platform.h && ball.x > platform.x && ball.x < platform.x + platform.w) {
             ball.PlatformCollide()
         }
+        //Second bullshit check
+        let x1 = ball.lx;
+        let y1 = ball.ly;
+        let x2 = ball.x;
+        let y2 = ball.y;
+        let x3 = platform.x;
+        let y3 = platform.y;
+        let x4 = platform.x + platform.w;
+        let y4 = platform.y;
+
+        let D = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+
+        let Px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / D;
+
+        console.log(Px, platform.x, platform.y, " | ", )
+        if(Px > platform.x && Px < platform.x + platform.w && platform.y > ball.ly && platform.y < ball.y) {
+            ball.PlatformCollide()
+        }
 
         for (let i = 0; i < bricks.length; i++) {
             if(ball.BrickCollide(i)) {
