@@ -71,13 +71,15 @@ class Ball {
         new Sound("sounds/bounce.wav", volume).play();
 
         //Fancy ball bounce thingy
-        if(this.x < platform.x + platform.w / 2) {
-            if(this.v.x > 0) this.v.x *= -1;
-            this.v.x -= vector.x / 10;
+        if(this.x < platform.x + platform.w / 2) { //Bounces on the left of the platform
+            if(this.v.x < 0) this.v.x *= -1;
+            this.v.x -= vector.x / 15;
             return;
         }
-        if(this.v.x < 0) this.v.x *= -1;
-        this.v.x += vector.x / 10;
+
+        //Bounces on the right of the platform
+        if(this.v.x > 0) this.v.x *= -1;
+        this.v.x += vector.x / 15;
     }
 
     Wall() {
