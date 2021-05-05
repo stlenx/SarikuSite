@@ -11,6 +11,7 @@ let clicked = false;
 
 let start = 0;
 let end = numbers.length;
+let gap = numbers.length;
 let algorithm = 0;
 let volume = 0.8;
 let arrays = [];
@@ -28,7 +29,7 @@ function Draw() {
             CocktailSort()
             break;
         case 2:
-            MergeSort()
+            CombSort()
             break;
     }
 
@@ -100,6 +101,23 @@ function Merge(list1, list2) {
     return [ ...output , ...list1, ...list2 ]
 }
 
+function CombSort() {
+    if(!IsSorted(numbers)) {
+        for(let i = 0; i < numbers.length - gap; i++) {
+            if(numbers[i] > numbers[i + gap]) {
+                let bigNumber = numbers[i];
+                numbers[i] = numbers[i + gap];
+                numbers[i + gap] = bigNumber;
+            }
+        }
+        gap = gap < 1 ? 1 : Math.floor(gap / 1.3)
+
+        let frequency = Remap(end, 0, numbers.length, 0, 1000)
+        //new SoundPlayer(audio).play(frequency, volume, "sine").stop(0.1);
+        end--;
+    }
+}
+
 function CocktailSort() {
     if(!IsSorted(numbers)) {
         for (let i = 0; i < end-1; i++) //Sort forwards
@@ -112,7 +130,7 @@ function CocktailSort() {
             }
         }
         let frequency = Remap(end, 0, numbers.length, 0, 1000)
-        new SoundPlayer(audio).play(frequency, volume, "sine").stop(0.1);
+        //new SoundPlayer(audio).play(frequency, volume, "sine").stop(0.1);
         end--;
         for (let i = end; i > start; i--) //Sort backwards
         {
@@ -124,7 +142,7 @@ function CocktailSort() {
             }
         }
         frequency = Remap(start, 0, numbers.length, 0, 1000)
-        new SoundPlayer(audio).play(frequency, volume, "sine").stop(0.1);
+        //new SoundPlayer(audio).play(frequency, volume, "sine").stop(0.1);
         start++;
     }
 }
@@ -140,7 +158,7 @@ function BubbleSort() {
         }
 
         let frequency = Remap(end, 0, numbers.length, 0, 1000)
-        new SoundPlayer(audio).play(frequency, volume, "sine").stop(0.1);
+        //new SoundPlayer(audio).play(frequency, volume, "sine").stop(0.1);
         end--;
     }
 }
@@ -152,20 +170,14 @@ function IsSorted(numbers) {
     return true;
 }
 
-function getRandom(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
-function Remap(value, from1, to1, from2, to2) {
-    return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
-}
-
 function WhichSort(value) {
+    gap = numbers.length;
     algorithm = parseInt(value);
     console.log(algorithm)
 }
 
 let audio
+
 function run() {
     numbers = new Array(width);
     arrays = [];
@@ -176,10 +188,11 @@ function run() {
 
     start = 0;
     end = numbers.length;
+    gap = numbers.length;
 
-    let AudioContext = window.AudioContext || window.webkitAudioContext;
-
-    audio = new AudioContext();
+    //let AudioContext = window.AudioContext || window.webkitAudioContext;
+//
+    //audio = new AudioContext();
 
     clicked = true;
 }

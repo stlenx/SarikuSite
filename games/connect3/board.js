@@ -41,7 +41,6 @@ class Board {
         if(this.winner !== null) return;
         if(this.VB === undefined) return;
 
-
         this.VB.turn = this.turn === 1 ? 2 : 1;
 
         let moves = this.Evaluate()
@@ -55,42 +54,46 @@ class Board {
         this.turn = this.turn === 1 ? 2 : 1;
     }
 
-    Evaluate() {
-        let moves = [];
-        let points = [];
+    Evaluate(b, turn) {
+        let score = 0;
 
-        for(let x = 0; x < 3; x++) {
-            for(let y = 0; y < 3; y++) {
+        
 
-                if(this.b[x][y] === 0 && this.VB !== undefined) {
-                    for(let x2 = 0; x2 < 3; x2++) {
-                        for(let y2 = 0; y2 < 3; y2++) {
-                            this.VB.b[x2][y2] = this.b[x2][y2]
-                        }
-                    }
-
-                    this.VB.b[x][y] = this.turn;
-                    this.VB.AiTurn()
-                    this.VB.Update()
-
-                    switch (this.VB.winner) {
-                        case this.turn:
-                            moves.push({x, y})
-                            points.push(9999)
-                            break;
-                        case this.VB.turn:
-                            moves.push({x, y})
-                            points.push(-9999)
-                            break;
-                        default:
-                            moves.push({x, y})
-                            points.push(0)
-                            break;
-                    }
-                }
-            }
-        }
-        return {moves, points};
+        //let moves = [];
+        //let points = [];
+//
+        //for(let x = 0; x < 3; x++) {
+        //    for(let y = 0; y < 3; y++) {
+//
+        //        if(this.b[x][y] === 0 && this.VB !== undefined) {
+        //            for(let x2 = 0; x2 < 3; x2++) {
+        //                for(let y2 = 0; y2 < 3; y2++) {
+        //                    this.VB.b[x2][y2] = this.b[x2][y2]
+        //                }
+        //            }
+//
+        //            this.VB.b[x][y] = this.turn;
+        //            this.VB.AiTurn()
+        //            this.VB.Update()
+        //
+        //            switch (this.VB.winner) {
+        //                case this.turn:
+        //                    moves.push({x, y})
+        //                    points.push(9999)
+        //                    break;
+        //                case this.VB.turn:
+        //                    moves.push({x, y})
+        //                    points.push(-9999)
+        //                    break;
+        //                default:
+        //                    moves.push({x, y})
+        //                    points.push(0)
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //}
+        //return {moves, points};
     }
 
     Update() {
