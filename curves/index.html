@@ -8,6 +8,13 @@
         position: absolute;
         top: 0;
         left: 0;
+          z-index: 0;
+      }
+      .cringe {
+          position: absolute;
+          top: 0;
+          left: 11%;
+          z-index: 50;
       }
     </style>
 </head>
@@ -16,6 +23,10 @@
 <script src="../misc/js+.js" defer></script>
 <script src="curve.js" defer></script>
 <script src="main.js" defer></script>
+
+<div class="cringe">
+    <label for="maker">Maker mode: </label><input type="checkbox" id="maker" name="makerC" value="false" onchange="MakerMode = this.checked">
+</div>
 
 <canvas id="scene" width="1900" height="900"></canvas>
 

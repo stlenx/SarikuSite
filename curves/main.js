@@ -4,6 +4,7 @@ canvas.setAttribute('height', window.innerHeight);
 let ctx = canvas.getContext("2d");
 
 let pointsZ = 15
+let MakerMode = false;
 let clicked = -1;
 let key = null;
 let points = [
@@ -75,7 +76,7 @@ function frame() {
 canvas.addEventListener("mousedown", (e) => {
     if(key === "ControlLeft") {
         points.push(new Vector2(e.offsetX, e.offsetY))
-        //ReCalculate()
+        if(MakerMode) ReCalculate()
     } else {
         for (let i = 0; i < points.length; i++) {
             let cringe = pointsZ / 2;
@@ -86,6 +87,7 @@ canvas.addEventListener("mousedown", (e) => {
             if(condition1 && condition2 && condition3 && condition4) {
                 if(key === "ShiftLeft") {
                     points.splice(i, 1)
+                    if(MakerMode) ReCalculate()
                 } else {
                     clicked = i;
                 }
@@ -98,7 +100,7 @@ canvas.addEventListener("mousemove", (e) => {
     if(clicked !== -1) {
         points[clicked].x = e.offsetX;
         points[clicked].y = e.offsetY;
-        //ReCalculate()
+        if(MakerMode) ReCalculate()
     }
 })
 
