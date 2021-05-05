@@ -27,12 +27,14 @@ class Curve {
             let newPoints = [];
 
             for (let i = 0; i < points.length - 1; i++) {
-                let posX = Remap(t, 0, 1, points[i].x, points[i+1].x)
-                let posY = Remap(t, 0, 1, points[i].y, points[i+1].y)
+                let posX = points[i].x + ((points[i+1].x - points[i].x) * t)
+                let posY = points[i].y + ((points[i+1].y - points[i].y) * t)
 
                 newPoints.push(new Vector2(posX, posY))
 
-                ctx.strokeStyle = "red";
+                let color = hslToHex(Remap(points.length, this.points.length,1, 0,360),100,50)
+
+                ctx.strokeStyle = color;
                 ctx.beginPath()
                 ctx.moveTo(points[i].x, points[i].y)
                 ctx.lineTo(points[i+1].x, points[i+1].y)
@@ -47,6 +49,7 @@ class Curve {
 
             this.Bezier(newPoints, t)
         } else {
+
             ctx.strokeStyle = "red";
             ctx.beginPath()
             ctx.moveTo(points[0].x, points[0].y)
@@ -55,11 +58,11 @@ class Curve {
             ctx.stroke()
             ctx.closePath()
 
-            let posX1 = Remap(t, 0, 1, points[0].x, points[1].x)
-            let posY1 = Remap(t, 0, 1, points[0].y, points[1].y)
+            let posX1 = points[0].x + ((points[1].x - points[0].x) * t)
+            let posY1 = points[0].y + ((points[1].y - points[0].y) * t)
 
-            let posX2 = Remap(t, 0, 1, points[1].x, points[2].x)
-            let posY2 = Remap(t, 0, 1, points[1].y, points[2].y)
+            let posX2 = points[1].x + ((points[2].x - points[1].x) * t)
+            let posY2 = points[1].y + ((points[2].y - points[1].y) * t)
 
             ctx.beginPath()
             ctx.moveTo(posX1, posY1)
@@ -67,8 +70,8 @@ class Curve {
             ctx.stroke()
             ctx.closePath()
 
-            let posX3 = Remap(t, 0, 1, posX1, posX2)
-            let posY3 = Remap(t, 0, 1, posY1, posY2)
+            let posX3 = posX1 + ((posX2 - posX1) * t)
+            let posY3 = posY1 + ((posY2 - posY1) * t)
 
             ctx.fillStyle = "blue";
             let circle = new Path2D()

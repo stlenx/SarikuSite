@@ -3,8 +3,10 @@ canvas.setAttribute('width', window.innerWidth);
 canvas.setAttribute('height', window.innerHeight);
 let ctx = canvas.getContext("2d");
 
+let lastT = Date.now()
+let res = 0.01;
 let pointsZ = 15
-let MakerMode = false;
+let MakerMode = true;
 let clicked = -1;
 let key = null;
 let points = [
@@ -24,21 +26,21 @@ function DrawPoints() {
 
 function DrawPreview() {
     ctx.fillStyle = "white";
-    ctx.fillRect(0,0, canvas.width * 0.1, canvas.width * 0.1)
+    ctx.fillRect(0,0, canvas.width * 0.2, canvas.height * 0.2)
     ctx.strokeStyle = "black";
     ctx.beginPath()
-    ctx.moveTo(canvas.width * 0.1, 0)
-    ctx.lineTo(canvas.width * 0.1, canvas.width * 0.1)
-    ctx.lineTo(0, canvas.width * 0.1)
+    ctx.moveTo(canvas.width * 0.2, 0)
+    ctx.lineTo(canvas.width * 0.2, canvas.height * 0.2)
+    ctx.lineTo(0, canvas.height * 0.2)
     ctx.stroke()
     ctx.closePath()
 
     ctx.beginPath();
     for (let i = 0; i < curve.t.length-1; i++) {
-        let posX1 = Remap(curve.t[i].x, 0, canvas.width, 0, canvas.width * 0.1)
-        let posY1 = Remap(curve.t[i].y, 0, canvas.height, 0, canvas.width * 0.1)
-        let posX2 = Remap(curve.t[i+1].x, 0, canvas.width, 0, canvas.width * 0.1)
-        let posY2 = Remap(curve.t[i+1].y, 0, canvas.height, 0, canvas.width * 0.1)
+        let posX1 = Remap(curve.t[i].x, 0, canvas.width, 0, canvas.width * 0.2)
+        let posY1 = Remap(curve.t[i].y, 0, canvas.height, 0, canvas.height * 0.2)
+        let posX2 = Remap(curve.t[i+1].x, 0, canvas.width, 0, canvas.width * 0.2)
+        let posY2 = Remap(curve.t[i+1].y, 0, canvas.height, 0, canvas.height * 0.2)
         ctx.moveTo(posX1, posY1);
         ctx.lineTo(posX2, posY2);
         ctx.stroke();
@@ -48,7 +50,7 @@ function DrawPreview() {
 
 function ReCalculate() {
     curve.t = [];
-    for(let nt = 0; nt < t; nt+=0.005) {
+    for(let nt = 0; nt < t; nt+=res) {
         curve.Bezier(curve.points, nt)
     }
 }
@@ -56,6 +58,10 @@ function ReCalculate() {
 let t = 0;
 function frame() {
     ctx.clearRect(0,0,canvas.width, canvas.height)
+
+    let now = Date.now()
+    let delta = lastT - now;
+    lastT = now;
 
     if(t > 1) {
         t = 0;
@@ -68,7 +74,10 @@ function frame() {
 
     DrawPreview()
 
-    t+=0.005;
+    let interval = delta / 16;
+
+    t+= res * (interval * -1);
+
 
     window.requestAnimationFrame(frame)
 }
@@ -95,6 +104,11 @@ canvas.addEventListener("mousedown", (e) => {
         }
     }
 })
+
+window.onresize = () => {
+    canvas.setAttribute('width', window.innerWidth);
+    canvas.setAttribute('height', window.innerHeight);
+}
 
 canvas.addEventListener("mousemove", (e) => {
     if(clicked !== -1) {

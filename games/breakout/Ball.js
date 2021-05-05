@@ -44,7 +44,7 @@ class Ball {
         this.lx = this.x;
         this.ly = this.y;
         this.x += this.v.x * interval;
-        this.y += this.v.y * interval
+        this.y += this.v.y * interval;
     }
 
     ResetSpeed() {
