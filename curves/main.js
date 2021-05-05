@@ -21,6 +21,30 @@ function DrawPoints() {
     })
 }
 
+function DrawPreview() {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0,0, canvas.width * 0.1, canvas.width * 0.1)
+    ctx.strokeStyle = "black";
+    ctx.beginPath()
+    ctx.moveTo(canvas.width * 0.1, 0)
+    ctx.lineTo(canvas.width * 0.1, canvas.width * 0.1)
+    ctx.lineTo(0, canvas.width * 0.1)
+    ctx.stroke()
+    ctx.closePath()
+
+    ctx.beginPath();
+    for (let i = 0; i < curve.t.length-1; i++) {
+        let posX1 = Remap(curve.t[i].x, 0, canvas.width, 0, canvas.width * 0.1)
+        let posY1 = Remap(curve.t[i].y, 0, canvas.height, 0, canvas.width * 0.1)
+        let posX2 = Remap(curve.t[i+1].x, 0, canvas.width, 0, canvas.width * 0.1)
+        let posY2 = Remap(curve.t[i+1].y, 0, canvas.height, 0, canvas.width * 0.1)
+        ctx.moveTo(posX1, posY1);
+        ctx.lineTo(posX2, posY2);
+        ctx.stroke();
+    }
+    ctx.closePath();
+}
+
 function ReCalculate() {
     curve.t = [];
     for(let nt = 0; nt < t; nt+=0.005) {
@@ -41,6 +65,8 @@ function frame() {
 
     DrawPoints()
 
+    DrawPreview()
+
     t+=0.005;
 
     window.requestAnimationFrame(frame)
@@ -49,7 +75,7 @@ function frame() {
 canvas.addEventListener("mousedown", (e) => {
     if(key === "ControlLeft") {
         points.push(new Vector2(e.offsetX, e.offsetY))
-        ReCalculate()
+        //ReCalculate()
     } else {
         for (let i = 0; i < points.length; i++) {
             let cringe = pointsZ / 2;
@@ -60,10 +86,6 @@ canvas.addEventListener("mousedown", (e) => {
             if(condition1 && condition2 && condition3 && condition4) {
                 if(key === "ShiftLeft") {
                     points.splice(i, 1)
-                    curve.t = [];
-                    for(let nt = 0; nt < t; nt+=0.005) {
-                        curve.Bezier(curve.points, nt)
-                    }
                 } else {
                     clicked = i;
                 }
@@ -76,7 +98,7 @@ canvas.addEventListener("mousemove", (e) => {
     if(clicked !== -1) {
         points[clicked].x = e.offsetX;
         points[clicked].y = e.offsetY;
-        ReCalculate()
+        //ReCalculate()
     }
 })
 
