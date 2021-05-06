@@ -9,13 +9,16 @@ let pointsZ = 15
 let MakerMode = true;
 let clicked = -1;
 let key = null;
+let animate = true;
+
 let selectionBox = {
     x: 0,
     y: 0,
     w: 0,
     h: 0,
     mx: 0,
-    my: 0
+    my: 0,
+    points: []
 }
 let points = [
     new Vector2(Math.floor(canvas.width / 3),Math.floor(canvas.height / 2)),
@@ -45,24 +48,26 @@ function DrawPreview() {
     ctx.stroke()
     ctx.closePath()
 
+    let posX1 = Remap(curve.t[0].x, 0, canvas.width, 0, canvas.width * 0.2)
+    let posY1 = Remap(curve.t[0].y, 0, canvas.height, 0, canvas.height * 0.2)
+    ctx.moveTo(posX1, posY1);
     ctx.beginPath();
-    for (let i = 0; i < curve.t.length-1; i++) {
-        let posX1 = Remap(curve.t[i].x, 0, canvas.width, 0, canvas.width * 0.2)
-        let posY1 = Remap(curve.t[i].y, 0, canvas.height, 0, canvas.height * 0.2)
-        let posX2 = Remap(curve.t[i+1].x, 0, canvas.width, 0, canvas.width * 0.2)
-        let posY2 = Remap(curve.t[i+1].y, 0, canvas.height, 0, canvas.height * 0.2)
-        ctx.moveTo(posX1, posY1);
-        ctx.lineTo(posX2, posY2);
-        ctx.stroke();
+    for (let i = 1; i < curve.t.length; i++) {
+        let posX = Remap(curve.t[i].x, 0, canvas.width, 0, canvas.width * 0.2)
+        let posY = Remap(curve.t[i].y, 0, canvas.height, 0, canvas.height * 0.2)
+        ctx.lineTo(posX, posY);
     }
+    ctx.stroke();
     ctx.closePath();
 }
 
 function ReCalculate() {
     curve.t = [];
+    let bezierCurve = new BezierCurve(points)
     for(let nt = 0; nt < t; nt+=res) {
-        curve.Bezier(curve.points, nt)
+        bezierCurve.Bezier(bezierCurve.points, nt)
     }
+    curve.t = bezierCurve.t;
 }
 
 let t = 0;
@@ -77,6 +82,7 @@ function frame() {
         t = 0;
         curve.t = [];
     }
+    updateInputs()
 
     curve.Draw(t)
 
@@ -84,16 +90,62 @@ function frame() {
 
     DrawPreview()
 
-    let interval = delta / 16;
+    if(animate) {
+        let interval = delta / 16;
 
-    t+= res * (interval * -1);
-
+        t+= res * (interval * -1);
+    }
 
     window.requestAnimationFrame(frame)
 }
 
+function updateInputs() {
+    let slider = document.getElementById("tRange");
+    if(slider !== null) {
+        if(t !== slider.value) {
+            t = parseFloat(slider.value);
+            ReCalculate()
+        }
+    }
+}
+
+function ToggleAnimation() {
+    animate = !animate;
+
+    let container = document.getElementById("animateDIV");
+    if(animate) {
+        let slider = document.getElementById("tRange");
+        container.removeChild(slider)
+    } else {
+        let slider = document.createElement("input")
+
+        slider.type = "range";
+        slider.id = "tRange";
+        slider.min = "0";
+        slider.max = "1";
+        slider.step = "0.001";
+        slider.value = t;
+
+        container.appendChild(slider)
+    }
+}
+
 canvas.addEventListener("mousedown", (e) => {
-    if(e.offsetX > selectionBox.x && e.offsetX < selectionBox.x + selectionBox.w && e.offsetY > selectionBox.y && e.offsetY < selectionBox.y + selectionBox.h) {
+    let conditionFixX1 = e.offsetX < selectionBox.x + selectionBox.w
+    let conditionFixX2 = e.offsetX > selectionBox.x;
+    if(selectionBox.w < 0) {
+        conditionFixX1 = e.offsetX < (selectionBox.x + selectionBox.w) -selectionBox.w;
+        conditionFixX2 = e.offsetX > (selectionBox.x + selectionBox.w);
+    }
+
+    let conditionFixY1 = e.offsetY < selectionBox.y + selectionBox.h
+    let conditionFixY2 = e.offsetY > selectionBox.y;
+    if(selectionBox.h < 0) {
+        conditionFixY1 = e.offsetY < (selectionBox.y + selectionBox.h) + -selectionBox.h;
+        conditionFixY2 = e.offsetY > (selectionBox.y + selectionBox.h);
+    }
+
+    if(conditionFixX2 && conditionFixX1 && conditionFixY1 && conditionFixY2) {
         selectionBox.mx = e.offsetX;
         selectionBox.my = e.offsetY;
         clicked = -3;
@@ -107,7 +159,8 @@ canvas.addEventListener("mousedown", (e) => {
                 w: 0,
                 h: 0,
                 mx: 0,
-                my: 0
+                my: 0,
+                points: []
             }
         } else {
             let pointC = false;
@@ -136,7 +189,8 @@ canvas.addEventListener("mousedown", (e) => {
                 w: 0,
                 h: 0,
                 mx: 0,
-                my: 0
+                my: 0,
+                points: []
             }
         }
     }
@@ -157,18 +211,31 @@ canvas.addEventListener("mousemove", (e) => {
         case clicked === -2:
             selectionBox.w = e.offsetX - selectionBox.x
             selectionBox.h = e.offsetY - selectionBox.y
+            selectionBox.points = [];
+            for(let i = 0; i < points.length; i++) {
+                let conditionFix1 = points[i].x < selectionBox.x + selectionBox.w
+                let conditionFix2 = points[i].x > selectionBox.x;
+                if(selectionBox.w < 0) {
+                    conditionFix1 = points[i].x < (selectionBox.x + selectionBox.w) -selectionBox.w;
+                    conditionFix2 = points[i].x > (selectionBox.x + selectionBox.w);
+                }
+
+                let conditionFix3 = points[i].y < selectionBox.y + selectionBox.h
+                let conditionFix4 = points[i].y > selectionBox.y;
+                if(selectionBox.h < 0) {
+                    conditionFix3 = points[i].y < (selectionBox.y + selectionBox.h) + -selectionBox.h;
+                    conditionFix4 = points[i].y > (selectionBox.y + selectionBox.h);
+                }
+
+                if(conditionFix1 && conditionFix2 && conditionFix3 && conditionFix4) {
+                    selectionBox.points.push(i)
+                }
+            }
             break;
         case clicked === -3:
-            points.forEach((p) => {
-                let cringe = pointsZ / 2;
-                let condition1 = p.x - cringe > selectionBox.x
-                let condition2 = p.x + cringe < selectionBox.x + selectionBox.w
-                let condition3 = p.y - cringe > selectionBox.y
-                let condition4 = p.y + cringe < selectionBox.y + selectionBox.h
-                if(condition1 && condition2 && condition3 && condition4) {
-                    p.x += e.offsetX - selectionBox.mx
-                    p.y += e.offsetY - selectionBox.my
-                }
+            selectionBox.points.forEach((p) => {
+                points[p].x += e.offsetX - selectionBox.mx
+                points[p].y += e.offsetY - selectionBox.my
             })
 
             selectionBox.x += e.offsetX - selectionBox.mx

@@ -88,11 +88,11 @@ class Curve {
 
         ctx.strokeStyle = "black";
         ctx.beginPath();
-        for (let i = 0; i < this.t.length-1; i++) {
-            ctx.moveTo(this.t[i].x, this.t[i].y);
-            ctx.lineTo(this.t[i+1].x, this.t[i+1].y);
-            ctx.stroke();
+        ctx.moveTo(this.t[0].x, this.t[0].y);
+        for (let i = 1; i < this.t.length; i++) {
+            ctx.lineTo(this.t[i].x, this.t[i].y);
         }
+        ctx.stroke();
         ctx.closePath();
     }
 

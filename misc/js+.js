@@ -34,6 +34,50 @@ function hslToHex(h, s, l) {
     return `#${f(0)}${f(8)}${f(4)}`;
 }
 
+//#region Bezier Curve
+
+class BezierCurve {
+    constructor(points) {
+        this.points = points;
+        this.t = [];
+    }
+
+    Calculate(increment) {
+        this.t = [];
+        for (let t = 0; t < 1; t+=increment) {
+            this.Bezier(this.points, t)
+        }
+    }
+
+    Bezier(points, t) {
+        if(points.length > 3) {
+            let newPoints = [];
+
+            for (let i = 0; i < points.length - 1; i++) {
+                let posX = points[i].x + ((points[i+1].x - points[i].x) * t)
+                let posY = points[i].y + ((points[i+1].y - points[i].y) * t)
+
+                newPoints.push(new Vector2(posX, posY))
+            }
+
+            this.Bezier(newPoints, t)
+        } else {
+            let posX1 = points[0].x + ((points[1].x - points[0].x) * t)
+            let posY1 = points[0].y + ((points[1].y - points[0].y) * t)
+
+            let posX2 = points[1].x + ((points[2].x - points[1].x) * t)
+            let posY2 = points[1].y + ((points[2].y - points[1].y) * t)
+
+            let posX3 = posX1 + ((posX2 - posX1) * t)
+            let posY3 = posY1 + ((posY2 - posY1) * t)
+
+            this.t.push(new Vector2(posX3, posY3))
+        }
+    }
+}
+
+//#endregion
+
 //#region Vector2
 
 class Vector2 {

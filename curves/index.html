@@ -25,7 +25,14 @@
 <script src="main.js" defer></script>
 
 <div class="cringe">
-    <label for="maker">Maker mode: </label><input type="checkbox" id="maker" name="makerC" value="false" checked onchange="MakerMode = this.checked"/>
+    <div class="sliders">
+        <div id="animateDIV">
+            <label for="animate">Animate t: </label><input type="checkbox" id="animate" name="animate" checked onchange="ToggleAnimation()"/>
+        </div>
+        <div>
+            <label for="maker">Maker mode: </label><input type="checkbox" id="maker" name="makerC" checked onchange="MakerMode = this.checked"/>
+        </div>
+    </div>
 </div>
 
 <canvas id="scene" width="1900" height="900"></canvas>

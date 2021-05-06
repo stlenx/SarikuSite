@@ -74,7 +74,6 @@ function getVideo(output) {
         tag.setAttribute("for", i.type)
         tag.innerHTML = i.type;
 
-
         //Add the new elements
         container.appendChild(input)
         container.appendChild(tag)
