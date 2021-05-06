@@ -32,9 +32,7 @@ class Curve {
 
                 newPoints.push(new Vector2(posX, posY))
 
-                let color = hslToHex(Remap(points.length, this.points.length,1, 0,360),100,50)
-
-                ctx.strokeStyle = color;
+                ctx.strokeStyle = hslToHex(Remap(points.length, this.points.length, 1, 0, 360), 100, 50);
                 ctx.beginPath()
                 ctx.moveTo(points[i].x, points[i].y)
                 ctx.lineTo(points[i+1].x, points[i+1].y)

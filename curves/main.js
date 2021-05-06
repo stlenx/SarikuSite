@@ -9,6 +9,14 @@ let pointsZ = 15
 let MakerMode = true;
 let clicked = -1;
 let key = null;
+let selectionBox = {
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0,
+    mx: 0,
+    my: 0
+}
 let points = [
     new Vector2(Math.floor(canvas.width / 3),Math.floor(canvas.height / 2)),
     new Vector2(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2 + canvas.height / 3)),
@@ -22,6 +30,8 @@ function DrawPoints() {
     points.forEach((point) => {
         ctx.fillRect(point.x - pointsZ / 2, point.y - pointsZ / 2, pointsZ, pointsZ)
     })
+
+    ctx.strokeRect(selectionBox.x, selectionBox.y, selectionBox.w, selectionBox.h)
 }
 
 function DrawPreview() {
@@ -83,23 +93,50 @@ function frame() {
 }
 
 canvas.addEventListener("mousedown", (e) => {
-    if(key === "ControlLeft") {
-        points.push(new Vector2(e.offsetX, e.offsetY))
-        if(MakerMode) ReCalculate()
+    if(e.offsetX > selectionBox.x && e.offsetX < selectionBox.x + selectionBox.w && e.offsetY > selectionBox.y && e.offsetY < selectionBox.y + selectionBox.h) {
+        selectionBox.mx = e.offsetX;
+        selectionBox.my = e.offsetY;
+        clicked = -3;
     } else {
-        for (let i = 0; i < points.length; i++) {
-            let cringe = pointsZ / 2;
-            let condition1 = e.offsetX > points[i].x - cringe
-            let condition2 = e.offsetX < points[i].x + cringe
-            let condition3 = e.offsetY > points[i].y - cringe
-            let condition4 = e.offsetY < points[i].y + cringe
-            if(condition1 && condition2 && condition3 && condition4) {
-                if(key === "ShiftLeft") {
-                    points.splice(i, 1)
-                    if(MakerMode) ReCalculate()
-                } else {
-                    clicked = i;
+        if(key === "ControlLeft") {
+            points.push(new Vector2(e.offsetX, e.offsetY))
+            if(MakerMode) ReCalculate()
+            selectionBox = {
+                x: e.offsetX,
+                y: e.offsetY,
+                w: 0,
+                h: 0,
+                mx: 0,
+                my: 0
+            }
+        } else {
+            let pointC = false;
+            for (let i = 0; i < points.length; i++) {
+                let cringe = pointsZ / 2;
+                let condition1 = e.offsetX > points[i].x - cringe
+                let condition2 = e.offsetX < points[i].x + cringe
+                let condition3 = e.offsetY > points[i].y - cringe
+                let condition4 = e.offsetY < points[i].y + cringe
+                if(condition1 && condition2 && condition3 && condition4) {
+                    if(key === "ShiftLeft") {
+                        points.splice(i, 1)
+                        if(MakerMode) ReCalculate()
+                    } else {
+                        clicked = i;
+                    }
+                    pointC = true;
                 }
+            }
+            if(!pointC) {
+                clicked = -2;
+            }
+            selectionBox = {
+                x: e.offsetX,
+                y: e.offsetY,
+                w: 0,
+                h: 0,
+                mx: 0,
+                my: 0
             }
         }
     }
@@ -111,10 +148,36 @@ window.onresize = () => {
 }
 
 canvas.addEventListener("mousemove", (e) => {
-    if(clicked !== -1) {
-        points[clicked].x = e.offsetX;
-        points[clicked].y = e.offsetY;
-        if(MakerMode) ReCalculate()
+    switch (true) {
+        case clicked > -1:
+            points[clicked].x = e.offsetX;
+            points[clicked].y = e.offsetY;
+            if(MakerMode) ReCalculate()
+            break;
+        case clicked === -2:
+            selectionBox.w = e.offsetX - selectionBox.x
+            selectionBox.h = e.offsetY - selectionBox.y
+            break;
+        case clicked === -3:
+            points.forEach((p) => {
+                let cringe = pointsZ / 2;
+                let condition1 = p.x - cringe > selectionBox.x
+                let condition2 = p.x + cringe < selectionBox.x + selectionBox.w
+                let condition3 = p.y - cringe > selectionBox.y
+                let condition4 = p.y + cringe < selectionBox.y + selectionBox.h
+                if(condition1 && condition2 && condition3 && condition4) {
+                    p.x += e.offsetX - selectionBox.mx
+                    p.y += e.offsetY - selectionBox.my
+                }
+            })
+
+            selectionBox.x += e.offsetX - selectionBox.mx
+            selectionBox.y += e.offsetY - selectionBox.my
+            selectionBox.mx = e.offsetX;
+            selectionBox.my = e.offsetY;
+
+            if(MakerMode) ReCalculate()
+            break;
     }
 })
 
