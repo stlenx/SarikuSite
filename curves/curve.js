@@ -4,24 +4,6 @@ class Curve {
         this.t = [];
     }
 
-    Calculate(increment) {
-        this.t = [];
-        for(let t = 0; t < 1; t+=increment) {
-            //
-//
-            //let posX1 = Remap(t, 0, 1, this.p1.x, this.p2.x)
-            //let posY1 = Remap(t, 0, 1, this.p1.y, this.p2.y)
-//
-            //let posX2 = Remap(t, 0, 1, this.p2.x, this.p3.x)
-            //let posY2 = Remap(t, 0, 1, this.p2.y, this.p3.y)
-//
-            //let posX3 = Remap(t, 0, 1, posX1, posX2)
-            //let posY3 = Remap(t, 0, 1, posY1, posY2)
-//
-            //this.t.push(new Vector2(posX3, posY3))
-        }
-    }
-
     Bezier(points, t) {
         if(points.length > 3) {
             let newPoints = [];
@@ -86,6 +68,7 @@ class Curve {
     Draw(t) {
         this.Bezier(this.points, t)
 
+        ctx.lineWidth = 4;
         ctx.strokeStyle = "black";
         ctx.beginPath();
         ctx.moveTo(this.t[0].x, this.t[0].y);
@@ -94,6 +77,7 @@ class Curve {
         }
         ctx.stroke();
         ctx.closePath();
+        ctx.lineWidth = 1;
     }
 
 }

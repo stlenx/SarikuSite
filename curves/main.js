@@ -6,7 +6,6 @@ let ctx = canvas.getContext("2d");
 let lastT = Date.now()
 let res = 0.01;
 let pointsZ = 15
-let MakerMode = true;
 let clicked = -1;
 let key = null;
 let animate = true;
@@ -48,17 +47,35 @@ function DrawPreview() {
     ctx.stroke()
     ctx.closePath()
 
-    let posX1 = Remap(curve.t[0].x, 0, canvas.width, 0, canvas.width * 0.2)
-    let posY1 = Remap(curve.t[0].y, 0, canvas.height, 0, canvas.height * 0.2)
+    let finishedLine = new BezierCurve(points)
+    finishedLine.Calculate(res)
+    ctx.strokeStyle = "red";
+    let OposX1 = Remap(finishedLine.t[0].x, 0, canvas.width, 0, canvas.width * 0.2)
+    let OposY1 = Remap(finishedLine.t[0].y, 0, canvas.height, 0, canvas.height * 0.2)
+    ctx.beginPath();
+    ctx.moveTo(OposX1, OposY1);
+    for (let i = 1; i < finishedLine.t.length; i++) {
+        let posX = Remap(finishedLine.t[i].x, 0, canvas.width, 0, canvas.width * 0.2)
+        let posY = Remap(finishedLine.t[i].y, 0, canvas.height, 0, canvas.height * 0.2)
+        ctx.lineTo(posX, posY);
+    }
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
+    let posX1 = Remap(curve.points[0].x, 0, canvas.width, 0, canvas.width * 0.2)
+    let posY1 = Remap(curve.points[0].y, 0, canvas.height, 0, canvas.height * 0.2)
     ctx.moveTo(posX1, posY1);
     ctx.beginPath();
-    for (let i = 1; i < curve.t.length; i++) {
+    for (let i = 0; i < curve.t.length; i++) {
         let posX = Remap(curve.t[i].x, 0, canvas.width, 0, canvas.width * 0.2)
         let posY = Remap(curve.t[i].y, 0, canvas.height, 0, canvas.height * 0.2)
         ctx.lineTo(posX, posY);
     }
     ctx.stroke();
     ctx.closePath();
+    ctx.lineWidth = 1;
 }
 
 function ReCalculate() {
@@ -152,7 +169,7 @@ canvas.addEventListener("mousedown", (e) => {
     } else {
         if(key === "ControlLeft") {
             points.push(new Vector2(e.offsetX, e.offsetY))
-            if(MakerMode) ReCalculate()
+            ReCalculate()
             selectionBox = {
                 x: e.offsetX,
                 y: e.offsetY,
@@ -173,7 +190,7 @@ canvas.addEventListener("mousedown", (e) => {
                 if(condition1 && condition2 && condition3 && condition4) {
                     if(key === "ShiftLeft") {
                         points.splice(i, 1)
-                        if(MakerMode) ReCalculate()
+                        ReCalculate()
                     } else {
                         clicked = i;
                     }
@@ -206,7 +223,7 @@ canvas.addEventListener("mousemove", (e) => {
         case clicked > -1:
             points[clicked].x = e.offsetX;
             points[clicked].y = e.offsetY;
-            if(MakerMode) ReCalculate()
+            ReCalculate()
             break;
         case clicked === -2:
             selectionBox.w = e.offsetX - selectionBox.x
@@ -243,7 +260,7 @@ canvas.addEventListener("mousemove", (e) => {
             selectionBox.mx = e.offsetX;
             selectionBox.my = e.offsetY;
 
-            if(MakerMode) ReCalculate()
+            ReCalculate()
             break;
     }
 })
