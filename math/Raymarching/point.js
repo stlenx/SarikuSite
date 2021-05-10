@@ -19,10 +19,10 @@ class Point{
             return;
         }
 
-        ctx.strokeStyle = "red";
-        let circle = new Path2D()
-        circle.arc(this.p.x, this.p.y, lowest, 0, Math.PI*2);
-        ctx.stroke(circle);
+        //ctx.strokeStyle = "red";
+        //let circle = new Path2D()
+        //circle.arc(this.p.x, this.p.y, lowest, 0, Math.PI*2);
+        //ctx.stroke(circle);
 
         let x2 = this.p.x + Math.cos(Math.PI * this.angle / 180) * lowest;
         let y2 = this.p.y + Math.sin(Math.PI * this.angle / 180) * lowest;

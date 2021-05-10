@@ -14,6 +14,18 @@ for(let i = 0; i < 10; i++) {
 
 let point = new Point(new Vector2(500,500), 0, circles, 5000)
 
+player = {
+    fov: 69,
+    angle: 0,
+    mx: 0,
+    my: 0,
+    speed: 5,
+    w: false,
+    a: false,
+    s: false,
+    d: false
+}
+
 function signedDstToCircle(p, centre, radius) {
     return getDistanceBetween(centre, p) - radius;
 }
@@ -31,10 +43,7 @@ function DrawPoints() {
     for (let i = 0; i < points.length; i++) {
         let w = canvas.width / points.length;
         let x = w * i;
-        if(points[i] === null) {
-            ctx.fillStyle = `rgb(0,0,0)`;
-            ctx.fillRect(x, 200, w, 100);
-        } else {
+        if(points[i] !== null) {
             let color = Remap(points[i], 0, getDistanceBetween(new Vector2(0,0), new Vector2(canvas.width, canvas.height)), 255,0)
             ctx.fillStyle = `rgb(${color},${color},${color})`;
             let h = Remap(points[i],0, getDistanceBetween(new Vector2(0,0), new Vector2(canvas.width, canvas.height)), 500,0);
@@ -43,28 +52,65 @@ function DrawPoints() {
     }
 }
 
-function frame() {
-    ctx.clearRect(0,0, canvas.width, canvas.height)
+function DrawView() {
+    points = [];
+    for(let angle = player.angle; angle < player.fov + player.angle; angle+=0.1) {
+        point.angle = angle;
+        point.Draw()
+    }
+}
 
-    DrawCircles()
+function GetAngle(p1, p2) {
+    return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+}
+
+function UpdatePos() {
+    let direction = getVector2(point.p, new Vector2(player.mx, player.my))
+    direction.normalize()
+    direction.mult(new Vector2(player.speed, player.speed))
+    if(player.w) {
+        point.p.add(direction);
+    }
+    if(player.s) {
+        point.p.add(new Vector2(direction.x * -1, direction.y * -1));
+    }
+}
+
+function frame() {
+    ctx.fillStyle = "black"
+    ctx.fillRect(0,0, canvas.width, canvas.height)
+
+    //DrawCircles()
 
     point.Draw()
-    
-    DrawPoints()
 
-    if(point.angle > 360) {
-        point.angle = 0;
-        points = [];
-    } else {
-        point.angle += 1;
-    }
+    DrawView()
+
+    DrawPoints()
+    
+    UpdatePos()
 
     window.requestAnimationFrame(frame)
 }
 
 canvas.addEventListener("mousemove", (e) => {
-    //point.p.x = e.offsetX;
-    //point.p.y = e.offsetY;
+    player.angle = GetAngle(point.p, {x: e.offsetX, y: e.offsetY}) - player.fov / 2
+    player.mx = e.offsetX;
+    player.my = e.offsetY;
+})
+
+window.addEventListener("keydown", (e) => {
+    if(e.code === "KeyW") player.w = true;
+    if(e.code === "KeyA") player.a = true;
+    if(e.code === "KeyS") player.s = true;
+    if(e.code === "KeyD") player.d = true;
+})
+
+window.addEventListener("keyup", (e) => {
+    if(e.code === "KeyW") player.w = false;
+    if(e.code === "KeyA") player.a = false;
+    if(e.code === "KeyS") player.s = false;
+    if(e.code === "KeyD") player.d = false;
 })
 
 window.requestAnimationFrame(frame)
