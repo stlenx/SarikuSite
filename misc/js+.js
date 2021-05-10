@@ -101,6 +101,18 @@ class Vector2 {
         this.x += vector.x;
         this.y += vector.y;
     }
+
+    minus(vector) {
+        this.x -= vector.x;
+        this.y -= vector.y;
+    }
+}
+
+function absVector2(a) {
+    let newVector = new Vector2()
+    newVector.x = a.x < 0 ? a.x * -1 : a.x;
+    newVector.y = a.y < 0 ? a.y * -1 : a.y;
+    return newVector;
 }
 
 let getVector2 = (a, b) => new Vector2(b.x - a.x, b.y - a.y)
