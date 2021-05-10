@@ -21,14 +21,4 @@ class Cell {
                 break;
         }
     }
-
-    Update() {
-        if(this.y < canvas.height - 10) {
-            if(world[this.x][this.y+1].type === type.empty) {
-                this.y = this.y+1;
-                world[this.x][this.y] = this;
-                world[this.x][this.y -1] = new Cell(this.x, this.y -1, type.empty)
-            }
-        }
-    }
 }

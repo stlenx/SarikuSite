@@ -20,7 +20,7 @@ let mouse = {
 }
 
 ctx.clearRect(0, 0, canvas.width, canvas.height);
-const imageData = ctx.createImageData(500, 500);
+const imageData = ctx.createImageData(100,100);
 const data = imageData.data;
 //Initialize world
 for(let x = 0; x < imageData.width; x++) {
@@ -126,14 +126,14 @@ function frame() {
 }
 
 canvas.addEventListener("mousedown", (e) => {
-    mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, 500));
-    mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, 500));
+    mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, 100));
+    mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, 100));
     mouse.clicked = true;
 })
 
 canvas.addEventListener("mousemove", (e) => {
-    mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, 500));
-    mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, 500));
+    mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, 100));
+    mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, 100));
 })
 
 canvas.addEventListener("mouseup", (e) => {

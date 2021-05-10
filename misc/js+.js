@@ -115,6 +115,8 @@ function absVector2(a) {
     return newVector;
 }
 
+let GetAngle = (p1, p2) => Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+
 let getVector2 = (a, b) => new Vector2(b.x - a.x, b.y - a.y)
 
 let getDistanceBetween = (a, b) => Math.sqrt( ((b.x - a.x) * (b.x - a.x)) + ((b.y - a.y) * (b.y - a.y)) )

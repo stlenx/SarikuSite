@@ -60,10 +60,6 @@ function DrawView() {
     }
 }
 
-function GetAngle(p1, p2) {
-    return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
-}
-
 function UpdatePos() {
     let direction = getVector2(point.p, new Vector2(player.mx, player.my))
     direction.normalize()
