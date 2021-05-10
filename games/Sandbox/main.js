@@ -13,10 +13,10 @@ const type = {
 let world = [];
 let mouse = {
     clicked: false,
-    radius: 10,
+    radius: 1,
     x: 0,
     y:0,
-    type: type.water
+    type: type.sand
 }
 
 ctx.clearRect(0, 0, canvas.width, canvas.height);
