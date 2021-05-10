@@ -66,41 +66,55 @@ function UpdateWorld() {
             switch (world[x][y].type) {
                 case type.sand:
                     if(world[x][y+1].type === type.empty) {
-                        newWorld[x][y + 1] = world[x][y];
-                        newWorld[x][y] = new Cell(x, y, type.empty)
+                        MoveCell(x, y, new Vector2(0, 1), 1)
                     } else if(world[x - 1][y + 1].type === type.empty) {
-                        newWorld[x - 1][y + 1] = world[x][y];
-                        newWorld[x][y] = new Cell(x, y, type.empty)
+                        MoveCell(x, y, new Vector2(-1, 1), 1)
                     } else if(world[x + 1][y + 1].type === type.empty) {
-                        newWorld[x + 1][y + 1] = world[x][y];
-                        newWorld[x][y] = new Cell(x, y, type.empty)
+                        MoveCell(x, y, new Vector2(1, 1), 1)
                     }
                     break;
                 case type.water:
                     if(world[x][y+1].type === type.empty && newWorld[x][y+1].type === type.empty) {
-                        newWorld[x][y + 1] = world[x][y];
-                        newWorld[x][y] = new Cell(x, y, type.empty)
+                        MoveCell(x, y, new Vector2(0,1), 1)
                     } else if(world[x - 1][y + 1].type === type.empty && newWorld[x - 1][y + 1].type === type.empty) {
-                        newWorld[x - 1][y + 1] = world[x][y];
-                        newWorld[x][y] = new Cell(x, y, type.empty)
+                        MoveCell(x, y, new Vector2(-1,1), 1)
                     } else if(world[x + 1][y + 1].type === type.empty && newWorld[x + 1][y + 1].type === type.empty) {
-                        newWorld[x + 1][y + 1] = world[x][y];
-                        newWorld[x][y] = new Cell(x, y, type.empty)
+                        MoveCell(x, y, new Vector2(1,1), 1)
                     } else if(world[x - 1][y].type === type.empty && newWorld[x-1][y].type === type.empty) {
-                        newWorld[x - 1][y] = world[x][y];
-                        newWorld[x][y] = new Cell(x, y, type.empty)
+                        MoveCell(x, y, new Vector2(-1,0), 1)
                     } else if(world[x + 1][y].type === type.empty && newWorld[x+1][y].type === type.empty) {
-                        newWorld[x + 1][y] = world[x][y];
-                        newWorld[x][y] = new Cell(x, y, type.empty)
+                        MoveCell(x, y, new Vector2(1,0), 1)
                     }
                     break;
-                case type.empty:
+                default:
                     break;
             }
         }
     }
-
     world = newWorld;
+    
+    function MoveCell(x, y, direction, amount) {
+        if(amount > 1) {
+            RecursiveMove(x, y, direction, amount)
+        } else {
+            newWorld[x + direction.x][y + direction.y] = world[x][y];
+            newWorld[x][y] = new Cell(x, y, type.empty)
+        }
+    }
+    
+    function RecursiveMove(x, y, direction, amount) {
+        if(amount > 1) {
+            if(world[x + direction.x][y + direction.y].type === type.empty && newWorld[x + direction.x][y + direction.y].type === type.empty) {
+                RecursiveMove(x + direction.x, y + direction.y, direction, amount - 1)
+            } else {
+                newWorld[x + direction.x][y + direction.y] = world[x][y];
+                newWorld[x][y] = new Cell(x, y, type.empty)
+            }
+        } else {
+            newWorld[x + direction.x][y + direction.y] = world[x][y];
+            newWorld[x][y] = new Cell(x, y, type.empty)
+        }
+    }
 }
 
 function frame() {

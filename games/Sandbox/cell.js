@@ -2,6 +2,7 @@ class Cell {
     constructor(x, y, Gtype) {
         this.x = x;
         this.y = y;
+        this.speed = 1;
         this.type = Gtype;
         switch (Gtype) {
             case type.empty:
