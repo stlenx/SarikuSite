@@ -77,25 +77,21 @@ function UpdateWorld() {
                     }
                     break;
                 case type.water:
-                    if(world[x][y+1].type === type.empty) {
+                    if(world[x][y+1].type === type.empty && newWorld[x][y+1].type === type.empty) {
                         newWorld[x][y + 1] = world[x][y];
                         newWorld[x][y] = new Cell(x, y, type.empty)
-                    } else if(world[x - 1][y + 1].type === type.empty) {
+                    } else if(world[x - 1][y + 1].type === type.empty && newWorld[x - 1][y + 1].type === type.empty) {
                         newWorld[x - 1][y + 1] = world[x][y];
                         newWorld[x][y] = new Cell(x, y, type.empty)
-                    } else if(world[x + 1][y + 1].type === type.empty) {
+                    } else if(world[x + 1][y + 1].type === type.empty && newWorld[x + 1][y + 1].type === type.empty) {
                         newWorld[x + 1][y + 1] = world[x][y];
                         newWorld[x][y] = new Cell(x, y, type.empty)
-                    } else if(world[x - 1][y].type === type.empty) {
-                        if(newWorld[x-1][y].type === type.empty) {
-                            newWorld[x - 1][y] = world[x][y];
-                            newWorld[x][y] = new Cell(x, y, type.empty)
-                        }
-                    } else if(world[x + 1][y].type === type.empty) {
-                        if(newWorld[x+1][y].type === type.empty) {
-                            newWorld[x + 1][y] = world[x][y];
-                            newWorld[x][y] = new Cell(x, y, type.empty)
-                        }
+                    } else if(world[x - 1][y].type === type.empty && newWorld[x-1][y].type === type.empty) {
+                        newWorld[x - 1][y] = world[x][y];
+                        newWorld[x][y] = new Cell(x, y, type.empty)
+                    } else if(world[x + 1][y].type === type.empty && newWorld[x+1][y].type === type.empty) {
+                        newWorld[x + 1][y] = world[x][y];
+                        newWorld[x][y] = new Cell(x, y, type.empty)
                     }
                     break;
                 case type.empty:
