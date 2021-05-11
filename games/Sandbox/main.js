@@ -1,5 +1,5 @@
 let canvas = document.getElementById("canvas");
-canvas.setAttribute("width", window.innerWidth)
+canvas.setAttribute("width", window.innerHeight)
 canvas.setAttribute("height", window.innerHeight)
 let ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
@@ -30,28 +30,36 @@ let mouse = {
 }
 
 ctx.clearRect(0, 0, canvas.width, canvas.height);
-const imageData = ctx.createImageData(100,100);
-const data = imageData.data;
-//Initialize world
-for(let x = 0; x < imageData.width; x++) {
-    world[x] = new Array(imageData.height)
-    for(let y = 0; y < imageData.height; y++) {
-        world[x][y] = new Cell(x, y, type.empty);
-    }
-}
-for(let x = 0; x < world.length; x++) {
-    world[x][0] = new Cell(x, 0, type.barrier);
-    world[x][world[x].length-1] = new Cell(x, world[x].length-1, type.barrier);
-}
-for(let y = 0; y < world[0].length; y++) {
-    world[0][y] = new Cell(0, y, type.barrier);
-    world[world.length-1][y] = new Cell(world.length-1, y, type.barrier);
-}
+let imageData = ctx.createImageData(100,100);
+let data = imageData.data;
+
+InitializeWorld()
 
 let newCanvas = document.createElement("canvas")
 newCanvas.setAttribute("width", imageData.width)
 newCanvas.setAttribute("height", imageData.height)
 let newCtx = newCanvas.getContext("2d")
+
+function InitializeWorld() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    imageData = ctx.createImageData(100,100);
+    data = imageData.data;
+
+    for(let x = 0; x < imageData.width; x++) {
+        world[x] = new Array(imageData.height)
+        for(let y = 0; y < imageData.height; y++) {
+            world[x][y] = new Cell(x, y, type.empty);
+        }
+    }
+    for(let x = 0; x < world.length; x++) {
+        world[x][0] = new Cell(x, 0, type.barrier);
+        world[x][world[x].length-1] = new Cell(x, world[x].length-1, type.barrier);
+    }
+    for(let y = 0; y < world[0].length; y++) {
+        world[0][y] = new Cell(0, y, type.barrier);
+        world[world.length-1][y] = new Cell(world.length-1, y, type.barrier);
+    }
+}
 
 function DrawWorld() {
     for (let x = 0; x < world.length; x++) {
@@ -67,7 +75,6 @@ function DrawWorld() {
     }
     newCtx.putImageData(imageData, 0,0)
     ctx.drawImage(newCanvas,0,0, window.innerHeight, window.innerHeight)
-    //ctx.putImageData(imageData, 0, 0);
 }
 
 function DrawMenu() {
@@ -89,8 +96,7 @@ function DrawMenu() {
     }
 }
 
-function drawBorder(xPos, yPos, width, height, thickness = 1)
-{
+function drawBorder(xPos, yPos, width, height, thickness = 1) {
     ctx.fillStyle='#ffffff';
     ctx.fillRect(xPos - (thickness), yPos - (thickness), width + (thickness * 2), height + (thickness * 2));
 }
@@ -141,7 +147,7 @@ function UpdateWorld() {
             RecursiveMove(x, y, direction, amount)
         } else {
             newWorld[x + direction.x][y + direction.y] = world[x][y];
-            newWorld[x][y] = world[x + direction.x][y + direction.y]
+            newWorld[x][y] = world[x + direction.x][y + direction.y];
         }
     }
     
@@ -161,6 +167,8 @@ function UpdateWorld() {
 }
 
 function frame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
     DrawWorld()
 
     UpdateWorld()
@@ -176,6 +184,19 @@ function frame() {
             }
         }
     }
+
+    let x = Remap(mouse.x, 0, 100, 0, window.innerHeight)
+    let y = Remap(mouse.y, 0, 100, 0, window.innerHeight)
+    let r = Remap(mouse.radius, 0, 100, 0, window.innerHeight)
+    ctx.strokeStyle = "white";
+    ctx.beginPath()
+    ctx.moveTo(x - r, y - r)
+    ctx.lineTo(x + r - 1, y - r)
+    ctx.lineTo(x + r - 1, y + r - 1)
+    ctx.lineTo(x - r, y + r - 1)
+    ctx.lineTo(x - r, y - r)
+    ctx.stroke();
+    ctx.closePath()
 
     window.requestAnimationFrame(frame)
 }
@@ -213,6 +234,7 @@ canvas.addEventListener("mousemove", (e) => {
         let x = canvas.height - r * 2;
         let y = 50 + count * r * 1.2;
         if(e.offsetX > x && e.offsetX < x+r && e.offsetY > y && e.offsetY < y+r) {
+            mouse.clicked = false;
             hover = true;
             text = type[key];
         }
