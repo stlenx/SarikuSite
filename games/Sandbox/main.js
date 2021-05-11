@@ -108,11 +108,11 @@ function UpdateWorld() {
         for(let y = 0; y < imageData.height - 1; y++) {
             switch (world[x][y].type) {
                 case type.sand:
-                    if(world[x][y+1].type === type.empty) {
+                    if(world[x][y+1].type === type.empty && newWorld[x][y+1].type === type.empty) {
                         MoveCell(x, y, new Vector2(0, 1), 1)
-                    } else if(world[x - 1][y + 1].type === type.empty) {
+                    } else if(world[x - 1][y + 1].type === type.empty && newWorld[x - 1][y+1].type === type.empty) {
                         MoveCell(x, y, new Vector2(-1, 1), 1)
-                    } else if(world[x + 1][y + 1].type === type.empty) {
+                    } else if(world[x + 1][y + 1].type === type.empty && newWorld[x + 1][y+1].type === type.empty) {
                         MoveCell(x, y, new Vector2(1, 1), 1)
                     }
                     break;
