@@ -4,22 +4,9 @@ class Cell {
         this.y = y;
         this.speed = 1;
         this.type = Gtype;
-        switch (Gtype) {
-            case type.empty:
-                this.r = 0;
-                this.g = 0;
-                this.b = 0;
-                break;
-            case type.sand:
-                this.r = 76;
-                this.g = 70;
-                this.b = 50;
-                break;
-            case type.water:
-                this.r = 78;
-                this.g = 141;
-                this.b = 200;
-                break;
-        }
+
+        this.r = color[Gtype][0]
+        this.g = color[Gtype][1]
+        this.b = color[Gtype][2]
     }
 }

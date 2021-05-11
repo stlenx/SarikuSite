@@ -7,8 +7,18 @@ ctx.imageSmoothingEnabled = false;
 const type = {
     empty: "empty",
     sand: "sand",
-    water: "water"
+    water: "water",
+    barrier: "barrier"
 }
+
+const color = {
+    empty: [0,0,0],
+    sand: [76,70,50],
+    water: [78,141,200],
+    barrier: [150,150,150]
+}
+
+let text = "";
 
 let world = [];
 let mouse = {
@@ -28,6 +38,14 @@ for(let x = 0; x < imageData.width; x++) {
     for(let y = 0; y < imageData.height; y++) {
         world[x][y] = new Cell(x, y, type.empty);
     }
+}
+for(let x = 0; x < world.length; x++) {
+    world[x][0] = new Cell(x, 0, type.barrier);
+    world[x][world[x].length-1] = new Cell(x, world[x].length-1, type.barrier);
+}
+for(let y = 0; y < world[0].length; y++) {
+    world[0][y] = new Cell(0, y, type.barrier);
+    world[world.length-1][y] = new Cell(world.length-1, y, type.barrier);
 }
 
 let newCanvas = document.createElement("canvas")
@@ -50,6 +68,31 @@ function DrawWorld() {
     newCtx.putImageData(imageData, 0,0)
     ctx.drawImage(newCanvas,0,0, window.innerHeight, window.innerHeight)
     //ctx.putImageData(imageData, 0, 0);
+}
+
+function DrawMenu() {
+    if(text !== "") {
+        let font = new Font(text)
+        font.Generate()
+        let fontImg = font.img;
+        let width = 30 * text.length;
+        ctx.drawImage(fontImg, canvas.height / 2 - width / 2,50, width, 30)
+    }
+
+    let r = 50;
+    let count = 0;
+    for (let key in type) {
+        drawBorder(canvas.height - r * 2, 50 + count * r * 1.2,r, r, 2)
+        ctx.fillStyle = `rgb(${color[key][0]},${color[key][1]},${color[key][2]})`;
+        ctx.fillRect(canvas.height - r * 2, 50 + count * r * 1.2,r, r)
+        count++;
+    }
+}
+
+function drawBorder(xPos, yPos, width, height, thickness = 1)
+{
+    ctx.fillStyle='#ffffff';
+    ctx.fillRect(xPos - (thickness), yPos - (thickness), width + (thickness * 2), height + (thickness * 2));
 }
 
 function UpdateWorld() {
@@ -122,12 +165,14 @@ function frame() {
 
     UpdateWorld()
 
-
+    DrawMenu()
 
     if(mouse.clicked) {
         for(let x = mouse.x - mouse.radius; x < mouse.x + mouse.radius; x++) {
             for(let y = mouse.y - mouse.radius; y < mouse.y + mouse.radius; y++) {
-                world[x][y] = new Cell(x, y, mouse.type)
+                if(x > 0 && x < world.length - 1 && y > 0 && y < world[0].length - 1) {
+                    world[x][y] = new Cell(x, y, mouse.type)
+                }
             }
         }
     }
@@ -138,12 +183,42 @@ function frame() {
 canvas.addEventListener("mousedown", (e) => {
     mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, 100));
     mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, 100));
-    mouse.clicked = true;
+
+    let r = 50;
+    let count = 0;
+    let hover = false;
+    for (let key in type) {
+        let x = canvas.height - r * 2;
+        let y = 50 + count * r * 1.2;
+        if(e.offsetX > x && e.offsetX < x+r && e.offsetY > y && e.offsetY < y+r) {
+            hover = true;
+        }
+        count++;
+    }
+    if(hover) {
+        mouse.type = type[text];
+    } else {
+        mouse.clicked = true;
+    }
 })
 
 canvas.addEventListener("mousemove", (e) => {
     mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, 100));
     mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, 100));
+
+    let r = 50;
+    let count = 0;
+    let hover = false;
+    for (let key in type) {
+        let x = canvas.height - r * 2;
+        let y = 50 + count * r * 1.2;
+        if(e.offsetX > x && e.offsetX < x+r && e.offsetY > y && e.offsetY < y+r) {
+            hover = true;
+            text = type[key];
+        }
+        count++;
+    }
+    if(!hover) text = "";
 })
 
 canvas.addEventListener("mouseup", (e) => {
