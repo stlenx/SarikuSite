@@ -8,19 +8,25 @@ const type = {
     empty: "empty",
     sand: "sand",
     water: "water",
-    barrier: "barrier"
+    barrier: "barrier",
+    wood: "wood",
+    fire: "fire"
 }
 
 const color = {
     empty: [0,0,0],
-    sand: [76,70,50],
+    sand: [245,235,216],
     water: [78,141,200],
-    barrier: [150,150,150]
+    barrier: [150,150,150],
+    wood: [150,111,51],
+    fire: [226,88,34]
+
 }
 
 let text = "";
 
 let world = [];
+let newWorld = [];
 let mouse = {
     clicked: false,
     radius: 1,
@@ -48,16 +54,16 @@ function InitializeWorld() {
     for(let x = 0; x < imageData.width; x++) {
         world[x] = new Array(imageData.height)
         for(let y = 0; y < imageData.height; y++) {
-            world[x][y] = new Cell(x, y, type.empty);
+            world[x][y] = CreateCell(x, y, type.empty);
         }
     }
     for(let x = 0; x < world.length; x++) {
-        world[x][0] = new Cell(x, 0, type.barrier);
-        world[x][world[x].length-1] = new Cell(x, world[x].length-1, type.barrier);
+        world[x][0] = CreateCell(x, 0, type.barrier);
+        world[x][world[x].length-1] = CreateCell(x, world[x].length-1, type.barrier);
     }
     for(let y = 0; y < world[0].length; y++) {
-        world[0][y] = new Cell(0, y, type.barrier);
-        world[world.length-1][y] = new Cell(world.length-1, y, type.barrier);
+        world[0][y] = CreateCell(0, y, type.barrier);
+        world[world.length-1][y] = CreateCell(world.length - 1, y, type.barrier);
     }
 }
 
@@ -101,69 +107,82 @@ function drawBorder(xPos, yPos, width, height, thickness = 1) {
     ctx.fillRect(xPos - (thickness), yPos - (thickness), width + (thickness * 2), height + (thickness * 2));
 }
 
-function UpdateWorld() {
-    let newWorld = new Array(world.length);
-    for(let x = 0; x < world.length; x++) {
-        newWorld[x] = new Array(world[x].length)
-        for(let y = 0; y < world[x].length; y++) {
-            newWorld[x][y] = new Cell(x,y, world[x][y].type);
+const deepCopy = (arr) => {
+    let copy = [];
+    arr.forEach(elem => {
+        if(Array.isArray(elem)){
+            copy.push(deepCopy(elem))
+        }else{
+            if (typeof elem === 'object') {
+                copy.push(deepCopyObject(elem))
+            } else {
+                copy.push(elem)
+            }
+        }
+    })
+    return copy;
+}
+
+const deepCopyObject = (obj) => {
+    let tempObj = {};
+    for (let [key, value] of Object.entries(obj)) {
+        if (Array.isArray(value)) {
+            tempObj[key] = deepCopy(value);
+        } else {
+            if (typeof value === 'object') {
+                tempObj[key] = deepCopyObject(value);
+            } else {
+                tempObj[key] = value
+            }
         }
     }
+    return tempObj;
+}
+
+function UpdateWorld() {
+    //newWorld = new Array(world.length);
+    //for(let x = 0; x < world.length; x++) {
+    //    newWorld[x] = new Array(world[x].length)
+    //    for(let y = 0; y < world[x].length; y++) {
+    //        switch (world[x][y].type) {
+    //            case type.empty:
+    //                newWorld[x][y] = new Empty(x, y);
+    //                break;
+    //            case type.sand:
+    //                newWorld[x][y] = new Sand(x, y)
+    //                break;
+    //            case type.water:
+    //                newWorld[x][y] = new Water(x, y)
+    //                break;
+    //            case type.barrier:
+    //                newWorld[x][y] = new Barrier(x, y)
+    //                break;
+    //            case type.wood:
+    //                newWorld[x][y] = new Wood(x, y)
+    //                break;
+    //            case type.fire:
+    //                newWorld[x][y] = new Fire(x,y, world[x][y].lifespan, world[x][y].isBurning)
+    //                break;
+    //        }
+    //    }
+    //}
+    newWorld = deepCopy(world)
 
     for(let x = 1; x < imageData.width - 1; x++) {
         for(let y = 0; y < imageData.height - 1; y++) {
-            switch (world[x][y].type) {
-                case type.sand:
-                    if(world[x][y+1].type === type.empty && newWorld[x][y+1].type === type.empty || world[x][y+1].type === type.water && newWorld[x][y+1].type === type.water) {
-                        SwapCell(x, y, new Vector2(0, 1), 1)
-                    } else if(world[x - 1][y + 1].type === type.empty && newWorld[x - 1][y+1].type === type.empty || world[x - 1][y + 1].type === type.water && newWorld[x - 1][y+1].type === type.water) {
-                        SwapCell(x, y, new Vector2(-1, 1), 1)
-                    } else if(world[x + 1][y + 1].type === type.empty && newWorld[x + 1][y+1].type === type.empty || world[x + 1][y + 1].type === type.water && newWorld[x + 1][y+1].type === type.water) {
-                        SwapCell(x, y, new Vector2(1, 1), 1)
-                    }
-                    break;
-                case type.water:
-                    if(world[x][y+1].type === type.empty && newWorld[x][y+1].type === type.empty) {
-                        SwapCell(x, y, new Vector2(0,1), 1)
-                    } else if(world[x - 1][y + 1].type === type.empty && newWorld[x - 1][y + 1].type === type.empty) {
-                        SwapCell(x, y, new Vector2(-1,1), 1)
-                    } else if(world[x + 1][y + 1].type === type.empty && newWorld[x + 1][y + 1].type === type.empty) {
-                        SwapCell(x, y, new Vector2(1,1), 1)
-                    } else if(world[x - 1][y].type === type.empty && newWorld[x-1][y].type === type.empty) {
-                        SwapCell(x, y, new Vector2(-1,0), 1)
-                    } else if(world[x + 1][y].type === type.empty && newWorld[x+1][y].type === type.empty) {
-                        SwapCell(x, y, new Vector2(1,0), 1)
-                    }
-                    break;
-                default:
-                    break;
-            }
+            world[x][y].Update()
         }
     }
+
     for(let x = 1; x < world.length -1; x++) {
         if(world[x][world[x].length-1].type !== type.barrier && world[x][world[x].length-1].type !== type.empty) {
             if(world[x][0].type === type.barrier) {
-                newWorld[x][world[x].length-1] = new Cell(x, 0, type.empty)
+                newWorld[x][world[x].length-1] = CreateCell(x, 0, type.empty)
             } else {
-                newWorld[x][world[x].length-1] = new Cell(x, 0, type.empty)
+                newWorld[x][world[x].length-1] = CreateCell(x, 0, type.empty)
                 newWorld[x][0] = world[x][world[x].length-1]
             }
         }
-    }
-    
-    function SwapCell(x, y, direction, amount) {
-        newWorld[x + direction.x][y + direction.y] = world[x][y];
-
-        if(newWorld[x][y].type === world[x][y].type) {
-            newWorld[x][y] = world[x + direction.x][y + direction.y];
-        }
-
-        //if(amount > 1) {
-        //    RecursiveMove(x, y, direction, amount)
-        //} else {
-        //    newWorld[x + direction.x][y + direction.y] = world[x][y];
-        //    newWorld[x][y] = world[x + direction.x][y + direction.y];
-        //}
     }
     
     function RecursiveMove(x, y, direction, amount) {
@@ -171,8 +190,8 @@ function UpdateWorld() {
             if(world[x + direction.x][y + direction.y].type === type.empty && newWorld[x + direction.x][y + direction.y].type === type.empty) {
                 RecursiveMove(x + direction.x, y + direction.y, direction, amount - 1)
             } else {
-                newWorld[x + direction.x][y + direction.y] = world[x][y];
-                newWorld[x][y] = new Cell(x, y, type.empty)
+                newWorld[x][y] = world[x][y];
+                newWorld[x - direction.x][y - direction.y] = new Cell(x, y, type.empty)
             }
         } else {
             newWorld[x + direction.x][y + direction.y] = world[x][y];
@@ -181,6 +200,28 @@ function UpdateWorld() {
     }
 
     world = newWorld;
+}
+
+function SwapCell(x, y, direction, amount) {
+    newWorld[x + direction.x][y + direction.y] = world[x][y];
+    newWorld[x][y] = world[x + direction.x][y + direction.y];
+}
+
+function CreateCell(x, y, givenType) {
+    switch (givenType) {
+        case type.empty:
+            return new Empty(x, y)
+        case type.sand:
+            return new Sand(x, y)
+        case type.water:
+            return new Water(x, y)
+        case type.barrier:
+            return new Barrier(x, y)
+        case type.wood:
+            return new Wood(x, y)
+        case type.fire:
+            return new Fire(x, y, 5, false)
+    }
 }
 
 function frame() {
@@ -194,7 +235,7 @@ function frame() {
         for(let x = mouse.x - mouse.radius; x < mouse.x + mouse.radius; x++) {
             for(let y = mouse.y - mouse.radius; y < mouse.y + mouse.radius; y++) {
                 if(x > 0 && x < world.length - 1 && y >= 0 && y < world[0].length) {
-                    world[x][y] = new Cell(x, y, mouse.type)
+                    world[x][y] = CreateCell(x, y, mouse.type)
                 }
             }
         }
