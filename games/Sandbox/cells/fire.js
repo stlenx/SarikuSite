@@ -5,6 +5,7 @@ class Fire {
         this.type = type.fire;
         this.lifespan = lifespan;
         this.isBurning = isBurning;
+        this.flammable = false;
 
         this.r = color[type.fire][0]
         this.g = color[type.fire][1]
