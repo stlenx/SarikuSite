@@ -200,15 +200,24 @@ function PickRes() {
     let r = canvas.height * 0.2;
     let offset = canvas.height * 0.11
     for(let i = 0; i < resolutions.length; i++) {
-        ctx.fillStyle = "white"
+        drawBorder(offset + r * 1.4 * i, canvas.height / 2,r, r / 2, 2)
+        ctx.fillStyle = "black"
         ctx.fillRect( offset + r * 1.4 * i,canvas.height / 2, r,r / 2)
+
+        let resText = resolutions[i]
+        let resFont = new Font(resText)
+        resFont.Generate()
+        let fontImg = resFont.img;
+        let height = 50;
+        let width = height * getLength(resText)
+        ctx.drawImage(fontImg,( offset + r * 1.4 * i)  + width/3,canvas.height / 2 + r / 4 - height / 2, width, height)
     }
 
-    let resText = "chose resolution"
+    let resText = "choose resolution"
     let resFont = new Font(resText)
     resFont.Generate()
     let fontImg = resFont.img;
-    let width = 30 * resText.length;
+    let width = 30 * getLength(resText)
     ctx.drawImage(fontImg, canvas.height / 2 - width / 2,canvas.height / 2 - r, width, 30)
 }
 
