@@ -115,24 +115,24 @@ function UpdateWorld() {
             switch (world[x][y].type) {
                 case type.sand:
                     if(world[x][y+1].type === type.empty && newWorld[x][y+1].type === type.empty || world[x][y+1].type === type.water && newWorld[x][y+1].type === type.water) {
-                        MoveCell(x, y, new Vector2(0, 1), 1)
+                        SwapCell(x, y, new Vector2(0, 1), 1)
                     } else if(world[x - 1][y + 1].type === type.empty && newWorld[x - 1][y+1].type === type.empty || world[x - 1][y + 1].type === type.water && newWorld[x - 1][y+1].type === type.water) {
-                        MoveCell(x, y, new Vector2(-1, 1), 1)
+                        SwapCell(x, y, new Vector2(-1, 1), 1)
                     } else if(world[x + 1][y + 1].type === type.empty && newWorld[x + 1][y+1].type === type.empty || world[x + 1][y + 1].type === type.water && newWorld[x + 1][y+1].type === type.water) {
-                        MoveCell(x, y, new Vector2(1, 1), 1)
+                        SwapCell(x, y, new Vector2(1, 1), 1)
                     }
                     break;
                 case type.water:
                     if(world[x][y+1].type === type.empty && newWorld[x][y+1].type === type.empty) {
-                        MoveCell(x, y, new Vector2(0,1), 1)
+                        SwapCell(x, y, new Vector2(0,1), 1)
                     } else if(world[x - 1][y + 1].type === type.empty && newWorld[x - 1][y + 1].type === type.empty) {
-                        MoveCell(x, y, new Vector2(-1,1), 1)
+                        SwapCell(x, y, new Vector2(-1,1), 1)
                     } else if(world[x + 1][y + 1].type === type.empty && newWorld[x + 1][y + 1].type === type.empty) {
-                        MoveCell(x, y, new Vector2(1,1), 1)
+                        SwapCell(x, y, new Vector2(1,1), 1)
                     } else if(world[x - 1][y].type === type.empty && newWorld[x-1][y].type === type.empty) {
-                        MoveCell(x, y, new Vector2(-1,0), 1)
+                        SwapCell(x, y, new Vector2(-1,0), 1)
                     } else if(world[x + 1][y].type === type.empty && newWorld[x+1][y].type === type.empty) {
-                        MoveCell(x, y, new Vector2(1,0), 1)
+                        SwapCell(x, y, new Vector2(1,0), 1)
                     }
                     break;
                 default:
@@ -140,15 +140,30 @@ function UpdateWorld() {
             }
         }
     }
-    world = newWorld;
+    for(let x = 1; x < world.length -1; x++) {
+        if(world[x][world[x].length-1].type !== type.barrier && world[x][world[x].length-1].type !== type.empty) {
+            if(world[x][0].type === type.barrier) {
+                newWorld[x][world[x].length-1] = new Cell(x, 0, type.empty)
+            } else {
+                newWorld[x][world[x].length-1] = new Cell(x, 0, type.empty)
+                newWorld[x][0] = world[x][world[x].length-1]
+            }
+        }
+    }
     
-    function MoveCell(x, y, direction, amount) {
-        if(amount > 1) {
-            RecursiveMove(x, y, direction, amount)
-        } else {
-            newWorld[x + direction.x][y + direction.y] = world[x][y];
+    function SwapCell(x, y, direction, amount) {
+        newWorld[x + direction.x][y + direction.y] = world[x][y];
+
+        if(newWorld[x][y].type === world[x][y].type) {
             newWorld[x][y] = world[x + direction.x][y + direction.y];
         }
+
+        //if(amount > 1) {
+        //    RecursiveMove(x, y, direction, amount)
+        //} else {
+        //    newWorld[x + direction.x][y + direction.y] = world[x][y];
+        //    newWorld[x][y] = world[x + direction.x][y + direction.y];
+        //}
     }
     
     function RecursiveMove(x, y, direction, amount) {
@@ -164,6 +179,8 @@ function UpdateWorld() {
             newWorld[x][y] = new Cell(x, y, type.empty)
         }
     }
+
+    world = newWorld;
 }
 
 function frame() {
@@ -173,12 +190,10 @@ function frame() {
 
     UpdateWorld()
 
-    DrawMenu()
-
     if(mouse.clicked) {
         for(let x = mouse.x - mouse.radius; x < mouse.x + mouse.radius; x++) {
             for(let y = mouse.y - mouse.radius; y < mouse.y + mouse.radius; y++) {
-                if(x > 0 && x < world.length - 1 && y > 0 && y < world[0].length - 1) {
+                if(x > 0 && x < world.length - 1 && y >= 0 && y < world[0].length) {
                     world[x][y] = new Cell(x, y, mouse.type)
                 }
             }
@@ -197,6 +212,8 @@ function frame() {
     ctx.lineTo(x - r, y - r)
     ctx.stroke();
     ctx.closePath()
+
+    DrawMenu()
 
     window.requestAnimationFrame(frame)
 }
@@ -244,6 +261,10 @@ canvas.addEventListener("mousemove", (e) => {
 })
 
 canvas.addEventListener("mouseup", (e) => {
+    mouse.clicked = false;
+})
+
+canvas.addEventListener("mouseleave", (e) => {
     mouse.clicked = false;
 })
 

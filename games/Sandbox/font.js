@@ -13,7 +13,7 @@ class Font {
         for(let i = 0; i < this.text.length; i++) {
             let letter = this.GetLetterCanvas(this.text[i])
             let pos = this.text[i].charCodeAt(0) - 97
-            ctx.drawImage(letter, 9 * i,0, letter.width, letter.height)
+            ctx.drawImage(letter, i * 9,0, 9, 9)
         }
 
         this.img = canvas;
