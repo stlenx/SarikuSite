@@ -7,9 +7,11 @@ class Fire {
         this.isBurning = isBurning;
         this.flammable = false;
 
-        this.r = color[type.fire][0]
-        this.g = color[type.fire][1]
-        this.b = color[type.fire][2]
+        let randomC = getRandom(-10, 10);
+
+        this.r = color[type.fire][0] + randomC
+        this.g = color[type.fire][1] + randomC
+        this.b = color[type.fire][2] + randomC
     }
 
     Update() {
@@ -21,28 +23,27 @@ class Fire {
         }
 
         if(world[this.x][this.y+1].flammable) {
-            newWorld[this.x][this.y + 1] = new Fire(this.x, this.y, 5, true)
+            this.MightBurn(this.x, this.y+1)
+        } else if(world[this.x - 1][this.y + 1].flammable) {
+            this.MightBurn(this.x-1, this.y+1)
+        } else if(world[this.x + 1][this.y + 1].flammable) {
+            this.MightBurn(this.x+1, this.y+1)
+        } else if(world[this.x - 1][this.y].flammable) {
+            this.MightBurn(this.x - 1, this.y)
+        } else if(world[this.x + 1][this.y].flammable) {
+            this.MightBurn(this.x + 1, this.y)
+        } else if(world[this.x][this.y - 1].flammable) {
+            this.MightBurn(this.x, this.y-1)
+        } else if(world[this.x - 1][this.y - 1].flammable) {
+            this.MightBurn(this.x-1, this.y-1)
+        } else if(world[this.x + 1][this.y - 1].flammable) {
+            this.MightBurn(this.x+1, this.y-1)
         }
-        if(world[this.x - 1][this.y + 1].flammable) {
-            newWorld[this.x - 1][this.y + 1] = new Fire(this.x, this.y, 5, true)
-        }
-        if(world[this.x + 1][this.y + 1].flammable) {
-            newWorld[this.x + 1][this.y + 1] = new Fire(this.x, this.y, 5, true)
-        }
-        if(world[this.x - 1][this.y].flammable) {
-            newWorld[this.x - 1][this.y] = new Fire(this.x, this.y, 5, true)
-        }
-        if(world[this.x + 1][this.y].flammable) {
-            newWorld[this.x + 1][this.y] = new Fire(this.x, this.y, 5, true)
-        }
-        if(world[this.x][this.y - 1].flammable) {
-            newWorld[this.x][this.y - 1] = new Fire(this.x, this.y, 5, true)
-        }
-        if(world[this.x - 1][this.y - 1].flammable) {
-            newWorld[this.x - 1][this.y - 1] = new Fire(this.x, this.y, 5, true)
-        }
-        if(world[this.x + 1][this.y - 1].flammable) {
-            newWorld[this.x + 1][this.y - 1] = new Fire(this.x, this.y, 5, true)
+    }
+
+    MightBurn(x,y) {
+        if(getRandom(0, 10) < world[x][y].burningChance * 10) {
+            newWorld[x][y] = new Fire(x, y, 10, true)
         }
     }
 }

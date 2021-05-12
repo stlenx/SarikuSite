@@ -3,7 +3,8 @@ class Empty {
         this.x = x;
         this.y = y;
         this.type = type.empty;
-        this.flammable = false;
+        this.flammable = true;
+        this.burningChance = 0.05;
 
         this.r = color[type.empty][0]
         this.g = color[type.empty][1]

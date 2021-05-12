@@ -135,6 +135,29 @@ function UpdateWorld() {
         newWorld[x] = new Array(world[x].length)
         for(let y = 0; y < world[x].length; y++) {
             newWorld[x][y] = CreateCell(x,y, world[x][y].type)
+            switch (world[x][y].type) {
+                case type.empty:
+                    newWorld[x][y] =  new Empty(x, y)
+                    break;
+                case type.sand:
+                    newWorld[x][y] =  new Sand(x, y, world[x][y].random)
+                    break;
+                case type.water:
+                    newWorld[x][y] =  new Water(x, y, world[x][y].random)
+                    break;
+                case type.barrier:
+                    newWorld[x][y] =  new Barrier(x, y)
+                    break;
+                case type.wood:
+                    newWorld[x][y] =  new Wood(x, y, world[x][y].random)
+                    break;
+                case type.fire:
+                    newWorld[x][y] =  new Fire(x, y, 10, false)
+                    break;
+                case type.oil:
+                    newWorld[x][y] =  new Oil(x, y, world[x][y].random)
+                    break;
+            }
         }
     }
 
@@ -190,7 +213,7 @@ function CreateCell(x, y, givenType) {
         case type.wood:
             return new Wood(x, y)
         case type.fire:
-            return new Fire(x, y, 5, false)
+            return new Fire(x, y, 10, false)
         case type.oil:
             return new Oil(x, y)
     }
@@ -343,6 +366,7 @@ canvas.addEventListener("mouseup", (e) => {
 
 canvas.addEventListener("mouseleave", (e) => {
     mouse.clicked = false;
+    mouse.holdingSlider = false;
 })
 
 window.addEventListener("keydown", (e) => {
