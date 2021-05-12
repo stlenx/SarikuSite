@@ -26,6 +26,10 @@ const color = {
 
 let text = "";
 
+let resolutions = [100, 200, 300];
+let resolution = 100;
+let resPicked = false;
+
 let world = [];
 let newWorld = [];
 let mouse = {
@@ -38,20 +42,25 @@ let mouse = {
 }
 
 ctx.clearRect(0, 0, canvas.width, canvas.height);
-let imageData = ctx.createImageData(100,100);
+let imageData = ctx.createImageData(resolution,resolution);
 let data = imageData.data;
-
-InitializeWorld()
 
 let newCanvas = document.createElement("canvas")
 newCanvas.setAttribute("width", imageData.width)
 newCanvas.setAttribute("height", imageData.height)
 let newCtx = newCanvas.getContext("2d")
 
+InitializeWorld()
+
 function InitializeWorld() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    imageData = ctx.createImageData(100,100);
+    imageData = ctx.createImageData(resolution,resolution);
     data = imageData.data;
+
+    newCanvas = document.createElement("canvas")
+    newCanvas.setAttribute("width", imageData.width)
+    newCanvas.setAttribute("height", imageData.height)
+    newCtx = newCanvas.getContext("2d")
 
     for(let x = 0; x < imageData.width; x++) {
         world[x] = new Array(imageData.height)
@@ -187,6 +196,22 @@ function CreateCell(x, y, givenType) {
     }
 }
 
+function PickRes() {
+    let r = canvas.height * 0.2;
+    let offset = canvas.height * 0.11
+    for(let i = 0; i < resolutions.length; i++) {
+        ctx.fillStyle = "white"
+        ctx.fillRect( offset + r * 1.4 * i,canvas.height / 2, r,r / 2)
+    }
+
+    let resText = "chose resolution"
+    let resFont = new Font(resText)
+    resFont.Generate()
+    let fontImg = resFont.img;
+    let width = 30 * resText.length;
+    ctx.drawImage(fontImg, canvas.height / 2 - width / 2,canvas.height / 2 - r, width, 30)
+}
+
 function frame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -204,9 +229,9 @@ function frame() {
         }
     }
 
-    let x = Remap(mouse.x, 0, 100, 0, window.innerHeight)
-    let y = Remap(mouse.y, 0, 100, 0, window.innerHeight)
-    let r = Remap(mouse.radius, 0, 100, 0, window.innerHeight)
+    let x = Remap(mouse.x, 0, resolution, 0, window.innerHeight)
+    let y = Remap(mouse.y, 0, resolution, 0, window.innerHeight)
+    let r = Remap(mouse.radius, 0, resolution, 0, window.innerHeight)
     ctx.lineWidth = 1;
     ctx.strokeStyle = "white";
     ctx.beginPath()
@@ -220,42 +245,65 @@ function frame() {
 
     DrawMenu()
 
+    if(!resPicked) PickRes()
+
     window.requestAnimationFrame(frame)
 }
 
 canvas.addEventListener("mousedown", (e) => {
-    mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, 100));
-    mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, 100));
+    mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, resolution));
+    mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, resolution));
 
-    let r = 50;
-    let count = 0;
-    let hover = false;
-    for (let key in type) {
-        let x = canvas.height - r * 2;
-        let y = 50 + count * r * 1.2;
-        if(e.offsetX > x && e.offsetX < x+r && e.offsetY > y && e.offsetY < y+r) {
-            hover = true;
+    if(!resPicked) {
+        let r = canvas.height * 0.2;
+        let offset = canvas.height * 0.11
+        for(let i = 0; i < resolutions.length; i++) {
+            ctx.fillStyle = "white"
+            ctx.fillRect( offset + r * 1.4 * i,canvas.height / 2, r,r / 2)
+
+            let x = offset + r * 1.4 * i;
+            let y = canvas.height / 2;
+            if(e.offsetX > x && e.offsetX < x + r && e.offsetY > y && e.offsetY < y + r/2) {
+                resolution = resolutions[i];
+                console.log(resolution)
+                InitializeWorld()
+                resPicked = true;
+                mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, resolution));
+                mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, resolution));
+
+            }
         }
-        count++;
-    }
-
-    let x = Remap(mouse.radius, 1, 10, 50, 300)
-
-    if(hover) {
-        mouse.type = type[text];
     } else {
-        mouse.clicked = true;
-    }
+        let r = 50;
+        let count = 0;
+        let hover = false;
+        for (let key in type) {
+            let x = canvas.height - r * 2;
+            let y = 50 + count * r * 1.2;
+            if(e.offsetX > x && e.offsetX < x+r && e.offsetY > y && e.offsetY < y+r) {
+                hover = true;
+            }
+            count++;
+        }
 
-    if(e.offsetX > x - 25 && e.offsetX < x + 25 && e.offsetY > 25 && e.offsetY < 75) {
-        mouse.clicked = false;
-        mouse.holdingSlider = true;
+        let x = Remap(mouse.radius, 1, 10, 50, 300)
+
+        if(hover) {
+            mouse.type = type[text];
+        } else {
+            mouse.clicked = true;
+        }
+
+        if(e.offsetX > x - 25 && e.offsetX < x + 25 && e.offsetY > 25 && e.offsetY < 75) {
+            mouse.clicked = false;
+            mouse.holdingSlider = true;
+        }
     }
 })
 
 canvas.addEventListener("mousemove", (e) => {
-    mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, 100));
-    mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, 100));
+    mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, resolution));
+    mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, resolution));
 
     let r = 50;
     let count = 0;
