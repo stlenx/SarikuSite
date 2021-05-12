@@ -10,7 +10,8 @@ const type = {
     water: "water",
     barrier: "barrier",
     wood: "wood",
-    fire: "fire"
+    fire: "fire",
+    oil: "oil"
 }
 
 const color = {
@@ -19,8 +20,8 @@ const color = {
     water: [78,141,200],
     barrier: [150,150,150],
     wood: [150,111,51],
-    fire: [226,88,34]
-
+    fire: [226,88,34],
+    oil: [227, 191, 80]
 }
 
 let text = "";
@@ -29,6 +30,7 @@ let world = [];
 let newWorld = [];
 let mouse = {
     clicked: false,
+    holdingSlider: false,
     radius: 1,
     x: 0,
     y:0,
@@ -100,6 +102,17 @@ function DrawMenu() {
         ctx.fillRect(canvas.height - r * 2, 50 + count * r * 1.2,r, r)
         count++;
     }
+
+    ctx.lineWidth = 8;
+    ctx.beginPath()
+    ctx.moveTo(50,50)
+    ctx.lineTo(300,50)
+    ctx.stroke()
+    ctx.closePath()
+
+    ctx.fillStyle = "white"
+    let x = Remap(mouse.radius, 1, 10, 50, 300)
+    ctx.fillRect(x - r/2, 50 - r/2, r, r)
 }
 
 function drawBorder(xPos, yPos, width, height, thickness = 1) {
@@ -107,66 +120,14 @@ function drawBorder(xPos, yPos, width, height, thickness = 1) {
     ctx.fillRect(xPos - (thickness), yPos - (thickness), width + (thickness * 2), height + (thickness * 2));
 }
 
-const deepCopy = (arr) => {
-    let copy = [];
-    arr.forEach(elem => {
-        if(Array.isArray(elem)){
-            copy.push(deepCopy(elem))
-        }else{
-            if (typeof elem === 'object') {
-                copy.push(deepCopyObject(elem))
-            } else {
-                copy.push(elem)
-            }
-        }
-    })
-    return copy;
-}
-
-const deepCopyObject = (obj) => {
-    let tempObj = {};
-    for (let [key, value] of Object.entries(obj)) {
-        if (Array.isArray(value)) {
-            tempObj[key] = deepCopy(value);
-        } else {
-            if (typeof value === 'object') {
-                tempObj[key] = deepCopyObject(value);
-            } else {
-                tempObj[key] = value
-            }
+function UpdateWorld() {
+    newWorld = new Array(world.length)
+    for(let x = 0; x < world.length; x++){
+        newWorld[x] = new Array(world[x].length)
+        for(let y = 0; y < world[x].length; y++) {
+            newWorld[x][y] = CreateCell(x,y, world[x][y].type)
         }
     }
-    return tempObj;
-}
-
-function UpdateWorld() {
-    //newWorld = new Array(world.length);
-    //for(let x = 0; x < world.length; x++) {
-    //    newWorld[x] = new Array(world[x].length)
-    //    for(let y = 0; y < world[x].length; y++) {
-    //        switch (world[x][y].type) {
-    //            case type.empty:
-    //                newWorld[x][y] = new Empty(x, y);
-    //                break;
-    //            case type.sand:
-    //                newWorld[x][y] = new Sand(x, y)
-    //                break;
-    //            case type.water:
-    //                newWorld[x][y] = new Water(x, y)
-    //                break;
-    //            case type.barrier:
-    //                newWorld[x][y] = new Barrier(x, y)
-    //                break;
-    //            case type.wood:
-    //                newWorld[x][y] = new Wood(x, y)
-    //                break;
-    //            case type.fire:
-    //                newWorld[x][y] = new Fire(x,y, world[x][y].lifespan, world[x][y].isBurning)
-    //                break;
-    //        }
-    //    }
-    //}
-    newWorld = deepCopy(world)
 
     for(let x = 1; x < imageData.width - 1; x++) {
         for(let y = 0; y < imageData.height - 1; y++) {
@@ -221,6 +182,8 @@ function CreateCell(x, y, givenType) {
             return new Wood(x, y)
         case type.fire:
             return new Fire(x, y, 5, false)
+        case type.oil:
+            return new Oil(x, y)
     }
 }
 
@@ -244,6 +207,7 @@ function frame() {
     let x = Remap(mouse.x, 0, 100, 0, window.innerHeight)
     let y = Remap(mouse.y, 0, 100, 0, window.innerHeight)
     let r = Remap(mouse.radius, 0, 100, 0, window.innerHeight)
+    ctx.lineWidth = 1;
     ctx.strokeStyle = "white";
     ctx.beginPath()
     ctx.moveTo(x - r, y - r)
@@ -274,10 +238,18 @@ canvas.addEventListener("mousedown", (e) => {
         }
         count++;
     }
+
+    let x = Remap(mouse.radius, 1, 10, 50, 300)
+
     if(hover) {
         mouse.type = type[text];
     } else {
         mouse.clicked = true;
+    }
+
+    if(e.offsetX > x - 25 && e.offsetX < x + 25 && e.offsetY > 25 && e.offsetY < 75) {
+        mouse.clicked = false;
+        mouse.holdingSlider = true;
     }
 })
 
@@ -299,14 +271,25 @@ canvas.addEventListener("mousemove", (e) => {
         count++;
     }
     if(!hover) text = "";
+    if(mouse.holdingSlider) {
+        let value = Math.floor(Remap(e.offsetX, 50, 300, 1, 10))
+        if(value >= 1 && value <= 10) {
+            mouse.radius = value;
+        }
+    }
 })
 
 canvas.addEventListener("mouseup", (e) => {
     mouse.clicked = false;
+    mouse.holdingSlider = false;
 })
 
 canvas.addEventListener("mouseleave", (e) => {
     mouse.clicked = false;
+})
+
+window.addEventListener("keydown", (e) => {
+    if(e.code === "KeyR") InitializeWorld()
 })
 
 window.requestAnimationFrame(frame)

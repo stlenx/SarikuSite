@@ -3,6 +3,7 @@ class Sand {
         this.x = x;
         this.y = y;
         this.type = type.sand;
+        this.flammable = false;
 
         this.r = color[type.sand][0]
         this.g = color[type.sand][1]

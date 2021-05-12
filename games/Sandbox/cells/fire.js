@@ -13,6 +13,35 @@ class Fire {
 
     Update() {
         this.lifespan-=1;
-        if(this.lifespan < 0) newWorld[this.x][this.y] = new Empty(this.x, this.y)
+        if(this.lifespan < 0) {
+            newWorld[this.x][this.y] = new Empty(this.x, this.y)
+        } else {
+            newWorld[this.x][this.y] = new Fire(this.x, this.y, this.lifespan, this.isBurning)
+        }
+
+        if(world[this.x][this.y+1].flammable) {
+            newWorld[this.x][this.y + 1] = new Fire(this.x, this.y, 5, true)
+        }
+        if(world[this.x - 1][this.y + 1].flammable) {
+            newWorld[this.x - 1][this.y + 1] = new Fire(this.x, this.y, 5, true)
+        }
+        if(world[this.x + 1][this.y + 1].flammable) {
+            newWorld[this.x + 1][this.y + 1] = new Fire(this.x, this.y, 5, true)
+        }
+        if(world[this.x - 1][this.y].flammable) {
+            newWorld[this.x - 1][this.y] = new Fire(this.x, this.y, 5, true)
+        }
+        if(world[this.x + 1][this.y].flammable) {
+            newWorld[this.x + 1][this.y] = new Fire(this.x, this.y, 5, true)
+        }
+        if(world[this.x][this.y - 1].flammable) {
+            newWorld[this.x][this.y - 1] = new Fire(this.x, this.y, 5, true)
+        }
+        if(world[this.x - 1][this.y - 1].flammable) {
+            newWorld[this.x - 1][this.y - 1] = new Fire(this.x, this.y, 5, true)
+        }
+        if(world[this.x + 1][this.y - 1].flammable) {
+            newWorld[this.x + 1][this.y - 1] = new Fire(this.x, this.y, 5, true)
+        }
     }
 }
