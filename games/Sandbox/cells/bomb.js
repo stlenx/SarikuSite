@@ -20,29 +20,36 @@ class Bomb {
             SwapCell(this.x, this.y, new Vector2(0, 1), 1)
         } else if(world[this.x][this.y+1].type !== this.type && newWorld[this.x][this.y+1].type !== this.type && world[this.x][this.y+1].type !== type.barrier && newWorld[this.x][this.y+1].type !== type.barrier) {
             this.Explode()
+        } else if(world[this.x - 1][this.y+1].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {
+            this.Explode()
+        } else if(world[this.x + 1][this.y+1].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {
+            this.Explode()
+        } else if(world[this.x + 1][this.y].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {
+            this.Explode()
+        } else if(world[this.x - 1][this.y].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {
+            this.Explode()
+        } else if(world[this.x + 1][this.y-1].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {
+            this.Explode()
+        } else if(world[this.x][this.y-1].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {
+            this.Explode()
+        } else if(world[this.x - 1][this.y-1].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {
+            this.Explode()
         }
     }
 
     Explode() {
-        newWorld[this.x][this.y] = new Empty(this.x, this.y)
-        newWorld[this.x + 1][this.y] = new Empty(this.x + 1, this.y)
-        newWorld[this.x - 1][this.y] = new Empty(this.x - 1, this.y)
-        newWorld[this.x][this.y + 1] = new Empty(this.x, this.y + 1)
-        newWorld[this.x][this.y - 1] = new Empty(this.x, this.y - 1)
-
-        let indices = []
-
-        for (let x = 0; x < world.length; x++)
-        {
-            for (let y = 0; y < world.length; y++)
-            {
+        for (let x = 0; x < world.length; x++) {
+            for (let y = 0; y < world.length; y++) {
                 let dx = x - this.x;
                 let dy = y - this.y;
                 let distanceSquared = dx * dx + dy * dy;
 
-                if (distanceSquared <= this.radius * this.radius)
-                {
-                    newWorld[x][y] = new Empty(x, y)
+                if (distanceSquared <= this.radius * this.radius) {
+                    if(Math.floor(getRandom(0,2)) === 0) {
+                        newWorld[x][y] = new Empty(x, y)
+                    } else {
+                        newWorld[x][y] = new Fire(x, y, 10, false)
+                    }
                 }
             }
         }
