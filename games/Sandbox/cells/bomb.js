@@ -18,7 +18,7 @@ class Bomb {
     Update() {
         if(world[this.x][this.y+1].type === type.empty && newWorld[this.x][this.y+1].type === type.empty || world[this.x][this.y+1].type === type.water && newWorld[this.x][this.y+1].type === type.water) {
             SwapCell(this.x, this.y, new Vector2(0, 1), 1)
-        } else if(world[this.x][this.y+1].type !== this.type && newWorld[this.x][this.y+1].type !== this.type) {
+        } else if(world[this.x][this.y+1].type !== this.type && newWorld[this.x][this.y+1].type !== this.type && world[this.x][this.y+1].type !== type.barrier && newWorld[this.x][this.y+1].type !== type.barrier) {
             this.Explode()
         }
     }
