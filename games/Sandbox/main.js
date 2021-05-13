@@ -5,13 +5,14 @@ let ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
 const type = {
-    empty: "empty", //0
-    sand: "sand", //1
-    water: "water", //2
-    barrier: "barrier", //3
-    wood: "wood", //4
-    fire: "fire", //5
-    oil: "oil" //6
+    empty: "empty",
+    sand: "sand",
+    water: "water",
+    barrier: "barrier",
+    wood: "wood",
+    fire: "fire",
+    oil: "oil",
+    bomb: "bomb"
 }
 
 const color = {
@@ -21,7 +22,8 @@ const color = {
     barrier: [150,150,150],
     wood: [150,111,51],
     fire: [226,88,34],
-    oil: [227, 191, 80]
+    oil: [227, 191, 80],
+    bomb: [119,126,84]
 }
 
 let text = "";
@@ -83,6 +85,7 @@ function DrawWorld() {
     for (let x = 0; x < world.length; x++) {
         for (let y = 0; y < world[x].length; y++) {
             let c = world[x][y];
+
             let index = (y * imageData.width + x) * 4;
 
             data[index] = c.r;
@@ -158,6 +161,9 @@ function UpdateWorld() {
                 case type.oil:
                     newWorld[x][y] =  new Oil(x, y, world[x][y].random)
                     break;
+                case type.bomb:
+                    newWorld[x][y] =  new Bomb(x, y, world[x][y].random)
+                    break;
             }
         }
     } //this fucking thing is like 10ms
@@ -217,6 +223,8 @@ function CreateCell(x, y, givenType) {
             return new Fire(x, y, 10, false)
         case type.oil:
             return new Oil(x, y)
+        case type.bomb:
+            return new Bomb(x, y)
     }
 }
 
