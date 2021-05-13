@@ -1,5 +1,5 @@
 class Fire {
-    constructor(x, y, lifespan, isBurning) {
+    constructor(x, y,lifespan, isBurning) {
         this.x = x;
         this.y = y;
         this.type = type.fire;
@@ -43,7 +43,7 @@ class Fire {
 
     MightBurn(x,y) {
         if(getRandom(0, 10) < world[x][y].burningChance * 10) {
-            newWorld[x][y] = new Fire(x, y, 10, true)
+            newWorld[x][y] = new Fire(x, y,10, true)
         }
     }
 }

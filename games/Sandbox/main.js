@@ -5,13 +5,13 @@ let ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
 const type = {
-    empty: "empty",
-    sand: "sand",
-    water: "water",
-    barrier: "barrier",
-    wood: "wood",
-    fire: "fire",
-    oil: "oil"
+    empty: "empty", //0
+    sand: "sand", //1
+    water: "water", //2
+    barrier: "barrier", //3
+    wood: "wood", //4
+    fire: "fire", //5
+    oil: "oil" //6
 }
 
 const color = {
@@ -68,6 +68,7 @@ function InitializeWorld() {
             world[x][y] = CreateCell(x, y, type.empty);
         }
     }
+
     for(let x = 0; x < world.length; x++) {
         world[x][0] = CreateCell(x, 0, type.barrier);
         world[x][world[x].length-1] = CreateCell(x, world[x].length-1, type.barrier);
@@ -130,11 +131,11 @@ function drawBorder(xPos, yPos, width, height, thickness = 1) {
 }
 
 function UpdateWorld() {
+
     newWorld = new Array(world.length)
     for(let x = 0; x < world.length; x++){
         newWorld[x] = new Array(world[x].length)
         for(let y = 0; y < world[x].length; y++) {
-            newWorld[x][y] = CreateCell(x,y, world[x][y].type)
             switch (world[x][y].type) {
                 case type.empty:
                     newWorld[x][y] =  new Empty(x, y)
@@ -159,7 +160,7 @@ function UpdateWorld() {
                     break;
             }
         }
-    }
+    } //this fucking thing is like 10ms
 
     for(let x = 1; x < imageData.width - 1; x++) {
         for(let y = 0; y < imageData.height - 1; y++) {
@@ -176,7 +177,7 @@ function UpdateWorld() {
                 newWorld[x][0] = world[x][world[x].length-1]
             }
         }
-    }
+    } //Like 4-10ms
     
     function RecursiveMove(x, y, direction, amount) {
         if(amount > 1) {
@@ -244,12 +245,18 @@ function PickRes() {
     ctx.drawImage(fontImg, canvas.height / 2 - width / 2,canvas.height / 2 - r, width, 30)
 }
 
+let lastTick = Date.now();
 function frame() {
+    //let now = Date.now()
+    //let time = now - lastTick;
+    //lastTick = now;
+    ////console.log(time)
+
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    DrawWorld()
+    DrawWorld() //2-5ms
 
-    UpdateWorld()
+    UpdateWorld() //16-35ms
 
     if(mouse.clicked) {
         for(let x = mouse.x - mouse.radius; x < mouse.x + mouse.radius; x++) {
