@@ -36,8 +36,8 @@ class Bomb extends Cell {
     }
 
     Explode() {
-        for (let x = 0; x < world.length; x++) {
-            for (let y = 0; y < world.length; y++) {
+        for (let x = this.x - this.radius; x < this.x + this.radius; x++) {
+            for (let y = this.y - this.radius; y < this.y + this.radius; y++) {
                 let dx = x - this.x;
                 let dy = y - this.y;
                 let distanceSquared = dx * dx + dy * dy;

@@ -361,6 +361,7 @@ canvas.addEventListener("mousedown", (e) => {
         let r = 50;
         let count = 0;
         let hover = false;
+        let buttonClick = false;
         for (let key in type) {
             let x = canvas.height - r * 2;
             let y = 50 + count * r * 1.2;
@@ -370,10 +371,22 @@ canvas.addEventListener("mousedown", (e) => {
             count++;
         }
 
-        if(hover) {
-            mouse.type = type[text];
-        } else {
-            mouse.clicked = true;
+        if(e.offsetX > tools[0].x && e.offsetX < tools[0].x + tools[0].r && e.offsetY > tools[0].y && e.offsetY < tools[0].y + tools[0].r) { //AAAAAAAA square
+            buttonClick = true;
+            mouse.SquareTool = true;
+        }
+
+        if(e.offsetX > tools[1].x && e.offsetX < tools[1].x + tools[1].r && e.offsetY > tools[1].y && e.offsetY < tools[1].y + tools[1].r) { //AAAAAAAA circle
+            buttonClick = true;
+            mouse.SquareTool = false;
+        }
+
+        if(!buttonClick) {
+            if(hover) {
+                mouse.type = type[text];
+            } else {
+                mouse.clicked = true;
+            }
         }
 
         let x = Remap(mouse.radius, 1, 10, 50, 300)
@@ -385,13 +398,6 @@ canvas.addEventListener("mousedown", (e) => {
         //Cringe
         //350,20,100,100
         //450,20,100,100
-        if(e.offsetX > tools[0].x && e.offsetX < tools[0].x + tools[0].r && e.offsetY > tools[0].y && e.offsetY < tools[0].y + tools[0].r) { //AAAAAAAA square
-            mouse.SquareTool = true;
-        }
-
-        if(e.offsetX > tools[1].x && e.offsetX < tools[1].x + tools[1].r && e.offsetY > tools[1].y && e.offsetY < tools[1].y + tools[1].r) { //AAAAAAAA circle
-            mouse.SquareTool = false;
-        }
     }
 })
 
@@ -406,7 +412,6 @@ canvas.addEventListener("mousemove", (e) => {
         let x = canvas.height - r * 2;
         let y = 50 + count * r * 1.2;
         if(e.offsetX > x && e.offsetX < x+r && e.offsetY > y && e.offsetY < y+r) {
-            mouse.clicked = false;
             hover = true;
             text = type[key];
         }
