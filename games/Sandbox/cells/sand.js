@@ -1,7 +1,6 @@
-class Sand {
+class Sand extends Cell {
     constructor(x, y, random = Infinity) {
-        this.x = x;
-        this.y = y;
+        super(x,y)
         this.type = type.sand;
         this.flammable = false;
 

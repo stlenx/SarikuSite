@@ -1,7 +1,6 @@
-class Fire {
+class Fire extends Cell {
     constructor(x, y,lifespan, isBurning) {
-        this.x = x;
-        this.y = y;
+        super(x,y)
         this.type = type.fire;
         this.lifespan = lifespan;
         this.isBurning = isBurning;

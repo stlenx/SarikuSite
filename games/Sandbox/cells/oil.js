@@ -1,7 +1,6 @@
-class Oil {
+class Oil extends Cell {
     constructor(x, y, random = Infinity) {
-        this.x = x;
-        this.y = y;
+        super(x,y)
         this.type = type.oil;
         this.flammable = true;
         this.burningChance = 0.9;

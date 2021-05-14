@@ -1,7 +1,6 @@
-class Water {
+class Water extends Cell {
     constructor(x, y,random = Infinity) {
-        this.x = x;
-        this.y = y;
+        super(x, y)
         this.type = type.water;
         this.flammable = false;
 

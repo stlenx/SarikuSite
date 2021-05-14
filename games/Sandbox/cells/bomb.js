@@ -1,7 +1,7 @@
-class Bomb {
+class Bomb extends Cell {
     constructor(x, y, random = Infinity) {
-        this.x = x;
-        this.y = y;
+        super(x,y)
+
         this.type = type.bomb;
         this.flammable = true;
         this.burningChance = 0.5;
@@ -18,8 +18,6 @@ class Bomb {
     Update() {
         if(world[this.x][this.y+1].type === type.empty && newWorld[this.x][this.y+1].type === type.empty || world[this.x][this.y+1].type === type.water && newWorld[this.x][this.y+1].type === type.water) {
             SwapCell(this.x, this.y, new Vector2(0, 1), 1)
-        } else if(world[this.x][this.y+1].type !== this.type && newWorld[this.x][this.y+1].type !== this.type && world[this.x][this.y+1].type !== type.barrier && newWorld[this.x][this.y+1].type !== type.barrier) {
-            this.Explode()
         } else if(world[this.x - 1][this.y+1].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {
             this.Explode()
         } else if(world[this.x + 1][this.y+1].type === type.fire && newWorld[this.x][this.y+1].type === type.fire ) {

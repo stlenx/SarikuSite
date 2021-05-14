@@ -6,7 +6,7 @@ class Font {
 
     Generate() {
         if(isNaN(this.text)){
-            let canvas = document.createElement("canvas");
+            let canvas = document.createElement("canvas")
             canvas.setAttribute("width", 9 * this.text.length)
             canvas.setAttribute("height", 9);
             let ctx = canvas.getContext("2d");

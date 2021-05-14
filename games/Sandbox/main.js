@@ -34,15 +34,33 @@ let resPicked = false;
 
 let world = [];
 let newWorld = [];
+
 let mouse = {
     clicked: false,
     holdingSlider: false,
     radius: 1,
     x: 0,
     y:0,
-    type: type.sand
+    type: type.sand,
+    SquareTool: true
 }
 
+const tools = [
+    {
+        name: "Square",
+        x: canvas.height - 120,
+        y: 600,
+        r: 100
+    },
+    {
+        name: "Circle",
+        x: canvas.height - 120,
+        y: 700,
+        r: 100
+    }
+]
+
+//Actual code
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 let imageData = ctx.createImageData(resolution,resolution);
 let data = imageData.data;
@@ -67,44 +85,47 @@ function InitializeWorld() {
     for(let x = 0; x < imageData.width; x++) {
         world[x] = new Array(imageData.height)
         for(let y = 0; y < imageData.height; y++) {
-            world[x][y] = CreateCell(x, y, type.empty);
+            world[x][y] = new Empty(x, y);
         }
     }
 
     for(let x = 0; x < world.length; x++) {
-        world[x][0] = CreateCell(x, 0, type.barrier);
-        world[x][world[x].length-1] = CreateCell(x, world[x].length-1, type.barrier);
+        world[x][0] = new Barrier(x, 0)
+        world[x][world[x].length-1] = new Barrier(x, world[x].length - 1)
     }
     for(let y = 0; y < world[0].length; y++) {
-        world[0][y] = CreateCell(0, y, type.barrier);
-        world[world.length-1][y] = CreateCell(world.length - 1, y, type.barrier);
+        world[0][y] = new Barrier(0, y)
+        world[world.length-1][y] = new Barrier(world.length - 1, y, type.barrier)
     }
 }
 
 function DrawWorld() {
+    let buf = new ArrayBuffer(imageData.data.length);
+
+    let buf8 = new Uint8ClampedArray(buf);
+    let data = new Uint32Array(buf);
     for (let x = 0; x < world.length; x++) {
         for (let y = 0; y < world[x].length; y++) {
             let c = world[x][y];
 
-            let index = (y * imageData.width + x) * 4;
-
-            data[index] = c.r;
-            data[index+1] = c.g;
-            data[index+2] = c.b;
-            data[index + 3] = 255;
+            data[y * world.length + x] =
+                (255   << 24) |	// alpha
+                (c.b << 16) |	// blue
+                (c.g <<  8) |	// green
+                c.r;		// red
         }
     }
+    imageData.data.set(buf8);
     newCtx.putImageData(imageData, 0,0)
     ctx.drawImage(newCanvas,0,0, window.innerHeight, window.innerHeight)
 }
 
 function DrawMenu() {
     if(text !== "") {
-        let font = new Font(text)
+        let font = new Font(text);
         font.Generate()
-        let fontImg = font.img;
-        let width = 30 * text.length;
-        ctx.drawImage(fontImg, canvas.height / 2 - width / 2,50, width, 30)
+        let width = font.img.width * 4;
+        ctx.drawImage(font.img, canvas.height / 2 - width / 2,50, width, font.img.height * 4)
     }
 
     let r = 50;
@@ -126,6 +147,21 @@ function DrawMenu() {
     ctx.fillStyle = "white"
     let x = Remap(mouse.radius, 1, 10, 50, 300)
     ctx.fillRect(x - r/2, 50 - r/2, r, r)
+
+    let square = new Image();
+    let circle = new Image();
+    if(mouse.SquareTool) {
+        square.src = "textures/SquareSelected.png";
+
+        circle.src = "textures/CircleUnselected.png";
+    } else {
+        square.src = "textures/SquareUnselected.png";
+
+        circle.src = "textures/CircleSelected.png";
+    }
+
+    ctx.drawImage(square,tools[0].x,tools[0].y,tools[0].r,tools[0].r);
+    ctx.drawImage(circle,tools[1].x,tools[1].y,tools[1].r,tools[1].r);
 }
 
 function drawBorder(xPos, yPos, width, height, thickness = 1) {
@@ -134,7 +170,6 @@ function drawBorder(xPos, yPos, width, height, thickness = 1) {
 }
 
 function UpdateWorld() {
-
     newWorld = new Array(world.length)
     for(let x = 0; x < world.length; x++){
         newWorld[x] = new Array(world[x].length)
@@ -177,9 +212,9 @@ function UpdateWorld() {
     for(let x = 1; x < world.length -1; x++) {
         if(world[x][world[x].length-1].type !== type.barrier && world[x][world[x].length-1].type !== type.empty) {
             if(world[x][0].type === type.barrier) {
-                newWorld[x][world[x].length-1] = CreateCell(x, 0, type.empty)
+                newWorld[x][world[x].length-1] = new Empty(x, 0)
             } else {
-                newWorld[x][world[x].length-1] = CreateCell(x, 0, type.empty)
+                newWorld[x][world[x].length-1] = new Empty(x, 0)
                 newWorld[x][0] = world[x][world[x].length-1]
             }
         }
@@ -207,27 +242,6 @@ function SwapCell(x, y, direction, amount) {
     newWorld[x][y] = world[x + direction.x][y + direction.y];
 }
 
-function CreateCell(x, y, givenType) {
-    switch (givenType) {
-        case type.empty:
-            return new Empty(x, y)
-        case type.sand:
-            return new Sand(x, y)
-        case type.water:
-            return new Water(x, y)
-        case type.barrier:
-            return new Barrier(x, y)
-        case type.wood:
-            return new Wood(x, y)
-        case type.fire:
-            return new Fire(x, y, 10, false)
-        case type.oil:
-            return new Oil(x, y)
-        case type.bomb:
-            return new Bomb(x, y)
-    }
-}
-
 function PickRes() {
     let r = canvas.height * 0.2;
     let offset = canvas.height * 0.11
@@ -240,17 +254,17 @@ function PickRes() {
         let resFont = new Font(resText)
         resFont.Generate()
         let fontImg = resFont.img;
-        let height = 50;
-        let width = height * getLength(resText)
-        ctx.drawImage(fontImg,( offset + r * 1.4 * i)  + width/3,canvas.height / 2 + r / 4 - height / 2, width, height)
+        let height = fontImg.height * 5;
+        let width = fontImg.width * 5;
+        ctx.drawImage(fontImg,offset + (canvas.height * 0.28 * i) + width * 0.38,canvas.height / 2 +  height / 2, width, height)
     }
 
     let resText = "choose resolution"
     let resFont = new Font(resText)
     resFont.Generate()
     let fontImg = resFont.img;
-    let width = 30 * getLength(resText)
-    ctx.drawImage(fontImg, canvas.height / 2 - width / 2,canvas.height / 2 - r, width, 30)
+    let width = fontImg.width * 4; //Doesn't scale well with different resolutions. Fix it future me >:(
+    ctx.drawImage(fontImg, canvas.height / 2 - width / 2,canvas.height / 2 - r, width, fontImg.height * 4)
 }
 
 let lastTick = Date.now();
@@ -262,15 +276,31 @@ function frame() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    DrawWorld() //2-5ms
+    DrawWorld() //2-5ms uhhhh it's faster i swear
 
     UpdateWorld() //16-35ms
 
     if(mouse.clicked) {
-        for(let x = mouse.x - mouse.radius; x < mouse.x + mouse.radius; x++) {
-            for(let y = mouse.y - mouse.radius; y < mouse.y + mouse.radius; y++) {
-                if(x > 0 && x < world.length - 1 && y >= 0 && y < world[0].length) {
-                    world[x][y] = CreateCell(x, y, mouse.type)
+        if(mouse.SquareTool) {
+            for(let x = mouse.x - mouse.radius; x < mouse.x + mouse.radius; x++) {
+                for(let y = mouse.y - mouse.radius; y < mouse.y + mouse.radius; y++) {
+                    if(x > 0 && x < world.length - 1 && y >= 0 && y < world[0].length) {
+                        world[x][y] = new Cell(x, y, mouse.type)
+                    }
+                }
+            }
+        } else {
+            for (let x = mouse.x - mouse.radius; x < mouse.x + mouse.radius; x++) {
+                for (let y = mouse.y - mouse.radius; y < mouse.y + mouse.radius; y++) {
+                    let dx = x - mouse.x;
+                    let dy = y - mouse.y;
+                    let distanceSquared = dx * dx + dy * dy;
+
+                    if (distanceSquared <= mouse.radius * mouse.radius) {
+                        if(x > 0 && x < world.length - 1 && y >= 0 && y < world[0].length) {
+                            world[x][y] = new Cell(x, y, mouse.type)
+                        }
+                    }
                 }
             }
         }
@@ -279,16 +309,24 @@ function frame() {
     let x = Remap(mouse.x, 0, resolution, 0, window.innerHeight)
     let y = Remap(mouse.y, 0, resolution, 0, window.innerHeight)
     let r = Remap(mouse.radius, 0, resolution, 0, window.innerHeight)
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "white";
-    ctx.beginPath()
-    ctx.moveTo(x - r, y - r)
-    ctx.lineTo(x + r - 1, y - r)
-    ctx.lineTo(x + r - 1, y + r - 1)
-    ctx.lineTo(x - r, y + r - 1)
-    ctx.lineTo(x - r, y - r)
-    ctx.stroke();
-    ctx.closePath()
+    if(mouse.SquareTool) {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "white";
+        ctx.beginPath()
+        ctx.moveTo(x - r, y - r)
+        ctx.lineTo(x + r - 1, y - r)
+        ctx.lineTo(x + r - 1, y + r - 1)
+        ctx.lineTo(x - r, y + r - 1)
+        ctx.lineTo(x - r, y - r)
+        ctx.stroke();
+        ctx.closePath()
+    } else {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "white";
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.stroke();
+    }
 
     DrawMenu()
 
@@ -317,7 +355,6 @@ canvas.addEventListener("mousedown", (e) => {
                 resPicked = true;
                 mouse.x = Math.floor(Remap(e.offsetX, 0, window.innerHeight, 0, resolution));
                 mouse.y = Math.floor(Remap(e.offsetY, 0, window.innerHeight, 0, resolution));
-
             }
         }
     } else {
@@ -333,17 +370,27 @@ canvas.addEventListener("mousedown", (e) => {
             count++;
         }
 
-        let x = Remap(mouse.radius, 1, 10, 50, 300)
-
         if(hover) {
             mouse.type = type[text];
         } else {
             mouse.clicked = true;
         }
 
+        let x = Remap(mouse.radius, 1, 10, 50, 300)
         if(e.offsetX > x - 25 && e.offsetX < x + 25 && e.offsetY > 25 && e.offsetY < 75) {
             mouse.clicked = false;
             mouse.holdingSlider = true;
+        }
+
+        //Cringe
+        //350,20,100,100
+        //450,20,100,100
+        if(e.offsetX > tools[0].x && e.offsetX < tools[0].x + tools[0].r && e.offsetY > tools[0].y && e.offsetY < tools[0].y + tools[0].r) { //AAAAAAAA square
+            mouse.SquareTool = true;
+        }
+
+        if(e.offsetX > tools[1].x && e.offsetX < tools[1].x + tools[1].r && e.offsetY > tools[1].y && e.offsetY < tools[1].y + tools[1].r) { //AAAAAAAA circle
+            mouse.SquareTool = false;
         }
     }
 })

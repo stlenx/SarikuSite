@@ -1,7 +1,6 @@
-class Wood {
+class Wood extends Cell {
     constructor(x, y, random = Infinity) {
-        this.x = x;
-        this.y = y;
+        super(x, y)
         this.type = type.wood;
         this.flammable = true;
         this.burningChance = 0.5;
@@ -12,9 +11,5 @@ class Wood {
         this.r = color[type.wood][0] + randomC
         this.g = color[type.wood][1] + randomC
         this.b = color[type.wood][2] + randomC
-    }
-
-    Update() {
-
     }
 }
