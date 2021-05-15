@@ -42,7 +42,7 @@ let mouse = {
     x: 0,
     y:0,
     type: type.sand,
-    SquareTool: true
+    SquareTool: false
 }
 
 const tools = [
