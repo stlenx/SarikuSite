@@ -43,10 +43,12 @@ class Bomb extends Cell {
                 let distanceSquared = dx * dx + dy * dy;
 
                 if (distanceSquared <= this.radius * this.radius) {
-                    if(Math.floor(getRandom(0,2)) === 0) {
-                        newWorld[x][y] = new Empty(x, y)
-                    } else {
-                        newWorld[x][y] = new Fire(x, y, 10, false)
+                    if(x > 0 && x < world.length - 1 && y >= 0 && y < world[0].length) {
+                        if(Math.floor(getRandom(0,2)) === 0) {
+                            newWorld[x][y] = new Empty(x, y)
+                        } else {
+                            newWorld[x][y] = new Fire(x, y, 10, false)
+                        }
                     }
                 }
             }
