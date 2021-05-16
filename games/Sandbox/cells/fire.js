@@ -40,16 +40,42 @@ class Fire extends Cell {
         if(directions.length > 1) {
             let pos = Math.floor(getRandom(0, directions.length))
 
-            if(world[this.x + directions[pos].x][this.y + directions[pos].y].flammable) {
-                this.MightBurn(this.x + directions[pos].x, this.y + directions[pos].y)
-            } else {
-                directions.splice(pos, 1)
+            if(this.y + directions[pos].y < 0) {
+                if(world[this.x + directions[pos].x][world[0].length - 1].flammable) {
+                    this.MightBurn(this.x + directions[pos].x, world[0].length - 1)
+                } else {
+                    directions.splice(pos, 1)
 
-                this.CheckDirections(directions)
+                    this.CheckDirections(directions)
+                }
+            } else {
+                if(this.y + directions[pos].y > world.length - 1) {
+                    if(world[this.x + directions[pos].x][0].flammable) {
+                        this.MightBurn(this.x + directions[pos].x, 0)
+                    } else {
+                        directions.splice(pos, 1)
+
+                        this.CheckDirections(directions)
+                    }
+                } else {
+                    if(world[this.x + directions[pos].x][this.y + directions[pos].y].flammable) {
+                        this.MightBurn(this.x + directions[pos].x, this.y + directions[pos].y)
+                    } else {
+                        directions.splice(pos, 1)
+
+                        this.CheckDirections(directions)
+                    }
+                }
             }
         } else {
-            if(world[this.x + directions[0].x][this.y + directions[0].y].flammable) {
-                this.MightBurn(this.x + directions[0].x, this.y + directions[0].y)
+            if(this.y + directions[0].y < 0) {
+                if(world[this.x + directions[0].x][world[0].length - 1].flammable) {
+                    this.MightBurn(this.x + directions[0].x, world[0].length - 1)
+                }
+            } else {
+                if(world[this.x + directions[0].x][this.y + directions[0].y].flammable) {
+                    this.MightBurn(this.x + directions[0].x, this.y + directions[0].y)
+                }
             }
         }
     }
