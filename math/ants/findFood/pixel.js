@@ -9,5 +9,15 @@ class Pixel {
 
         this.alfa = 0;
         this.beta = 0;
+
+        this.food = false;
+    }
+
+    MakeFood() {
+        this.food = true;
+
+        this.r = 0;
+        this.g = 255;
+        this.b = 0;
     }
 }
