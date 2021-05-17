@@ -8,6 +8,12 @@ Http.onreadystatechange = () => {
     let output = JSON.parse(Http.responseText)
     console.log(output)
 
+    const nextURL = document.location.href + loadedSign;
+    const nextTitle = 'Signs';
+    const nextState = { additionalInformation: 'Cool thing i know right' };
+
+    window.history.replaceState(nextState, nextTitle, nextURL);
+
     if (output.pageResults !== undefined) {
         getVideo(output)
         return
@@ -100,6 +106,7 @@ function inputChanged(input) {
         container.removeChild(container.lastChild)
     }
     getSign(input)
+
 }
 
 function getSign(sign) {
@@ -108,3 +115,14 @@ function getSign(sign) {
     Http.setRequestHeader("sign", sign)
     Http.send();
 }
+
+function CheckUrl() {
+    let url = new URL(document.location.href);
+    url.searchParams.sort();
+
+    let val = url.searchParams.get("sign");
+    document.getElementById("textInput").value = val;
+    getSign(val);
+}
+
+CheckUrl()
