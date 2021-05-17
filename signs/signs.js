@@ -8,7 +8,8 @@ Http.onreadystatechange = () => {
     let output = JSON.parse(Http.responseText)
     console.log(output)
 
-    const nextURL = document.location.href + `?sign=${loadedSign}`;
+    let url = document.location.href.split("?");
+    const nextURL = url[0] + `?sign=${loadedSign}`;
     const nextTitle = 'Signs';
     const nextState = { additionalInformation: 'Cool thing i know right' };
 
