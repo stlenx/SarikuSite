@@ -27,7 +27,8 @@ class Ant {
         let dst = getDistanceBetween(this.current, destination)
         let pheromoneStrength = 1;
         if(this.pheromone !== []) {
-            if(this.pheromone.includes(destination)) {
+            let path = new Path(this.current, destination)
+            if(this.pheromone.includes(path.Hash)) {
                 pheromoneStrength = 2;
             }
         }

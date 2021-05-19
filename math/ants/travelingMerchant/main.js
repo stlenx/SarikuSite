@@ -6,6 +6,7 @@ let ctx = canvas.getContext("2d");
 let bestText = document.getElementById("bestText")
 let timerText = document.getElementById("timer")
 let bestSolution = new Solution()
+let pheromoneSol = new Solution()
 let destinations = [];
 let timer = true;
 let start = Date.now()
@@ -34,8 +35,6 @@ function BruteForce() {
         bestSolution = newSolution;
     }
 }
-
-
 
 function shuffle(array) {
     let copy = [], n = array.length, i;
@@ -101,10 +100,32 @@ function EvaluatePaths() {
             index = i;
         }
     }
-    bestSolution = ants[index].solution;
-    bestSolution.CalcDst()
+    pheromoneSol = ants[index].solution;
+    pheromoneSol.CalcDst()
 
-    pheromone = bestSolution.points;
+    //Try?
+    pheromone = [];
+    for(let i = 0; i < pheromoneSol.points.length - 1; i++) {
+        pheromone.push(new Path(pheromoneSol.points[i], pheromoneSol.points[i+1]).Hash)
+    }
+
+    bestSolution.CalcDst()
+    if(pheromoneSol.distance < bestSolution.distance) {
+        bestSolution = pheromoneSol;
+    }
+}
+
+function Hash(input) {
+    let hash = 0;
+    if (input.length === 0) {
+        return hash;
+    }
+    for (let i = 0; i < input.length; i++) {
+        let char = input.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
 }
 
 function DrawAnts() {
@@ -124,6 +145,8 @@ function frame() {
     DrawDestinations()
 
     //BruteForce()
+
+    RunStep()
 
     bestText.innerHTML = `Best Solution: ${bestSolution.distance}`
 
