@@ -4,14 +4,14 @@ canvas.setAttribute("height", window.innerHeight)
 let ctx = canvas.getContext("2d");
 
 let bestText = document.getElementById("bestText")
-let timerText = document.getElementById("timer")
 let bestSolution = new Solution()
 let pheromoneSol = new Solution()
 let destinations = [];
-let timer = true;
-let start = Date.now()
+let running = true;
+let antN = 10;
+let destN = 20;
 
-for(let i = 0; i < 20; i++) {
+for(let i = 0; i < destN; i++) {
     destinations.push(new Destination(getRandom(0, canvas.width), getRandom(0, canvas.height)))
 }
 bestSolution.Path = destinations;
@@ -73,7 +73,7 @@ let ants = []
 let pheromone = [];
 function AddAnts() {
     ants = [];
-    for(let i = 0; i < 10; i++) {
+    for(let i = 0; i < antN; i++) {
         let copy = [];
         for(let i = 0; i < destinations.length; i++) {
             copy.push(destinations[i])
@@ -146,7 +146,7 @@ function frame() {
 
     //BruteForce()
 
-    RunStep()
+    if(running) RunStep()
 
     bestText.innerHTML = `Best Solution: ${bestSolution.distance}`
 
@@ -157,6 +157,16 @@ function RunStep() {
     AddAnts()
     RunAnts()
     EvaluatePaths()
+}
+
+function Reset() {
+    bestSolution = new Solution()
+    pheromoneSol = new Solution()
+    destinations = [];
+    for(let i = 0; i < destN; i++) {
+        destinations.push(new Destination(getRandom(0, canvas.width), getRandom(0, canvas.height)))
+    }
+    bestSolution.Path = destinations;
 }
 
 window.requestAnimationFrame(frame)
