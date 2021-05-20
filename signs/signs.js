@@ -8,12 +8,19 @@ Http.onreadystatechange = () => {
     let output = JSON.parse(Http.responseText)
     console.log(output)
 
+    //https://www.signingsavvy.com/sign/MOVE/8598/2
     let url = document.location.href.split("?");
-    const nextURL = url[0] + `?sign=${loadedSign}`;
-    const nextTitle = 'Signs';
-    const nextState = { additionalInformation: 'Cool thing i know right' };
 
-    window.history.replaceState(nextState, nextTitle, nextURL);
+    let nextURL = url[0] + `?sign=${loadedSign}`;
+
+    let splits = loadedSign.split("/");
+    if(splits.length > 1) {
+        //4, 5 ,6
+        nextURL = url[0] + `?sign=${splits[4].toLowerCase()}&id=${splits[5]}&v=${splits[6]}`;
+    }
+
+    const nextState = { additionalInformation: 'Cool thing i know right' };
+    window.history.replaceState(nextState, "", nextURL);
 
     if (output.pageResults !== undefined) {
         getVideo(output)
