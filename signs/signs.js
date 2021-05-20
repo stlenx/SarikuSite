@@ -129,7 +129,7 @@ function CheckUrl() {
 
     if(id !== null) {
         //https://www.signingsavvy.com/sign/MOVE/8598/2
-        searchSign = `https://www.signingsavvy.com/sign/${sign.toUpperCase()}/${id}}/${v}`
+        searchSign = `https://www.signingsavvy.com/sign/${sign.toUpperCase()}/${id}/${v}`
     }
 
     document.getElementById("textInput").value = sign;
