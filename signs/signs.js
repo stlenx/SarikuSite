@@ -121,9 +121,19 @@ function CheckUrl() {
     let url = new URL(document.location.href);
     url.searchParams.sort();
 
-    let val = url.searchParams.get("sign");
-    document.getElementById("textInput").value = val;
-    getSign(val);
+    let sign = url.searchParams.get("sign");
+    let id = url.searchParams.get("id");
+    let v = url.searchParams.get("v");
+
+    let searchSign = sign;
+
+    if(id !== null) {
+        //https://www.signingsavvy.com/sign/MOVE/8598/2
+        searchSign = `https://www.signingsavvy.com/sign/${sign.toUpperCase()}/${id}}/${v}`
+    }
+
+    document.getElementById("textInput").value = sign;
+    getSign(searchSign);
 }
 
 CheckUrl()
