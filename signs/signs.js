@@ -133,6 +133,7 @@ function CheckUrl() {
     }
 
     document.getElementById("textInput").value = sign;
+    console.log(searchSign)
     getSign(searchSign);
 }
 
