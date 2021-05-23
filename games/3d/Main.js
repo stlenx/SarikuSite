@@ -24,7 +24,7 @@ let position = new Vector3(0,0,0);
 let lastTick = Date.now();
 
 let camera = new Camera(0,0,0);
-let scene = new Scene(gl, camera)
+let scene = new SceneGL(gl, camera)
 
 function frame() {
     let now = Date.now()

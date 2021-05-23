@@ -86,8 +86,12 @@ class Vector2 {
         this.y = y;
     }
 
+    Length() {
+        return Math.sqrt((this.x * this.x) + (this.y * this.y))
+    }
+
     normalize() {
-        let h = Math.sqrt((this.x * this.x) + (this.y * this.y))
+        let h = this.Length()
         this.x /= h;
         this.y /= h;
     }
@@ -131,7 +135,48 @@ class Vector3 {
         this.y = y;
         this.z = z;
     }
+
+    RAdd(vector) {
+        let x = vector.x + this.x;
+        let y = vector.y + this.y;
+        let z = vector.z + this.z;
+
+        return new Vector3(x,y,z);
+    }
+
+    RRes(vector) {
+        let x = vector.x - this.x;
+        let y = vector.y - this.y;
+        let z = vector.z - this.z;
+
+        return new Vector3(x,y,z);
+    }
+
+    Add(vector) {
+        this.x += vector.x;
+        this.y += vector.y;
+        this.z += vector.z;
+    }
+
+    Res(vector) {
+        this.x += vector.x;
+        this.y += vector.y;
+        this.z += vector.z;
+    }
+
+    Length() {
+        return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z))
+    }
+
+    normalize() {
+        let length = this.Length()
+        this.x = this.x / length;
+        this.y = this.y / length;
+        this.z = this.z / length;
+    }
 }
+
+let dot3 = (a, b)  => (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 
 //#endregion
 

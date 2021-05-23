@@ -1,4 +1,4 @@
-class Scene {
+class SceneGL {
     //vertex shader - Convert vertex positions to clip space
     vsSource = `
     attribute vec4 aVertexPosition;

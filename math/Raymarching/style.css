@@ -1,0 +1,8 @@
+div.menu {
+    flex-basis: 20%;
+    background-color: blue;
+}
+
+div.page {
+    display: flex;
+}

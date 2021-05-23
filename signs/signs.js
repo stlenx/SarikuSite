@@ -8,7 +8,6 @@ Http.onreadystatechange = () => {
     let output = JSON.parse(Http.responseText)
     console.log(output)
 
-    //https://www.signingsavvy.com/sign/MOVE/8598/2
     let url = document.location.href.split("?");
 
     let nextURL = url[0] + `?sign=${loadedSign}`;
@@ -135,7 +134,6 @@ function CheckUrl() {
     let searchSign = sign;
 
     if(id !== null) {
-        //https://www.signingsavvy.com/sign/MOVE/8598/2
         searchSign = `https://www.signingsavvy.com/sign/${sign.toUpperCase()}/${id}/${v}`
     }
 
