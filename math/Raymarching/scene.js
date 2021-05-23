@@ -39,10 +39,13 @@ class Scene {
     }
 
     GetPixel(x, y) {
-        let dst1 = this.elements[0].GetDistance(x, y);
-        let dst2 = this.elements[1].GetDistance(x, y);
+        let dst = this.elements[0].GetDistance(x, y);
 
-        if(smooth(dst1, dst2, 800) < 0) {
+        for(let i = 0; i < this.elements.length; i++) {
+            dst = smooth(dst, this.elements[i].GetDistance(x, y), 300)
+        }
+
+        if(dst < 0) {
             return new Color(0,0,0)
         }
         return new Color(255,255,255)

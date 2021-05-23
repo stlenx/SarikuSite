@@ -6,6 +6,8 @@ let ctx = canvas.getContext("2d");
 let scene = new Scene(canvas.width, canvas.height,ctx);
 scene.AddElement(new Circle(500,500, 80))
 scene.AddElement(new Square(600,500, new Vector2(200, 200)))
+scene.AddElement(new Square(900,500, new Vector2(100, 100)))
+scene.AddElement(new Circle(450, 500, 80))
 
 scene.Draw();
 
