@@ -6,6 +6,10 @@ class Scene {
         this.objects = [];
         this.ImageData = null;
 
+        this.InitCalc()
+    }
+
+    InitCalc() {
         this.calc = gpu.createKernel(function (objects, n, k) {
             if(n < 1) return 0;
 
@@ -55,16 +59,19 @@ class Scene {
                 return 255
             }
             return 0;
-        }).setOutput([h, h])
+        }).setOutput([this.h, this.h])
     }
 
     AddObject(x, y, type, s, sx = 0) {
         switch (type) {
             case 0: //Circle
                 this.objects.push([x, y, s, 0, 0, 0])
+                this.InitCalc()
                 break;
             case 1:
                 this.objects.push([x, y, 0, 1, s, sx])
+                this.InitCalc()
+                break;
         }
     }
 
