@@ -7,6 +7,7 @@
 </head>
 <body>
 
+<script src="../../dist/gpu-browser.js"></script>
 <script src="../../misc/js+.js" defer></script>
 <script src="shapes/shape.js" defer></script>
 <script src="shapes/circle.js" defer></script>
@@ -17,8 +18,12 @@
 <div class="page">
     <div class="menu">
         <h1>
-            Hello this is a test
+            Elements
         </h1>
+        <div id="elements">
+
+        </div>
+        <button onclick="AddButton()">Add</button>
     </div>
 
     <canvas id="scene"></canvas>

@@ -19,26 +19,31 @@ class Scene {
     Calculate() {
         this.imageData = this.ctx.createImageData(this.w,this.h);
 
+        let output = DumbShitFuck(this.elements[0].x, this.elements[0].y, 50);
+
         let buf = new ArrayBuffer(this.imageData.data.length);
 
         let buf8 = new Uint8ClampedArray(buf);
         let data = new Uint32Array(buf);
-        for (let x = 0; x < this.w; x++) {
-            for (let y = 0; y < this.h; y++) {
+        for (let x = 0; x < output.length; x++) {
+            for (let y = 0; y < output[x].length; y++) {
 
-                let col = this.GetPixel(x, y)
+                //let col = this.GetPixel(x, y)
+                let col = output[y][x];
 
                 data[y * this.imageData.width + x] =
                     (255   << 24) |	// alpha
-                    (col.b << 16) |	// blue
-                    (col.g <<  8) |	// green
-                    col.r;		    // red
+                    (col << 16) |	// blue
+                    (col <<  8) |	// green
+                    col;		    // red
             }
         }
         this.imageData.data.set(buf8);
     }
 
     GetPixel(x, y) {
+        if(this.elements.length === 0) return new Color(0,0,0)
+
         let dst = this.elements[0].GetDistance(x, y);
 
         for(let i = 0; i < this.elements.length; i++) {
@@ -46,9 +51,9 @@ class Scene {
         }
 
         if(dst < 0) {
-            return new Color(0,0,0)
+            return new Color(255,255,255)
         }
-        return new Color(255,255,255)
+        return new Color(0,0,0)
 
         function smooth(dst1, dst2, k) {
             let h = Math.max(k-Math.abs(dst1-dst2),0) / k;
