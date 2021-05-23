@@ -12,3 +12,7 @@ div.menu {
 div.page {
     display: flex;
 }
+
+input[type=number]{
+    width: 3em;
+}
