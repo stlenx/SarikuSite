@@ -19,10 +19,7 @@ const type = {
     square: 1
 }
 
-let key = {
-    ctrl: false
-}
-
+let clicked = false;
 let drawBorders = false;
 let TypeToMake = 0;
 let selected = 0;
@@ -57,12 +54,6 @@ function DrawBorders() {
         }
     })
 }
-
-canvas.addEventListener("mousemove", (e) => {
-    if(scene.objects.length < 1 || key.ctrl) return;
-    scene.objects[selected][0] = e.offsetX;
-    scene.objects[selected][1] = e.offsetY;
-})
 
 function ChangeType(value) {
     switch (value) {
@@ -143,24 +134,61 @@ function AddElementHTML() {
     a.appendChild(h2)
 }
 
-window.addEventListener("keydown", (e) => {
-    switch (e.key) {
-        case "Control":
-            key.ctrl = true;
-            break;
-        default:
-            break;
+canvas.addEventListener("mousedown", (e) => {
+    scene.objects.forEach((o) => {
+        switch (o[3]) {
+            case type.circle:
+                let dx = o[0] - e.offsetX;
+                let dy = o[1] - e.offsetY;
+                let distanceSquared = dx * dx + dy * dy;
+
+                if (distanceSquared <= o[2] * o[2]) {
+
+                }
+                break;
+            case type.square:
+                break;
+        }
+    })
+    for(let i = 0; i < scene.objects.length; i++) {
+        let objectX = scene.objects[i][0];
+        let objectY = scene.objects[i][1];
+        let objectType = scene.objects[i][3];
+
+        switch (objectType) {
+            case type.circle:
+                let objectR = scene.objects[i][2];
+
+                let dx = objectX - e.offsetX;
+                let dy = objectY - e.offsetY;
+                let distanceSquared = dx * dx + dy * dy;
+
+                if (distanceSquared <= objectR * objectR) {
+                    selected = i;
+                    clicked = true;
+                }
+                break;
+            case type.square:
+                let objectW = scene.objects[i][4];
+                let objectH = scene.objects[i][5];
+
+                if(e.offsetX > objectX - objectW / 2 && e.offsetX < objectX + objectW / 2 && e.offsetY > objectY - objectH / 2 && e.offsetY < objectY + objectH / 2) {
+                    selected = i;
+                    clicked = true;
+                }
+                break;
+        }
     }
 })
 
-window.addEventListener("keyup",(e) => {
-    switch (e.key) {
-        case "Control":
-            key.ctrl = false;
-            break;
-        default:
-            break;
-    }
+canvas.addEventListener("mousemove", (e) => {
+    if(scene.objects.length < 1 || !clicked) return;
+    scene.objects[selected][0] = e.offsetX;
+    scene.objects[selected][1] = e.offsetY;
+})
+
+canvas.addEventListener("mouseup", (e) => {
+    clicked = false;
 })
 
 window.requestAnimationFrame(frame)
