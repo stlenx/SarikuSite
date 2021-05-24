@@ -94,7 +94,50 @@ function AddParameter(value, id, text) {
     container.appendChild(input)
 }
 
+let lastClick = Date.now();
 function SelectElement(id) {
+    let now = Date.now();
+    let timeInBetween = now - lastClick;
+    if(timeInBetween < 250) {
+        //Double click
+        SelectElementDoubleClick(id)
+    } else {
+        //Single click
+        SelectElementLeftClick(id)
+    }
+    lastClick = now;
+}
+
+function SelectElementDoubleClick(id) {
+    let a = document.getElementById(id);
+    let h2 = a.lastChild;
+
+    let input = document.createElement("input")
+    input.type = "text";
+    input.value = h2.innerHTML;
+    input.name = id;
+    input.onchange = function() {RenameElement(this.name, this.value)}
+
+    a.appendChild(input)
+
+    input.select()
+
+    a.removeChild(h2)
+}
+
+function RenameElement(id, text) {
+    let a = document.getElementById(id);
+    let input = a.lastChild;
+
+    let h2 = document.createElement("h2")
+    h2.innerHTML = text;
+
+    a.appendChild(h2)
+
+    a.removeChild(input)
+}
+
+function SelectElementLeftClick(id) {
     document.getElementById(selected).style.color="white";
     document.getElementById(id).style.color="red";
     selected = id;
