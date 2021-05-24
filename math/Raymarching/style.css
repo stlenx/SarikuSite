@@ -16,3 +16,7 @@ div.page {
 input[type=number]{
     width: 3em;
 }
+
+a.element:hover {
+    color: blue;
+}
