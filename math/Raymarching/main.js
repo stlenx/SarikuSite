@@ -29,6 +29,7 @@ scene.AddObject(500, 500, type.circle, 50)
 //scene.AddObject(500, 500, type.square, 50, 80)
 
 function frame() {
+    scene.k = parseInt(document.getElementById("k").value)
 
     scene.Calculate()
     scene.Draw()

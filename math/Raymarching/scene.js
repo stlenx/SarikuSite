@@ -3,6 +3,7 @@ class Scene {
         this.w = w;
         this.h = h;
         this.ctx = ctx;
+        this.k = 150;
         this.objects = [];
         this.ImageData = null;
 
@@ -83,7 +84,7 @@ class Scene {
     Calculate() {
         this.ImageData = this.ctx.createImageData(this.w,this.h);
 
-        let output = this.calc(this.objects, this.objects.length, 300);
+        let output = this.calc(this.objects, this.objects.length, this.k);
 
         let buf = new ArrayBuffer(this.ImageData.data.length);
 

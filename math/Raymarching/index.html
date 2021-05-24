@@ -28,18 +28,24 @@
             <input type="radio" id="box" name="type" value="1" onclick="ChangeType(parseInt(this.value))">
             <label for="box">Box</label>
         </div>
+
         <div>
             <label for="x">X: <input type="number" value="0" id="x"></label>
             <label for="y">Y: <input type="number" value="0" id="y"></label>
         </div>
+
         <div id="parameters">
             <label for="r" id="for-r">Radius: <input type="number" value="50" id="r"></label>
         </div>
-        <button onclick="AddButton()">Add</button>
-        <label>
-            Draw Borders
-            <input type="checkbox" onclick="drawBorders = !drawBorders">
-        </label>
+
+        <div>
+            <button onclick="AddButton()">Add</button>
+            <label>
+                Draw Borders
+                <input type="checkbox" onclick="drawBorders = !drawBorders">
+            </label>
+        </div>
+        <input id="k" type="range" value="150" min="1" max="1000">
     </div>
 
     <canvas id="scene"></canvas>
