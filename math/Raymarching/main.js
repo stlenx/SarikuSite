@@ -25,7 +25,7 @@ let TypeToMake = 0;
 let selected = 0;
 let gpu = new GPU();
 let scene = new Scene(canvas.width, canvas.height,ctx);
-scene.AddObject(500, 500, type.circle, 50)
+scene.AddObject(500, 500, type.circle, 250, 200, 150, 50)
 //scene.AddObject(500, 500, type.square, 50, 80)
 
 function frame() {
@@ -43,14 +43,14 @@ function DrawBorders() {
     ctx.strokeStyle = "green";
     ctx.lineWidth = 5;
     scene.objects.forEach((o) => {
-        switch (o[3]) { //index 3 is type
+        switch (o[2]) { //index 3 is type
             case type.circle:
                 ctx.beginPath();
-                ctx.arc(o[0], o[1], o[2], 0, 2 * Math.PI);
+                ctx.arc(o[0], o[1], o[3], 0, 2 * Math.PI);
                 ctx.stroke();
                 break;
             case type.square:
-                ctx.strokeRect(o[0] - o[4] / 2, o[1] - o[5] / 2, o[4], o[5]);
+                ctx.strokeRect(o[0] - o[3] / 2, o[1] - o[4] / 2, o[3], o[4]);
                 break;
         }
     })
@@ -151,12 +151,12 @@ function AddButton() {
     switch (TypeToMake) {
         case type.circle:
             let r = parseInt(document.getElementById("r").value);
-            scene.AddObject(x, y, TypeToMake, r)
+            scene.AddObject(x, y, TypeToMake, 100,23,255,r)
             break;
         case type.square:
             let w = parseInt(document.getElementById("w").value);
             let h = parseInt(document.getElementById("h").value);
-            scene.AddObject(x, y, TypeToMake, w, h)
+            scene.AddObject(x, y, TypeToMake, 255,255,255,w, h)
             break;
     }
 
@@ -180,13 +180,13 @@ function AddElementHTML() {
 
 canvas.addEventListener("mousedown", (e) => {
     scene.objects.forEach((o) => {
-        switch (o[3]) {
+        switch (o[2]) {
             case type.circle:
                 let dx = o[0] - e.offsetX;
                 let dy = o[1] - e.offsetY;
                 let distanceSquared = dx * dx + dy * dy;
 
-                if (distanceSquared <= o[2] * o[2]) {
+                if (distanceSquared <= o[3] * o[3]) {
 
                 }
                 break;
@@ -197,11 +197,11 @@ canvas.addEventListener("mousedown", (e) => {
     for(let i = 0; i < scene.objects.length; i++) {
         let objectX = scene.objects[i][0];
         let objectY = scene.objects[i][1];
-        let objectType = scene.objects[i][3];
+        let objectType = scene.objects[i][2];
 
         switch (objectType) {
             case type.circle:
-                let objectR = scene.objects[i][2];
+                let objectR = scene.objects[i][3];
 
                 let dx = objectX - e.offsetX;
                 let dy = objectY - e.offsetY;
@@ -213,8 +213,8 @@ canvas.addEventListener("mousedown", (e) => {
                 }
                 break;
             case type.square:
-                let objectW = scene.objects[i][4];
-                let objectH = scene.objects[i][5];
+                let objectW = scene.objects[i][3];
+                let objectH = scene.objects[i][4];
 
                 if(e.offsetX > objectX - objectW / 2 && e.offsetX < objectX + objectW / 2 && e.offsetY > objectY - objectH / 2 && e.offsetY < objectY + objectH / 2) {
                     selected = i;

@@ -16,8 +16,11 @@ class Scene {
 
             let object1x = objects[0][0];
             let object1y = objects[0][1];
-            let object1r = objects[0][2];
-            let object1type = objects[0][3];
+            let object1r = objects[0][3];
+            let object1type = objects[0][2];
+            let r = objects[0][5];
+            let g = objects[0][6];
+            let b = objects[0][7];
 
             let dst = 0;
 
@@ -25,8 +28,8 @@ class Scene {
                 dst = Math.sqrt( ((object1x - this.thread.x) * (object1x - this.thread.x)) + ((object1y - this.thread.y) * (object1y - this.thread.y)) )
                 dst -= object1r;
             } else {
-                let object1w = objects[0][4];
-                let object1h = objects[0][5];
+                let object1w = objects[0][3];
+                let object1h = objects[0][4];
                 let dx = Math.max(Math.abs(this.thread.x - object1x) - object1w * 0.5, 0);
                 let dy = Math.max(Math.abs(this.thread.y - object1y) - object1h * 0.5, 0);
                 dst = dx * dx + dy * dy;
@@ -37,40 +40,66 @@ class Scene {
                 let dstN = 0;
                 let objectNx = objects[i][0];
                 let objectNy = objects[i][1];
-                let objectNr = objects[i][2];
-                let objectNtype = objects[i][3];
+                let objectNr = objects[i][3];
+                let objectNtype = objects[i][2];
+                let Nr = objects[i][5];
+                let Ng = objects[i][6];
+                let Nb = objects[i][7];
 
                 if(objectNtype === 0) {
                     dstN = Math.sqrt( ((objectNx - this.thread.x) * (objectNx - this.thread.x)) + ((objectNy - this.thread.y) * (objectNy - this.thread.y)) )
                     dstN -= objectNr;
                 } else {
-                    let objectNw = objects[i][4];
-                    let objectNh = objects[i][5];
+                    let objectNw = objects[i][3];
+                    let objectNh = objects[i][4];
                     let dx = Math.max(Math.abs(this.thread.x - objectNx) - objectNw * 0.5, 0);
                     let dy = Math.max(Math.abs(this.thread.y - objectNy) - objectNh * 0.5, 0);
                     dstN = dx * dx + dy * dy;
                     if(dstN < 1) dstN = -1;
                 }
 
+                function Clamp(num, min, max) {
+                    return Math.min(Math.max(num, min), max);
+                }
+
+                function Lerp(v0, v1, t) {
+                    return v0*(1-t)+v1*t
+                }
+
                 let h = Math.max(k-Math.abs(dst-dstN),0) / k;
                 dst =  Math.min(dst, dstN) - h * h * h * k/6;
+
+                //New thing?
+                let hC = Clamp(0.5 + 0.5 * (dstN - dst), 0.0, 1.0);
+
+                r = Lerp(Nr, r, hC);
+                g = Lerp(Ng, g, hC);
+                b = Lerp(Nb, b, hC);
+                //dst = Lerp(dst, dstN, h) - k*h*(1.0-h);
             }
 
             if(dst < 0) {
-                return 255
+                let rgb = r;
+                rgb = (rgb << 8) + g;
+                rgb = (rgb << 8) + b;
+                return rgb
             }
-            return 0;
+
+            let rgb = 0;
+            rgb = (rgb << 8) + 0;
+            rgb = (rgb << 8) + 0;
+            return rgb
         }).setOutput([this.h, this.h])
     }
 
-    AddObject(x, y, type, s, sx = 0) {
+    AddObject(x, y, type, r, g, b, s, sx = 0) {
         switch (type) {
             case 0: //Circle
-                this.objects.push([x, y, s, 0, 0, 0])
+                this.objects.push([x, y, 0, s, 0, r, g, b]) //X, Y, type, Radius, empty, R, G, B
                 this.InitCalc()
                 break;
             case 1:
-                this.objects.push([x, y, 0, 1, s, sx])
+                this.objects.push([x, y, 1, s, sx, r, g, b]) //X, Y, type, Width, Height, R, G, B
                 this.InitCalc()
                 break;
         }
@@ -93,14 +122,17 @@ class Scene {
         for (let x = 0; x < output.length; x++) {
             for (let y = 0; y < output[x].length; y++) {
 
-                //let col = this.GetPixel(x, y)
                 let col = output[y][x];
+
+                let red = (col >> 16) & 0xFF;
+                let green = (col >> 8) & 0xFF;
+                let blue = col & 0xFF;
 
                 data[y * this.ImageData.width + x] =
                     (255   << 24) |	// alpha
-                    (col << 16) |	// blue
-                    (col <<  8) |	// green
-                    col;		    // red
+                    (blue << 16) |	// blue
+                    (green <<  8) |	// green
+                    red;		    // red
             }
         }
         this.ImageData.data.set(buf8);
