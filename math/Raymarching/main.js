@@ -23,6 +23,7 @@ let clicked = false;
 let drawBorders = false;
 let TypeToMake = 0;
 let selected = 0;
+let Modify = false;
 let gpu = new GPU();
 let scene = new Scene(canvas.width, canvas.height,ctx);
 scene.AddObject(500, 500, type.circle, 255, 0, 0, 50)
@@ -36,7 +37,38 @@ function frame() {
 
     if(drawBorders) DrawBorders()
 
+    if(Modify) UpdateSelected();
+
     window.requestAnimationFrame(frame)
+}
+
+function UpdateSelected() {
+    let x = parseInt(document.getElementById("x").value);
+    let y = parseInt(document.getElementById("y").value);
+    let col = hexToRgb(document.getElementById("col").value);
+
+    switch (scene.objects[selected][2]) {
+        case type.circle:
+            let r = parseInt(document.getElementById("r").value);
+            UpdateValues(selected,x, y, scene.objects[selected][2], col.r,col.g,col.b,r)
+            break;
+        case type.square:
+            let w = parseInt(document.getElementById("w").value);
+            let h = parseInt(document.getElementById("h").value);
+            UpdateValues(selected,x, y, scene.objects[selected][2], col.r,col.g,col.b,w, h)
+            break;
+    }
+}
+
+function UpdateValues(i, x, y, type, r, g, b, s, sx = 0) {
+    scene.objects[i][0] = x;
+    scene.objects[i][1] = y;
+    scene.objects[i][2] = type;
+    scene.objects[i][3] = s;
+    scene.objects[i][4] = sx;
+    scene.objects[i][5] = r;
+    scene.objects[i][6] = g;
+    scene.objects[i][7] = b;
 }
 
 function DrawBorders() {
@@ -109,6 +141,11 @@ function SelectElement(id) {
     lastClick = now;
 }
 
+function Unselect() {
+    document.getElementById(selected).style.color="white";
+    Modify = false;
+}
+
 function SelectElementDoubleClick(id) {
     let a = document.getElementById(id);
     let h2 = a.lastChild;
@@ -142,6 +179,22 @@ function SelectElementLeftClick(id) {
     document.getElementById(selected).style.color="white";
     document.getElementById(id).style.color="red";
     selected = id;
+
+    document.getElementById("x").value = scene.objects[id][0];
+    document.getElementById("y").value = scene.objects[id][1];
+    document.getElementById("col").value = rgbToHex(scene.objects[id][5],scene.objects[id][6],scene.objects[id][7]);
+
+    switch (scene.objects[id][2]) {
+        case type.circle:
+            document.getElementById("r").value = scene.objects[id][3];
+            break;
+        case type.square:
+            document.getElementById("w").value = scene.objects[id][3];
+            document.getElementById("h").value = scene.objects[id][4];
+            break;
+    }
+
+    Modify = true;
 }
 
 function AddButton() {
