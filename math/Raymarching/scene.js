@@ -14,29 +14,13 @@ class Scene {
         this.calc = gpu.createKernel(function (objects, n, k) {
             if(n < 1) return 0;
 
-            let object1x = objects[0][0];
-            let object1y = objects[0][1];
-            let object1r = objects[0][3];
-            let object1type = objects[0][2];
-            let r = objects[0][5];
-            let g = objects[0][6];
-            let b = objects[0][7];
+            let r = -1;
+            let g = -1;
+            let b = -1;
 
-            let dst = 0;
+            let dst = 1000;
 
-            if(object1type === 0) {
-                dst = Math.sqrt( ((object1x - this.thread.x) * (object1x - this.thread.x)) + ((object1y - this.thread.y) * (object1y - this.thread.y)) )
-                dst -= object1r;
-            } else {
-                let object1w = objects[0][3];
-                let object1h = objects[0][4];
-                let dx = Math.max(Math.abs(this.thread.x - object1x) - object1w * 0.5, 0);
-                let dy = Math.max(Math.abs(this.thread.y - object1y) - object1h * 0.5, 0);
-                dst = dx * dx + dy * dy;
-                if(dst < 1) dst = -1;
-            }
-
-            for(let i = 1; i < n; i++) {
+            for(let i = 0; i < n; i++) {
                 let dstN = 0;
                 let objectNx = objects[i][0];
                 let objectNy = objects[i][1];
@@ -66,16 +50,12 @@ class Scene {
                     return v0*(1-t)+v1*t
                 }
 
-                let h = Math.max(k-Math.abs(dst-dstN),0) / k;
-                dst =  Math.min(dst, dstN) - h * h * h * k/6;
+                let h = Clamp( 0.5+0.5*(dst-dstN)/k, 0.0, 1.0 );
+                dst = Lerp( dst, dstN, h ) - k*h*(1.0-h);
 
-                //New thing?
-                let hC = Clamp(0.5 + 0.5 * (dstN - dst), 0.0, 1.0);
-
-                r = Lerp(Nr, r, hC);
-                g = Lerp(Ng, g, hC);
-                b = Lerp(Nb, b, hC);
-                //dst = Lerp(dst, dstN, h) - k*h*(1.0-h);
+                r = Lerp(r, Nr, h);
+                g = Lerp(g, Ng, h);
+                b = Lerp(b, Nb, h);
             }
 
             if(dst < 0) {

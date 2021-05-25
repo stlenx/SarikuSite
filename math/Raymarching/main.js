@@ -25,7 +25,7 @@ let TypeToMake = 0;
 let selected = 0;
 let gpu = new GPU();
 let scene = new Scene(canvas.width, canvas.height,ctx);
-scene.AddObject(500, 500, type.circle, 250, 200, 150, 50)
+scene.AddObject(500, 500, type.circle, 255, 0, 0, 50)
 //scene.AddObject(500, 500, type.square, 50, 80)
 
 function frame() {
@@ -62,14 +62,14 @@ function ChangeType(value) {
             TypeToMake = type.circle;
             RemoveParameter("w")
             RemoveParameter("h")
-            AddParameter(0, "r", "Radius: ")
+            AddParameter(50, "r", "Radius: ")
             break;
         case type.square:
             TypeToMake = type.square;
 
             RemoveParameter("r")
-            AddParameter(0, "w", "Width: ")
-            AddParameter(0, "h", "Height: ")
+            AddParameter(100, "w", "Width: ")
+            AddParameter(100, "h", "Height: ")
 
             break;
     }
@@ -147,16 +147,17 @@ function SelectElementLeftClick(id) {
 function AddButton() {
     let x = parseInt(document.getElementById("x").value);
     let y = parseInt(document.getElementById("y").value);
+    let col = hexToRgb(document.getElementById("col").value);
 
     switch (TypeToMake) {
         case type.circle:
             let r = parseInt(document.getElementById("r").value);
-            scene.AddObject(x, y, TypeToMake, 100,23,255,r)
+            scene.AddObject(x, y, TypeToMake, col.r,col.g,col.b,r)
             break;
         case type.square:
             let w = parseInt(document.getElementById("w").value);
             let h = parseInt(document.getElementById("h").value);
-            scene.AddObject(x, y, TypeToMake, 255,255,255,w, h)
+            scene.AddObject(x, y, TypeToMake, col.r,col.g,col.b,w, h)
             break;
     }
 

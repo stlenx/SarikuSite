@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Cool</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,35 +19,35 @@
 
 <div class="page">
     <div class="menu">
-        <h1>Elements</h1>
+        <h1>- Objects -</h1>
         <div id="elements">
             <a class="element" id="0" onclick="SelectElement(this.id)"><h2>Element 1</h2></a>
         </div>
 
-        <div>
-            <input type="radio" id="circle" name="type" value="0" checked onclick="ChangeType(parseInt(this.value))">
-            <label for="circle">Circle</label>
-            <input type="radio" id="box" name="type" value="1" onclick="ChangeType(parseInt(this.value))">
-            <label for="box">Box</label>
-        </div>
+        <div class="controls">
+            <div>
+                <input type="radio" id="circle" name="type" value="0" checked onclick="ChangeType(parseInt(this.value))">
+                <label for="circle">Circle</label>
+                <input type="radio" id="box" name="type" value="1" onclick="ChangeType(parseInt(this.value))">
+                <label for="box">Box</label>
+            </div>
 
-        <div>
-            <label for="x">X: <input type="number" value="0" id="x"></label>
-            <label for="y">Y: <input type="number" value="0" id="y"></label>
-        </div>
+            <div  id="parameters">
+                <label for="x">X: <input type="number" value="0" id="x"></label>
+                <label for="y">Y: <input type="number" value="0" id="y"></label>
+                <label for="r" id="for-r">Radius: <input type="number" value="50" id="r"></label>
+            </div>
 
-        <div id="parameters">
-            <label for="r" id="for-r">Radius: <input type="number" value="50" id="r"></label>
+            <div>
+                <input type="color" id="col">
+                <button onclick="AddButton()">Add</button>
+                <label>
+                    Draw Borders
+                    <input type="checkbox" onclick="drawBorders = !drawBorders">
+                </label>
+            </div>
+            <input id="k" type="range" value="150" min="1" max="1000">
         </div>
-
-        <div>
-            <button onclick="AddButton()">Add</button>
-            <label>
-                Draw Borders
-                <input type="checkbox" onclick="drawBorders = !drawBorders">
-            </label>
-        </div>
-        <input id="k" type="range" value="150" min="1" max="1000">
     </div>
 
     <canvas id="scene"></canvas>

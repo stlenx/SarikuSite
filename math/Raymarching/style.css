@@ -1,12 +1,24 @@
 body {
     background-color: black;
+    overflow: hidden;
 }
 
 div.menu {
+    font-family: 'Open Sans', sans-serif;
     color: white;
     flex-basis: 20%;
-    background-color: #424242;
+    background-color: #242424;
     text-align: center;
+}
+
+div.controls {
+    margin-top: 5%;
+}
+
+div#elements {
+    background-color: #424242;
+    padding-top: 1%;
+    padding-bottom: 1%;
 }
 
 div.page {
