@@ -35,10 +35,85 @@ class Scene {
                 } else {
                     let objectNw = objects[i][3];
                     let objectNh = objects[i][4];
-                    let dx = Math.max(Math.abs(this.thread.x - objectNx) - objectNw * 0.5, 0);
-                    let dy = Math.max(Math.abs(this.thread.y - objectNy) - objectNh * 0.5, 0);
-                    dstN = dx * dx + dy * dy;
-                    if(dstN < 1) dstN = -1;
+
+                    let width = objectNw * 0.5;
+                    let height = objectNh * 0.5;
+
+                    //Line 1 - Top left, top right
+                    let p1 = objectNx - width;
+                    let p2 = objectNy - height;
+                    let p3 = objectNx + width;
+                    let p4 = objectNy - height;
+
+                    let l2 = dist2(p1, p2, p3, p4);
+                    if (l2 === 0) return dist2(this.thread.x, this.thread.y, p1, p2);
+                    let t = ((this.thread.x - p1) * (p3 - p1) + (this.thread.y - p2) * (p4 - p2)) / l2;
+                    t = Math.max(0, Math.min(1, t));
+                    let result = dist2(this.thread.x, this.thread.y, p1 + t * (p3 - p1), p2 + t * (p4 - p2));
+
+                    dstN = Math.sqrt(result);
+
+                    //Line 2 - Top right, bottom right
+                    p1 = objectNx + width;
+                    p2 = objectNy - height;
+                    p3 = objectNx + width;
+                    p4 = objectNy + height;
+
+                    l2 = dist2(p1, p2, p3, p4);
+                    if (l2 === 0) return dist2(this.thread.x, this.thread.y, p1, p2);
+                    t = ((this.thread.x - p1) * (p3 - p1) + (this.thread.y - p2) * (p4 - p2)) / l2;
+                    t = Math.max(0, Math.min(1, t));
+                    result = dist2(this.thread.x, this.thread.y, p1 + t * (p3 - p1), p2 + t * (p4 - p2));
+
+                    let dstL = Math.sqrt(result);
+                    if(dstL < dstN) dstN = dstL;
+
+                    //Line 3 - bottom right, bottom left
+                    p1 = objectNx + width;
+                    p2 = objectNy + height;
+                    p3 = objectNx - width;
+                    p4 = objectNy + height;
+
+                    l2 = dist2(p1, p2, p3, p4);
+                    if (l2 === 0) return dist2(this.thread.x, this.thread.y, p1, p2);
+                    t = ((this.thread.x - p1) * (p3 - p1) + (this.thread.y - p2) * (p4 - p2)) / l2;
+                    t = Math.max(0, Math.min(1, t));
+                    result = dist2(this.thread.x, this.thread.y, p1 + t * (p3 - p1), p2 + t * (p4 - p2));
+
+                    dstL = Math.sqrt(result);
+                    if(dstL < dstN) dstN = dstL;
+
+                    //Line 4 - bottom left, top left
+                    p1 = objectNx - width;
+                    p2 = objectNy + height;
+                    p3 = objectNx - width;
+                    p4 = objectNy - height;
+
+                    l2 = dist2(p1, p2, p3, p4);
+                    if (l2 === 0) return dist2(this.thread.x, this.thread.y, p1, p2);
+                    t = ((this.thread.x - p1) * (p3 - p1) + (this.thread.y - p2) * (p4 - p2)) / l2;
+                    t = Math.max(0, Math.min(1, t));
+                    result = dist2(this.thread.x, this.thread.y, p1 + t * (p3 - p1), p2 + t * (p4 - p2));
+
+                    dstL = Math.sqrt(result);
+                    if(dstL < dstN) dstN = dstL;
+
+                    if(this.thread.x > objectNx - width && this.thread.x < objectNx + width && this.thread.y > objectNy - height && this.thread.y < objectNy + height) {
+                        dstN = dstN * -1;
+                    }
+
+                    //let dx = Math.max(Math.abs(this.thread.x - objectNx) - objectNw * 0.5, 0);
+                    //let dy = Math.max(Math.abs(this.thread.y - objectNy) - objectNh * 0.5, 0);
+                    //dstN = dx * dx + dy * dy;
+                    //if(dstN < 1) dstN = -1;
+
+                    function sqr(x) {
+                        return x * x
+                    }
+
+                    function dist2(vx, vy, wx, wy) {
+                        return sqr(vx - wx) + sqr(vy - wy)
+                    }
                 }
 
                 function Clamp(num, min, max) {
@@ -55,6 +130,9 @@ class Scene {
                 r = Lerp(r, Nr, h);
                 g = Lerp(g, Ng, h);
                 b = Lerp(b, Nb, h);
+
+                //Square stuff
+
             }
 
             if(dst < 0) {
@@ -83,14 +161,10 @@ class Scene {
     Calculate() {
         let output = this.calc(this.objects, this.objects.length, this.k);
 
-        //var t0 = performance.now()
         let buf = new ArrayBuffer(this.ImageData.data.length);
 
         let buf8 = new Uint8ClampedArray(buf);
         let data = new Uint32Array(buf);
-
-        //var t1 = performance.now()
-        //console.log((t1 - t0) + " milliseconds.")
 
         for (let x = 0; x < output.length; x++) {
             for (let y = 0; y < output[x].length; y++) {
