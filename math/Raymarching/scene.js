@@ -1,11 +1,10 @@
 class Scene {
-    constructor(w, h,ctx) {
-        this.w = w;
+    constructor(h,ctx) {
         this.h = h;
         this.ctx = ctx;
         this.k = 150;
         this.objects = [];
-        this.ImageData = null;
+        this.ImageData = this.ctx.createImageData(this.h,this.h);
 
         this.InitCalc()
     }
@@ -59,9 +58,9 @@ class Scene {
             }
 
             if(dst < 0) {
-                let rgb = r;
+                let rgb = b;
                 rgb = (rgb << 8) + g;
-                rgb = (rgb << 8) + b;
+                rgb = (rgb << 8) + r;
                 return rgb
             }
 
@@ -73,77 +72,33 @@ class Scene {
     }
 
     AddObject(x, y, type, r, g, b, s, sx = 0) {
-        switch (type) {
-            case 0: //Circle
-                this.objects.push([x, y, 0, s, 0, r, g, b]) //X, Y, type, Radius, empty, R, G, B
-                this.InitCalc()
-                break;
-            case 1:
-                this.objects.push([x, y, 1, s, sx, r, g, b]) //X, Y, type, Width, Height, R, G, B
-                this.InitCalc()
-                break;
-        }
+        this.objects.push([x, y, type, s, sx, r, g, b])
+        this.InitCalc()
     }
 
     Draw() {
-        if(this.ImageData === null) this.Calculate()
         this.ctx.putImageData(this.ImageData, 0,0)
     }
 
     Calculate() {
-        this.ImageData = this.ctx.createImageData(this.w,this.h);
-
         let output = this.calc(this.objects, this.objects.length, this.k);
 
+        //var t0 = performance.now()
         let buf = new ArrayBuffer(this.ImageData.data.length);
 
         let buf8 = new Uint8ClampedArray(buf);
         let data = new Uint32Array(buf);
+
+        //var t1 = performance.now()
+        //console.log((t1 - t0) + " milliseconds.")
+
         for (let x = 0; x < output.length; x++) {
             for (let y = 0; y < output[x].length; y++) {
-
-                let col = output[y][x];
-
-                let red = (col >> 16) & 0xFF;
-                let green = (col >> 8) & 0xFF;
-                let blue = col & 0xFF;
-
-                data[y * this.ImageData.width + x] =
-                    (255   << 24) |	// alpha
-                    (blue << 16) |	// blue
-                    (green <<  8) |	// green
-                    red;		    // red
+                data[y * this.ImageData.width + x] = (255 << 24) | output[y][x];
             }
         }
+
         this.ImageData.data.set(buf8);
-    }
 
-    GetPixel(x, y) {
-        if(this.elements.length === 0) return new Color(0,0,0)
-
-        let dst = this.elements[0].GetDistance(x, y);
-
-        for(let i = 0; i < this.elements.length; i++) {
-            dst = smooth(dst, this.elements[i].GetDistance(x, y), 300)
-        }
-
-        if(dst < 0) {
-            return new Color(255,255,255)
-        }
-        return new Color(0,0,0)
-
-        function smooth(dst1, dst2, k) {
-            let h = Math.max(k-Math.abs(dst1-dst2),0) / k;
-            return Math.min(dst1, dst2) - h * h * h * k/6;
-        }
-    }
-}
-
-class Color {
-    constructor(r, g, b, a = 255) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
     }
 }

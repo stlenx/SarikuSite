@@ -25,15 +25,21 @@ let TypeToMake = 0;
 let selected = 0;
 let Modify = false;
 let gpu = new GPU();
-let scene = new Scene(canvas.width, canvas.height,ctx);
+let scene = new Scene(canvas.height,ctx);
 scene.AddObject(500, 500, type.circle, 255, 0, 0, 50)
 //scene.AddObject(500, 500, type.square, 50, 80)
 
+let k = document.getElementById("k");
 function frame() {
-    scene.k = parseInt(document.getElementById("k").value)
+
+
+    scene.k = parseInt(k.value)
 
     scene.Calculate()
+
     scene.Draw()
+
+
 
     if(drawBorders) DrawBorders()
 
