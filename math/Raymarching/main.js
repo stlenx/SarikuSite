@@ -31,15 +31,11 @@ scene.AddObject(500, 500, type.circle, 255, 0, 0, 50)
 
 let k = document.getElementById("k");
 function frame() {
-
-
     scene.k = parseInt(k.value)
 
     scene.Calculate()
 
     scene.Draw()
-
-
 
     if(drawBorders) DrawBorders()
 

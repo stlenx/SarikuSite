@@ -40,79 +40,22 @@ class Scene {
                     let height = objectNh * 0.5;
 
                     //Line 1 - Top left, top right
-                    let p1 = objectNx - width;
-                    let p2 = objectNy - height;
-                    let p3 = objectNx + width;
-                    let p4 = objectNy - height;
-
-                    let l2 = dist2(p1, p2, p3, p4);
-                    if (l2 === 0) return dist2(this.thread.x, this.thread.y, p1, p2);
-                    let t = ((this.thread.x - p1) * (p3 - p1) + (this.thread.y - p2) * (p4 - p2)) / l2;
-                    t = Math.max(0, Math.min(1, t));
-                    let result = dist2(this.thread.x, this.thread.y, p1 + t * (p3 - p1), p2 + t * (p4 - p2));
-
-                    dstN = Math.sqrt(result);
+                    dstN = DistToSegment(this.thread.x, this.thread.y, objectNx - width, objectNy - height, objectNx + width, objectNy - height);
 
                     //Line 2 - Top right, bottom right
-                    p1 = objectNx + width;
-                    p2 = objectNy - height;
-                    p3 = objectNx + width;
-                    p4 = objectNy + height;
-
-                    l2 = dist2(p1, p2, p3, p4);
-                    if (l2 === 0) return dist2(this.thread.x, this.thread.y, p1, p2);
-                    t = ((this.thread.x - p1) * (p3 - p1) + (this.thread.y - p2) * (p4 - p2)) / l2;
-                    t = Math.max(0, Math.min(1, t));
-                    result = dist2(this.thread.x, this.thread.y, p1 + t * (p3 - p1), p2 + t * (p4 - p2));
-
-                    let dstL = Math.sqrt(result);
-                    if(dstL < dstN) dstN = dstL;
+                    let dstLine2 = DistToSegment(this.thread.x, this.thread.y, objectNx + width, objectNy - height, objectNx + width, objectNy + height)
+                    if(dstLine2 < dstN) dstN = dstLine2;
 
                     //Line 3 - bottom right, bottom left
-                    p1 = objectNx + width;
-                    p2 = objectNy + height;
-                    p3 = objectNx - width;
-                    p4 = objectNy + height;
-
-                    l2 = dist2(p1, p2, p3, p4);
-                    if (l2 === 0) return dist2(this.thread.x, this.thread.y, p1, p2);
-                    t = ((this.thread.x - p1) * (p3 - p1) + (this.thread.y - p2) * (p4 - p2)) / l2;
-                    t = Math.max(0, Math.min(1, t));
-                    result = dist2(this.thread.x, this.thread.y, p1 + t * (p3 - p1), p2 + t * (p4 - p2));
-
-                    dstL = Math.sqrt(result);
-                    if(dstL < dstN) dstN = dstL;
+                    let dstLine3 = DistToSegment(this.thread.x, this.thread.y, objectNx + width, objectNy + height, objectNx - width,  objectNy + height)
+                    if(dstLine3 < dstN) dstN = dstLine3;
 
                     //Line 4 - bottom left, top left
-                    p1 = objectNx - width;
-                    p2 = objectNy + height;
-                    p3 = objectNx - width;
-                    p4 = objectNy - height;
-
-                    l2 = dist2(p1, p2, p3, p4);
-                    if (l2 === 0) return dist2(this.thread.x, this.thread.y, p1, p2);
-                    t = ((this.thread.x - p1) * (p3 - p1) + (this.thread.y - p2) * (p4 - p2)) / l2;
-                    t = Math.max(0, Math.min(1, t));
-                    result = dist2(this.thread.x, this.thread.y, p1 + t * (p3 - p1), p2 + t * (p4 - p2));
-
-                    dstL = Math.sqrt(result);
-                    if(dstL < dstN) dstN = dstL;
+                    let dstLine4 = DistToSegment(this.thread.x, this.thread.y, objectNx - width, objectNy + height, objectNx - width, objectNy - height)
+                    if(dstLine4 < dstN) dstN = dstLine4;
 
                     if(this.thread.x > objectNx - width && this.thread.x < objectNx + width && this.thread.y > objectNy - height && this.thread.y < objectNy + height) {
                         dstN = dstN * -1;
-                    }
-
-                    //let dx = Math.max(Math.abs(this.thread.x - objectNx) - objectNw * 0.5, 0);
-                    //let dy = Math.max(Math.abs(this.thread.y - objectNy) - objectNh * 0.5, 0);
-                    //dstN = dx * dx + dy * dy;
-                    //if(dstN < 1) dstN = -1;
-
-                    function sqr(x) {
-                        return x * x
-                    }
-
-                    function dist2(vx, vy, wx, wy) {
-                        return sqr(vx - wx) + sqr(vy - wy)
                     }
                 }
 
@@ -124,6 +67,19 @@ class Scene {
                     return v0*(1-t)+v1*t
                 }
 
+                function dist2(vx, vy, wx, wy) {
+                    return (vx - wx)*(vx - wx) + (vy - wy)*(vy - wy)
+                }
+                
+                function DistToSegment(px, py, l1x, l1y, l2x, l2y) {
+                    let l2 = 1;
+                    l2 = dist2(l1x, l1y, l2x, l2y);
+                    if (l2 === 0) return dist2(px, py, l1x, l1y);
+                    let t = ((px - l1x) * (l2x - l1x) + (py - l1y) * (l2y - l1y)) / l2;
+                    t = Math.max(0, Math.min(1, t));
+                    return Math.sqrt(dist2(px, py, l1x + t * (l2x - l1x), l1y + t * (l2y - l1y)));
+                }
+
                 let h = Clamp( 0.5+0.5*(dst-dstN)/k, 0.0, 1.0 );
                 dst = Lerp( dst, dstN, h ) - k*h*(1.0-h);
 
@@ -131,8 +87,13 @@ class Scene {
                 g = Lerp(g, Ng, h);
                 b = Lerp(b, Nb, h);
 
-                //Square stuff
-
+                //if(dstN < 0) {
+                //    //(value - from1) / (to1 - from1) * (to2 - from2) + from2;
+                //    let light = (dstN - 0) / (objectNr - 0) * (-50 - 50) +50;
+                //    r = Clamp(r + light, 0, 255)
+                //    g = Clamp(g + light, 0, 255)
+                //    b = Clamp(b + light, 0, 255)
+                //}
             }
 
             if(dst < 0) {
