@@ -16,7 +16,8 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 
 const type = {
     circle: 0,
-    square: 1
+    square: 1,
+    polygon: 2
 }
 
 let clicked = false;
@@ -50,15 +51,23 @@ function UpdateSelected() {
     let col = hexToRgb(document.getElementById("col").value);
 
     switch (scene.objects[selected][2]) {
-        case type.circle:
+        case type.circle: {
             let r = parseInt(document.getElementById("r").value);
             UpdateValues(selected,x, y, scene.objects[selected][2], col.r,col.g,col.b,r)
             break;
-        case type.square:
+        }
+        case type.square: {
             let w = parseInt(document.getElementById("w").value);
             let h = parseInt(document.getElementById("h").value);
             UpdateValues(selected,x, y, scene.objects[selected][2], col.r,col.g,col.b,w, h)
             break;
+        }
+        case type.polygon: {
+            let r = parseInt(document.getElementById("r").value);
+            let s = parseInt(document.getElementById("s").value);
+            UpdateValues(selected,x, y, scene.objects[selected][2], col.r,col.g,col.b,r, s)
+            break;
+        }
     }
 }
 
@@ -86,6 +95,11 @@ function DrawBorders() {
             case type.square:
                 ctx.strokeRect(o[0] - o[3] / 2, o[1] - o[4] / 2, o[3], o[4]);
                 break;
+            case type.polygon:
+                ctx.beginPath();
+                ctx.arc(o[0], o[1], o[3], 0, 2 * Math.PI);
+                ctx.stroke();
+                break;
         }
     })
 }
@@ -94,24 +108,52 @@ function ChangeType(value) {
     switch (value) {
         case type.circle:
             TypeToMake = type.circle;
-            RemoveParameter("w")
-            RemoveParameter("h")
+            if(document.getElementById("r")) RemoveParameter("r")
+            if(document.getElementById("w")) RemoveParameter("w")
+            if(document.getElementById("h")) RemoveParameter("h")
+            if(document.getElementById("s")) RemoveParameter("s")
             AddParameter(50, "r", "Radius: ")
             break;
         case type.square:
             TypeToMake = type.square;
-
-            RemoveParameter("r")
+            if(document.getElementById("r")) RemoveParameter("r")
+            if(document.getElementById("h")) RemoveParameter("h")
+            if(document.getElementById("s")) RemoveParameter("s")
             AddParameter(100, "w", "Width: ")
             AddParameter(100, "h", "Height: ")
-
             break;
+        case type.polygon:
+            TypeToMake = type.polygon;
+            if(document.getElementById("r")) RemoveParameter("r")
+            if(document.getElementById("w")) RemoveParameter("w")
+            if(document.getElementById("h")) RemoveParameter("h")
+
+            AddParameter(50, "r", "Radius: ")
+            AddParameterSlider(3, "s", " <br> Sides: ", 3, 20, 1)
     }
 }
 
 function RemoveParameter(id) {
     document.getElementById(id).remove();
     document.getElementById(`for-${id}`).remove();
+}
+
+function AddParameterSlider(value, id, text, min, max, step) {
+    let container = document.getElementById("parameters");
+    let input = document.createElement("input")
+    input.type = "range";
+    input.value = value;
+    input.min = min;
+    input.max = max;
+    input.step = step;
+    input.id = id;
+
+    let label = document.createElement("label")
+    label.setAttribute("for", "id")
+    label.id = `for-${id}`
+    label.innerHTML = text
+    container.appendChild(label)
+    container.appendChild(input)
 }
 
 function AddParameter(value, id, text) {
@@ -206,14 +248,25 @@ function AddButton() {
 
     switch (TypeToMake) {
         case type.circle:
+        {
             let r = parseInt(document.getElementById("r").value);
             scene.AddObject(x, y, TypeToMake, col.r,col.g,col.b,r)
             break;
+        }
         case type.square:
+        {
             let w = parseInt(document.getElementById("w").value);
             let h = parseInt(document.getElementById("h").value);
             scene.AddObject(x, y, TypeToMake, col.r,col.g,col.b,w, h)
             break;
+        }
+        case type.polygon:
+        {
+            let r = parseInt(document.getElementById("r").value);
+            let s = parseInt(document.getElementById("s").value);
+            scene.AddObject(x, y, TypeToMake, col.r,col.g,col.b,r, s)
+            break;
+        }
     }
 
     AddElementHTML()
@@ -257,6 +310,7 @@ canvas.addEventListener("mousedown", (e) => {
 
         switch (objectType) {
             case type.circle:
+            {
                 let objectR = scene.objects[i][3];
 
                 let dx = objectX - e.offsetX;
@@ -268,6 +322,7 @@ canvas.addEventListener("mousedown", (e) => {
                     clicked = true;
                 }
                 break;
+            }
             case type.square:
                 let objectW = scene.objects[i][3];
                 let objectH = scene.objects[i][4];
@@ -277,6 +332,20 @@ canvas.addEventListener("mousedown", (e) => {
                     clicked = true;
                 }
                 break;
+            case type.polygon:
+            {
+                let objectR = scene.objects[i][3];
+
+                let dx = objectX - e.offsetX;
+                let dy = objectY - e.offsetY;
+                let distanceSquared = dx * dx + dy * dy;
+
+                if (distanceSquared <= objectR * objectR) {
+                    selected = i;
+                    clicked = true;
+                }
+                break;
+            }
         }
     }
 })

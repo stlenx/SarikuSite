@@ -20,9 +20,6 @@
 <div class="page">
     <div class="menu">
         <h1>- Objects -</h1>
-        <div id="elements">
-            <a class="element" id="0" onclick="SelectElement(this.id)"><h2>Element 1</h2></a>
-        </div>
 
         <div class="controls">
             <div>
@@ -30,6 +27,8 @@
                 <label for="circle">Circle</label>
                 <input type="radio" id="box" name="type" value="1" onclick="ChangeType(parseInt(this.value))">
                 <label for="box">Box</label>
+                <input type="radio" id="polygon" name="type" value="2" onclick="ChangeType(parseInt(this.value))">
+                <label for="polygon">Polygon</label>
             </div>
 
             <div  id="parameters">
@@ -46,7 +45,11 @@
                     <input type="checkbox" onclick="drawBorders = !drawBorders">
                 </label>
             </div>
-            <input id="k" type="range" value="150" min="1" max="1000">
+            <input id="k" type="range" value="150" min="1" max="1000" >
+        </div>
+
+        <div id="elements">
+            <a class="element" id="0" onclick="SelectElement(this.id)"><h2>Element 1</h2></a>
         </div>
     </div>
 
