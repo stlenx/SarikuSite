@@ -1,3 +1,11 @@
+:root {
+    --dark-Gray: #242424;
+    --light-Gray: #424242;
+    --dark-blue: #1097c8;
+    --light-blue: #2cc6ff;
+    --white: #ffffff;
+}
+
 body {
     background-color: black;
     overflow: hidden;
@@ -7,7 +15,7 @@ div.menu {
     font-family: 'Open Sans', sans-serif;
     color: white;
     flex-basis: 20%;
-    background-color: #242424;
+    background-color: var(--dark-Gray);
     text-align: center;
 }
 
@@ -16,9 +24,26 @@ div.controls {
 }
 
 div#elements {
-    background-color: #424242;
+    background-color: var(--light-Gray);
     padding-top: 1%;
     padding-bottom: 1%;
+}
+
+div#parameters {
+    margin-bottom: 4%;
+}
+
+div.TypeSelect {
+    display: flex;
+    margin-bottom: 4%;
+}
+
+.RadioInput {
+    background-color: var(--dark-blue);
+    border-radius: 4px;
+    margin-right: 5%;
+    margin-left: 5%;
+    flex: 1;
 }
 
 div.page {
@@ -29,6 +54,38 @@ input[type=number]{
     width: 3em;
 }
 
-a.element:hover {
-    color: blue;
+input[type=radio] {
+    display: none;
+}
+
+input[type=radio]:checked + label {
+    background-color: var(--light-blue);
+}
+
+div.element {
+    background-color: var(--dark-blue);
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 25%;
+    margin-left: 25%;
+}
+
+.renameInput {
+    background-color: var(--light-blue);
+    font-size: 1.3em;
+    color: white;
+    width: 100%;
+}
+
+button {
+    background-color: var(--light-blue); /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    padding: 2% 5%;
+    margin: 4px 5%;
+    cursor: pointer;
+    border-radius: 4px;
 }

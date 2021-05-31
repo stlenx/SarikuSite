@@ -129,7 +129,7 @@ function ChangeType(value) {
             if(document.getElementById("h")) RemoveParameter("h")
 
             AddParameter(50, "r", "Radius: ")
-            AddParameterSlider(3, "s", " <br> Sides: ", 3, 20, 1)
+            AddParameterSlider(3, "s", " <br> Sides: ", 3, 10, 1)
     }
 }
 
@@ -186,42 +186,47 @@ function SelectElement(id) {
 }
 
 function Unselect() {
-    document.getElementById(selected).style.color="white";
+    let darkBlue = getComputedStyle(document.documentElement).getPropertyValue('--dark-blue');
+    document.getElementById(selected).style.background=darkBlue;
     Modify = false;
 }
 
 function SelectElementDoubleClick(id) {
-    let a = document.getElementById(id);
-    let h2 = a.lastChild;
+    let div = document.getElementById(id);
+    let h2 = div.lastChild;
 
     let input = document.createElement("input")
     input.type = "text";
     input.value = h2.innerHTML;
     input.name = id;
+    input.setAttribute("class", "renameInput")
     input.onchange = function() {RenameElement(this.name, this.value)}
 
-    a.appendChild(input)
+    div.appendChild(input)
 
     input.select()
 
-    a.removeChild(h2)
+    div.removeChild(h2)
 }
 
 function RenameElement(id, text) {
-    let a = document.getElementById(id);
-    let input = a.lastChild;
+    let div = document.getElementById(id);
+    let input = div.lastChild;
 
     let h2 = document.createElement("h2")
     h2.innerHTML = text;
 
-    a.appendChild(h2)
+    div.appendChild(h2)
 
-    a.removeChild(input)
+    div.removeChild(input)
 }
 
 function SelectElementLeftClick(id) {
-    document.getElementById(selected).style.color="white";
-    document.getElementById(id).style.color="red";
+    let darkBlue = getComputedStyle(document.documentElement).getPropertyValue('--dark-blue');
+    let lightBlue = getComputedStyle(document.documentElement).getPropertyValue('--light-blue');
+
+    document.getElementById(selected).style.background=darkBlue;
+    document.getElementById(id).style.background=lightBlue;
     selected = id;
 
     document.getElementById("x").value = scene.objects[id][0];
@@ -273,18 +278,18 @@ function AddButton() {
 }
 
 function AddElementHTML() {
-    let div = document.getElementById("elements")
+    let container = document.getElementById("elements")
 
-    let a = document.createElement("a");
-    a.setAttribute("class", "element")
-    a.id = scene.objects.length - 1;
-    a.onclick = function() {SelectElement(this.id)};
-    div.appendChild(a)
+    let div = document.createElement("div");
+    div.setAttribute("class", "element")
+    div.id = scene.objects.length - 1;
+    div.onclick = function() {SelectElement(this.id)};
+    container.appendChild(div)
 
     let h2 = document.createElement("h2")
     h2.innerHTML = `Element ${scene.objects.length}`
 
-    a.appendChild(h2)
+    div.appendChild(h2)
 }
 
 canvas.addEventListener("mousedown", (e) => {

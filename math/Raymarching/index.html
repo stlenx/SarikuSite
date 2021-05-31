@@ -11,9 +11,6 @@
 
 <script src="../../dist/gpu-browser.js"></script>
 <script src="../../misc/js+.js" defer></script>
-<script src="shapes/shape.js" defer></script>
-<script src="shapes/circle.js" defer></script>
-<script src="shapes/square.js" defer></script>
 <script src="scene.js" defer></script>
 <script src="main.js" defer></script>
 
@@ -22,13 +19,15 @@
         <h1>- Objects -</h1>
 
         <div class="controls">
-            <div>
+            <div class="TypeSelect">
                 <input type="radio" id="circle" name="type" value="0" checked onclick="ChangeType(parseInt(this.value))">
-                <label for="circle">Circle</label>
+                <label for="circle" class="RadioInput">Circle</label>
+
                 <input type="radio" id="box" name="type" value="1" onclick="ChangeType(parseInt(this.value))">
-                <label for="box">Box</label>
+                <label for="box" class="RadioInput">Box</label>
+
                 <input type="radio" id="polygon" name="type" value="2" onclick="ChangeType(parseInt(this.value))">
-                <label for="polygon">Polygon</label>
+                <label for="polygon" class="RadioInput">Polygon</label>
             </div>
 
             <div  id="parameters">
@@ -38,8 +37,9 @@
             </div>
 
             <div>
-                <input type="color" id="col">
+                <label for="col">Color: </label><input type="color" id="col">
                 <button onclick="AddButton()">Add</button>
+                <br>
                 <label>
                     Draw Borders
                     <input type="checkbox" onclick="drawBorders = !drawBorders">
@@ -49,7 +49,7 @@
         </div>
 
         <div id="elements">
-            <a class="element" id="0" onclick="SelectElement(this.id)"><h2>Element 1</h2></a>
+            <div class="element" id="0" onclick="SelectElement(this.id)"><h2>Element 1</h2></div>
         </div>
     </div>
 
