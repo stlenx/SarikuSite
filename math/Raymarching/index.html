@@ -18,7 +18,7 @@
     <div class="cardContainer">
         <div class="card">
             <div class="cardTitle">Objects</div>
-            <div class="cardBody">
+            <div class="cardBody bodyScroll">
                 <div id="elements">
                     <div class="element" id="0" onclick="SelectElement(this.id)"><span>Element 1</span></div>
                 </div>
@@ -30,7 +30,7 @@
 
     <div class="cardContainer">
         <div class="card">
-            <div class="cardTitle">Add Objects</div>
+            <div class="cardTitle">Inspector</div>
             <div class="cardBody">
                 <div class="typeSelect">
                     <input type="radio" id="circle" name="type" value="0" checked onclick="ChangeType(parseInt(this.value))">
@@ -57,18 +57,18 @@
                 <div class="inputShelf">
                     <label for="col">Color: </label><input type="color" id="col">
                 </div>
-                <button class="wideButton" onclick="AddButton()">Add</button>
+                <button class="wideButton" onclick="AddButton()">Add new</button>
             </div>
         </div>
         <div class="card">
             <div class="cardTitle">Settings</div>
             <div class="cardBody">
                 <div class="inputShelf">
-                    <label>Draw Borders</label>
-                    <input type="checkbox" onclick="drawBorders = !drawBorders">
+                    <label for="checkbox">Draw Borders</label>
+                    <input type="checkbox" onclick="drawBorders = !drawBorders" id="checkbox">
                 </div>
                 <div class="inputShelf">
-                    <label>Blending</label>
+                    <label for="k">Blending </label>
                     <input id="k" type="range" value="150" min="1" max="1000" >
                 </div>
             </div>

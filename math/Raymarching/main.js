@@ -1,6 +1,6 @@
 let canvas = document.getElementById("scene");
-canvas.setAttribute("width", window.innerHeight)
-canvas.setAttribute("height", window.innerHeight)
+canvas.setAttribute("width", window.innerHeight * 0.94)
+canvas.setAttribute("height", window.innerHeight *0.94)
 let ctx = canvas.getContext("2d");
 
 Element.prototype.remove = function() {
@@ -83,9 +83,10 @@ function UpdateValues(i, x, y, type, r, g, b, s, sx = 0) {
 }
 
 function DrawBorders() {
-    ctx.strokeStyle = "green";
+    //ctx.strokeStyle = "green";
     ctx.lineWidth = 5;
     scene.objects.forEach((o) => {
+        ctx.strokeStyle = `rgb(${255 - o[5]}, ${255 - o[6]}, ${255 - o[7]})`;
         switch (o[2]) { //index 3 is type
             case type.circle:
                 ctx.beginPath();
@@ -96,9 +97,28 @@ function DrawBorders() {
                 ctx.strokeRect(o[0] - o[3] / 2, o[1] - o[4] / 2, o[3], o[4]);
                 break;
             case type.polygon:
+                let n = o[4]; //NUmber of lines to make
+                let objectNr = o[3];
+                let objectNx = o[0];
+                let objectNy = o[1];
+
+                let increment = 6.28319 / n; //Amount of radians to move each iteration.
+
                 ctx.beginPath();
-                ctx.arc(o[0], o[1], o[3], 0, 2 * Math.PI);
+                for(let i = 0; i < n; i++) {
+                    //float x = r*cos(t) + h;
+                    // float y = r*sin(t) + k;
+                    let p1x = objectNr * Math.cos(increment * i) + objectNx;
+                    let p1y = objectNr * Math.sin(increment * i) + objectNy;
+
+                    let p2x = objectNr * Math.cos(increment * (i + 1)) + objectNx;
+                    let p2y = objectNr * Math.sin(increment * (i + 1)) + objectNy;
+
+                    ctx.moveTo(p1x, p1y);
+                    ctx.lineTo(p2x, p2y);
+                }
                 ctx.stroke();
+                ctx.closePath();
                 break;
         }
     })

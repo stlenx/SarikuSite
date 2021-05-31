@@ -29,17 +29,17 @@ body {
 
 .cardContainer {
     background-color: var(--darkSecondary);
-    flex-basis: 20%;
+    flex-basis: 24%;
     margin: 12px;
     border-radius: 12px;
     overflow: hidden;
 }
 
-
 .card {
-    flex-basis: 20%;
     background-color: var(--darkSecondary);
     text-align: left;
+    flex-basis: 24%;
+    overflow: hidden;
 }
 
 .cardTitle {
@@ -53,6 +53,10 @@ body {
 
 .cardBody {
     padding: 16px;
+}
+
+.bodyScroll {
+    overflow-y: auto;
 }
 
 .typeSelect {
@@ -91,7 +95,7 @@ input::-webkit-inner-spin-button {
 
 input[type=color] {
     background-color: transparent;
-    padding: 0px;
+    padding: 0;
     width: 64px;
     height: 42px;
 }
@@ -132,6 +136,7 @@ input[type=radio]:checked + label {
 
 .element {
     background-color: var(--darkSecondary1);
+    text-align: center;
     font-size: 21px;
     border-radius: 4px;
     cursor: pointer;
@@ -141,6 +146,8 @@ input[type=radio]:checked + label {
 
 .renameInput {
     background-color: var(--darkSecondary1);
+    text-align: center;
+    margin: 0;
     border: none;
     color: white;
 }
