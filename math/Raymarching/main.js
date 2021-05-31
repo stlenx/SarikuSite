@@ -206,8 +206,7 @@ function SelectElement(id) {
 }
 
 function Unselect() {
-    let darkBlue = getComputedStyle(document.documentElement).getPropertyValue('--dark-blue');
-    document.getElementById(selected).style.background=darkBlue;
+    document.getElementById(selected).classList.remove("active");
     Modify = false;
 }
 
@@ -242,9 +241,6 @@ function RenameElement(id, text) {
 }
 
 function SelectElementLeftClick(id) {
-    let darkBlue = getComputedStyle(document.documentElement).getPropertyValue('--dark-blue');
-    let lightBlue = getComputedStyle(document.documentElement).getPropertyValue('--light-blue');
-
     document.getElementById(selected).classList.remove("active");
     document.getElementById(id).classList.add("active");
     selected = id;

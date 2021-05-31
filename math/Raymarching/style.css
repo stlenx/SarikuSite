@@ -77,6 +77,11 @@ body {
     padding-left: 10px;
 }
 
+/*  */
+.element.active {
+    background-color: var(--darkSecondary2);
+}
+
 input {
     margin: 2px 12px;
     background-color: var(--darkSecondary1);
