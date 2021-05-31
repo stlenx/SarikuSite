@@ -1,5 +1,5 @@
 let canvas = document.getElementById("scene");
-canvas.setAttribute("width", window.innerWidth * 0.8)
+canvas.setAttribute("width", window.innerHeight)
 canvas.setAttribute("height", window.innerHeight)
 let ctx = canvas.getContext("2d");
 
