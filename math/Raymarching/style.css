@@ -136,14 +136,13 @@ input[type=radio]:checked + label {
     border-radius: 4px;
     cursor: pointer;
     padding: 12px 18px;
-    margin-bottom: 24px;
+    margin: 12px 0 24px;
 }
 
 .renameInput {
     background-color: var(--darkSecondary1);
     border: none;
     color: white;
-    text-align: center;
 }
 
 button {
