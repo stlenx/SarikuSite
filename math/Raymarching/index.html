@@ -15,45 +15,65 @@
 <script src="main.js" defer></script>
 
 <div class="page">
-    <div class="menu">
-        <h1>- Objects -</h1>
-
-        <div class="controls">
-            <div class="TypeSelect">
-                <input type="radio" id="circle" name="type" value="0" checked onclick="ChangeType(parseInt(this.value))">
-                <label for="circle" class="RadioInput">Circle</label>
-
-                <input type="radio" id="box" name="type" value="1" onclick="ChangeType(parseInt(this.value))">
-                <label for="box" class="RadioInput">Box</label>
-
-                <input type="radio" id="polygon" name="type" value="2" onclick="ChangeType(parseInt(this.value))">
-                <label for="polygon" class="RadioInput">Polygon</label>
+    <div class="cardContainer">
+        <div class="card">
+            <div class="cardTitle">Objects</div>
+            <div class="cardBody">
+                <div id="elements">
+                    <div class="element" id="0" onclick="SelectElement(this.id)"><span>Element 1</span></div>
+                </div>
             </div>
-
-            <div  id="parameters">
-                <label for="x">X: <input type="number" value="0" id="x"></label>
-                <label for="y">Y: <input type="number" value="0" id="y"></label>
-                <label for="r" id="for-r">Radius: <input type="number" value="50" id="r"></label>
-            </div>
-
-            <div>
-                <label for="col">Color: </label><input type="color" id="col">
-                <button onclick="AddButton()">Add</button>
-                <br>
-                <label>
-                    Draw Borders
-                    <input type="checkbox" onclick="drawBorders = !drawBorders">
-                </label>
-            </div>
-            <input id="k" type="range" value="150" min="1" max="1000" >
-        </div>
-
-        <div id="elements">
-            <div class="element" id="0" onclick="SelectElement(this.id)"><h2>Element 1</h2></div>
         </div>
     </div>
 
-    <canvas id="scene" onmousedown="Unselect()"></canvas>
+    <canvas class="scene" id="scene" onmousedown="Unselect()"></canvas>
+
+    <div class="cardContainer">
+        <div class="card">
+            <div class="cardTitle">Add Objects</div>
+            <div class="cardBody">
+                <div class="typeSelect">
+                    <input type="radio" id="circle" name="type" value="0" checked onclick="ChangeType(parseInt(this.value))">
+                    <label for="circle" class="radioInput">Circle</label>
+
+                    <input type="radio" id="box" name="type" value="1" onclick="ChangeType(parseInt(this.value))">
+                    <label for="box" class="radioInput">Box</label>
+
+                    <input type="radio" id="polygon" name="type" value="2" onclick="ChangeType(parseInt(this.value))">
+                    <label for="polygon" class="radioInput">Polygon</label>
+                </div>
+                <div class="inputShelf" >
+                    <div class="inlineInputs">
+                        <label for="x">X:</label>
+                        <input type="number" value="0" id="x">
+                        <label for="y">Y:</label>
+                        <input type="number" value="0" id="y">
+                    </div>
+                    <div id="parameters">
+                        <label for="r" id="for-r">Radius:</label>
+                        <input type="number" value="50" id="r">
+                    </div>
+                </div>
+                <div class="inputShelf">
+                    <label for="col">Color: </label><input type="color" id="col">
+                </div>
+                <button class="wideButton" onclick="AddButton()">Add</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="cardTitle">Settings</div>
+            <div class="cardBody">
+                <div class="inputShelf">
+                    <label>Draw Borders</label>
+                    <input type="checkbox" onclick="drawBorders = !drawBorders">
+                </div>
+                <div class="inputShelf">
+                    <label>Blending</label>
+                    <input id="k" type="range" value="150" min="1" max="1000" >
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

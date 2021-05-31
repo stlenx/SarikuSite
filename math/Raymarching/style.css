@@ -1,53 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway&family=Padauk");
+
 :root {
-    --dark-Gray: #242424;
-    --light-Gray: #424242;
-    --dark-blue: #1097c8;
-    --light-blue: #2cc6ff;
-    --white: #ffffff;
+    --veryDark: #0a0a0a;
+
+    --dark: #121213;
+    --light: #dfdfdf;
+
+    --darkSecondary: #1d1d1e;
+    --darkSecondary1: #2f2f32;
+    --darkSecondary2: #525255;
+
+    --fontHeader: 'Raleway', sans-serif;
+    --fontText: 'Padauk', sans-serif;
 }
 
 body {
-    background-color: black;
+    background-color: var(--veryDark);
+    color: var(--light);
+    font-family: var(--fontText);
+    overflow: hidden;
+    padding: 12px;
+}
+
+.scene {
+    margin: 12px;
+    border-radius: 12px;
+}
+
+.cardContainer {
+    background-color: var(--darkSecondary);
+    flex-basis: 20%;
+    margin: 12px;
+    border-radius: 12px;
     overflow: hidden;
 }
 
-div.menu {
-    font-family: 'Open Sans', sans-serif;
-    color: white;
+
+.card {
     flex-basis: 20%;
-    background-color: var(--dark-Gray);
-    text-align: center;
+    background-color: var(--darkSecondary);
+    text-align: left;
 }
 
-div.controls {
-    margin-bottom: 5%;
+.cardTitle {
+    padding: 16px;
+    font-family: var(--fontHeader);
+    font-size: 1.2em;
+    letter-spacing: 2px;
+    background-color: var(--darkSecondary1);
+    font-weight: bold;
 }
 
-div#elements {
-    background-color: var(--light-Gray);
-    padding-top: 1%;
-    padding-bottom: 1%;
+.cardBody {
+    padding: 16px;
 }
 
-div#parameters {
-    margin-bottom: 4%;
+.typeSelect {
+    align-content: center;
+    margin-bottom: 24px;
 }
 
-div.TypeSelect {
+.page {
     display: flex;
-    margin-bottom: 4%;
 }
 
-.RadioInput {
-    background-color: var(--dark-blue);
+label {
+    display: block;
+    margin: 16px 12px 2px;
+}
+
+.inlineInputs label {
+    display: inline;
+    margin: 16px 4px 2px 12px;
+}
+
+input {
+    margin: 2px 12px;
+    background-color: var(--darkSecondary1);
+    color: var(--light);
+    border: none;
     border-radius: 4px;
-    margin-right: 5%;
-    margin-left: 5%;
-    flex: 1;
+    padding: 6px 12px;
 }
 
-div.page {
-    display: flex;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=color] {
+    background-color: transparent;
+    padding: 0px;
+    width: 64px;
+    height: 42px;
+}
+
+::-webkit-color-swatch {
+    border-radius: 4px;
+    border: solid 3px var(--darkSecondary1);
+}
+
+.inlineInputs input {
+    margin: 2px 4px;
 }
 
 input[type=number]{
@@ -58,34 +113,52 @@ input[type=radio] {
     display: none;
 }
 
-input[type=radio]:checked + label {
-    background-color: var(--light-blue);
-}
-
-div.element {
-    background-color: var(--dark-blue);
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 25%;
-    margin-left: 25%;
-}
-
-.renameInput {
-    background-color: var(--light-blue);
-    font-size: 1.3em;
-    color: white;
-    width: 100%;
-}
-
-button {
-    background-color: var(--light-blue); /* Green */
+input[type=radio] + label {
+    background-color: var(--darkSecondary1); /* Green lol */
+    color: var(--light);
     border: none;
-    color: white;
     text-align: center;
     display: inline-block;
     font-size: 16px;
-    padding: 2% 5%;
-    margin: 4px 5%;
+    padding: 6px 18px;
+    margin: 6px;
     cursor: pointer;
     border-radius: 4px;
+}
+
+input[type=radio]:checked + label {
+    background-color: var(--darkSecondary2);
+}
+
+.element {
+    background-color: var(--darkSecondary1);
+    font-size: 21px;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 12px 18px;
+    margin-bottom: 24px;
+}
+
+.renameInput {
+    background-color: var(--darkSecondary1);
+    border: none;
+    color: white;
+    text-align: center;
+}
+
+button {
+    background-color: var(--darkSecondary1); /* Green lol */
+    color: var(--light);
+    border: none;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    padding: 12px 18px;
+    margin: 16px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button.wideButton {
+    padding: 12px 32px;
 }
