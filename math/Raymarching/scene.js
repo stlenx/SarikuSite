@@ -199,9 +199,9 @@ class Scene {
                 return rgb
             }
 
-            let rgb = 0;
-            rgb = (rgb << 8) + 0;
-            rgb = (rgb << 8) + 0;
+            let rgb = 18;
+            rgb = (rgb << 8) + 18;
+            rgb = (rgb << 8) + 19;
             return rgb
         }).setOutput([this.h, this.h])
     }

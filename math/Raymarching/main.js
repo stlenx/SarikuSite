@@ -193,11 +193,11 @@ function Unselect() {
 
 function SelectElementDoubleClick(id) {
     let div = document.getElementById(id);
-    let h2 = div.lastChild;
+    let span = div.lastChild;
 
     let input = document.createElement("input")
     input.type = "text";
-    input.value = h2.innerHTML;
+    input.value = span.innerHTML;
     input.name = id;
     input.setAttribute("class", "renameInput")
     input.onchange = function() {RenameElement(this.name, this.value)}
@@ -206,17 +206,17 @@ function SelectElementDoubleClick(id) {
 
     input.select()
 
-    div.removeChild(h2)
+    div.removeChild(span)
 }
 
 function RenameElement(id, text) {
     let div = document.getElementById(id);
     let input = div.lastChild;
 
-    let h2 = document.createElement("h2")
-    h2.innerHTML = text;
+    let span = document.createElement("span")
+    span.innerHTML = text;
 
-    div.appendChild(h2)
+    div.appendChild(span)
 
     div.removeChild(input)
 }
@@ -225,8 +225,8 @@ function SelectElementLeftClick(id) {
     let darkBlue = getComputedStyle(document.documentElement).getPropertyValue('--dark-blue');
     let lightBlue = getComputedStyle(document.documentElement).getPropertyValue('--light-blue');
 
-    document.getElementById(selected).style.background=darkBlue;
-    document.getElementById(id).style.background=lightBlue;
+    document.getElementById(selected).classList.remove("active");
+    document.getElementById(id).classList.add("active");
     selected = id;
 
     document.getElementById("x").value = scene.objects[id][0];
@@ -286,10 +286,10 @@ function AddElementHTML() {
     div.onclick = function() {SelectElement(this.id)};
     container.appendChild(div)
 
-    let h2 = document.createElement("h2")
-    h2.innerHTML = `Element ${scene.objects.length}`
+    let span = document.createElement("span")
+    span.innerHTML = `Element ${scene.objects.length}`
 
-    div.appendChild(h2)
+    div.appendChild(span)
 }
 
 canvas.addEventListener("mousedown", (e) => {
