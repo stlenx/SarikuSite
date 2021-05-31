@@ -68,14 +68,13 @@ body {
     display: flex;
 }
 
-label {
-    display: block;
-    margin: 16px 12px 2px;
-}
-
 .inlineInputs label {
     display: inline;
-    margin: 16px 4px 2px 12px;
+}
+
+.inputShelf {
+    padding-bottom: 10px;
+    padding-left: 10px;
 }
 
 input {
@@ -95,7 +94,6 @@ input::-webkit-inner-spin-button {
 
 input[type=color] {
     background-color: transparent;
-    padding: 0;
     width: 64px;
     height: 42px;
 }
