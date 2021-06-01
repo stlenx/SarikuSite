@@ -68,7 +68,10 @@
             <div class="cardBody">
                 <div class="inputShelf">
                     <label for="checkbox">Draw Borders</label>
-                    <input type="checkbox" onclick="drawBorders = !drawBorders" id="checkbox">
+                    <div class="switch">
+                        <input id="checkbox" type="checkbox" class="switch-input" onclick="drawBorders = !drawBorders"/>
+                        <label for="checkbox" class="switch-label">Switch</label>
+                    </div>
                 </div>
                 <div class="inputShelf">
                     <label for="k">Blending </label>

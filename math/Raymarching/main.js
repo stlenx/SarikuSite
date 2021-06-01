@@ -125,32 +125,27 @@ function DrawBorders() {
 }
 
 function ChangeType(value) {
+    RemoveAllParameters()
     switch (value) {
         case type.circle:
             TypeToMake = type.circle;
-            if(document.getElementById("r")) RemoveParameter("r")
-            if(document.getElementById("w")) RemoveParameter("w")
-            if(document.getElementById("h")) RemoveParameter("h")
-            if(document.getElementById("s")) RemoveParameter("s")
             AddParameter(50, "r", "Radius: ")
             break;
         case type.square:
             TypeToMake = type.square;
-            if(document.getElementById("r")) RemoveParameter("r")
-            if(document.getElementById("h")) RemoveParameter("h")
-            if(document.getElementById("s")) RemoveParameter("s")
             AddParameter(100, "w", "Width: ")
             AddParameter(100, "h", "Height: ")
             break;
         case type.polygon:
             TypeToMake = type.polygon;
-            if(document.getElementById("r")) RemoveParameter("r")
-            if(document.getElementById("w")) RemoveParameter("w")
-            if(document.getElementById("h")) RemoveParameter("h")
-
             AddParameter(50, "r", "Radius: ")
-            AddParameterSlider(3, "s", " <br> Sides: ", 3, 10, 1)
+            AddParameterSlider(3, "s", "Sides: ", 3, 10, 1)
     }
+}
+
+function RemoveAllParameters() {
+    let container = document.getElementById("parameters");
+    while (container.hasChildNodes()) container.removeChild(container.lastChild)
 }
 
 function RemoveParameter(id) {
