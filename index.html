@@ -90,7 +90,7 @@
                                     from that point, of the last set (either mandelbrot or burning ship). Uses multithreading on the cpu for faster load. <br>
                                     <br>
                                     You can check the code <a href="https://github.com/stlenx/Mandelbrot-Set">here</a>,
-                                    or try a simplified version on your internet explorer. This last one will use GPU compute and will be significantly faster.
+                                    or try a simplified version on your internet explorer. This last one will use GPU compute and will be significantly faster thanks to <a href="https://gpu.rocks/#/">GPU.js</a>!.
                                 </p>
 
                                 <button type="button" class="articleButton" id="mandelbrot/index.html">ONLINE VERSION</button>
@@ -123,6 +123,35 @@
                             </p>
 
                             <button type="button" class="articleButton" id="math/curves/index.html">CHECK PAGE</button>
+                        </td>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="article">
+                    <table class="articleTable">
+                        <thead>
+                        <th colspan="2">Raymarching based shape blend</th>
+                        </thead>
+                        <tbody>
+                        <td class="articleTD">
+                            <img src="img/Raymarching.png" class="imageContent">
+                        </td>
+                        <td class="articleTD">
+                            <p>
+                                With a technique based on raymarching (and i say based because they're no actual marching being done as it's not necessary), this little project displays different
+                                shapes on the screen<br>
+                                <br>
+                                Use the inspector at the right to add shapes with different colors and values, then you're free to rename them on the objects list by double clicking, or change their values
+                                by selecting them and changing the values back on the inspector at the right<br>
+                                <br>
+                                You can drag the elements on the screen or, by double clicking, easily select them.<br>
+                                <br>
+                                Finally on the Settings tab, you can change the value of k, which is how much the objects blend with each other, and enable or disable the drawing of the borders of the shapes
+                                to be able to see where they are and move them easily. The visual representation runs on on gpu thanks to <a href="https://gpu.rocks/#/">GPU.js</a>!
+                            </p>
+
+                            <button type="button" class="articleButton" id="math/Raymarching/index.html">CHECK PAGE</button>
                         </td>
                         </tbody>
                     </table>
