@@ -6,6 +6,8 @@
     --dark: #121213;
     --light: #dfdfdf;
 
+    --lightSecondary: #cccccc;
+
     --darkSecondary: #1d1d1e;
     --darkSecondary1: #2f2f32;
     --darkSecondary2: #525255;
@@ -192,6 +194,17 @@ button {
     border-radius: 4px;
 }
 
+button:hover {
+    background-color: var(--darkSecondary2);
+}
+
+button:disabled,
+button[disabled]{
+    background-color: var(--darkSecondary);
+    color: var(--darkSecondary);
+    cursor: auto;
+}
+
 button.wideButton {
     padding: 12px 32px;
 }
@@ -246,4 +259,5 @@ button.wideButton {
 }
 .switch-input:checked + .switch-label::after {
     left: 24px;
+    background-color: var(--lightSecondary);
 }

@@ -211,6 +211,11 @@ class Scene {
         this.InitCalc()
     }
 
+    RemoveObject(index) {
+        this.objects.splice(index, 1)
+        this.InitCalc()
+    }
+
     Draw() {
         this.ctx.putImageData(this.ImageData, 0,0)
     }

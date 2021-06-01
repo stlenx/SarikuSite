@@ -203,6 +203,7 @@ function SelectElement(id) {
 function Unselect() {
     document.getElementById(selected).classList.remove("active");
     Modify = false;
+    document.getElementById("RemoveButton").disabled = true;
 }
 
 function SelectElementDoubleClick(id) {
@@ -255,6 +256,7 @@ function SelectElementLeftClick(id) {
     }
 
     Modify = true;
+    document.getElementById("RemoveButton").disabled = false;
 }
 
 function AddButton() {
@@ -286,6 +288,15 @@ function AddButton() {
     }
 
     AddElementHTML()
+}
+
+function RemoveButton() {
+    if(scene.objects.length === 1) return;
+    selected = 0;
+    document.getElementById(scene.objects.length - 1).remove();
+
+    scene.RemoveObject(selected);
+    document.getElementById("RemoveButton").disabled = true;
 }
 
 function AddElementHTML() {
