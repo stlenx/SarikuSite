@@ -163,6 +163,18 @@ function AddParameterSlider(value, id, text, min, max, step) {
     input.step = step;
     input.id = id;
 
+    input.addEventListener("mouseenter", () => {
+        ShowNumberIndicator()
+    })
+
+    input.addEventListener("mouseleave", () => {
+        HideNumberIndicator()
+    })
+
+    input.addEventListener("mousemove", () => {
+        SetNumberIndicator(document.getElementById(id).value)
+    })
+
     let label = document.createElement("label")
     label.setAttribute("for", "id")
     label.id = `for-${id}`
@@ -292,10 +304,16 @@ function AddButton() {
 
 function RemoveButton() {
     if(scene.objects.length === 1) return;
-    selected = 0;
-    document.getElementById(scene.objects.length - 1).remove();
+    let REMOVE = document.getElementById(selected);
+    //REMOVE.id = "CRINGE";
+    console.log(selected)
+    for(let i = selected; i < scene.objects.length; i++) {
+        document.getElementById(i).id = i - 1;
+    }
 
+    REMOVE.remove();
     scene.RemoveObject(selected);
+    selected = 0;
     document.getElementById("RemoveButton").disabled = true;
 }
 
@@ -314,26 +332,26 @@ function AddElementHTML() {
     div.appendChild(span)
 }
 
+lastClick = Date.now();
 canvas.addEventListener("mousedown", (e) => {
-    scene.objects.forEach((o) => {
-        switch (o[2]) {
-            case type.circle:
-                let dx = o[0] - e.offsetX;
-                let dy = o[1] - e.offsetY;
-                let distanceSquared = dx * dx + dy * dy;
-
-                if (distanceSquared <= o[3] * o[3]) {
-
-                }
-                break;
-            case type.square:
-                break;
-        }
-    })
+    let now = Date.now();
+    let timeInBetween = now - lastClick;
     for(let i = 0; i < scene.objects.length; i++) {
         let objectX = scene.objects[i][0];
         let objectY = scene.objects[i][1];
         let objectType = scene.objects[i][2];
+
+        // function SelectElement(id) {
+        //     let now = Date.now();
+        //     let timeInBetween = now - lastClick;
+        //     if(timeInBetween < 250) {
+        //         //Double click
+        //         SelectElementDoubleClick(id)
+        //     } else {
+        //         //Single click
+        //         SelectElementLeftClick(id)
+        //     }
+        //     lastClick = now;
 
         switch (objectType) {
             case type.circle:
@@ -345,20 +363,32 @@ canvas.addEventListener("mousedown", (e) => {
                 let distanceSquared = dx * dx + dy * dy;
 
                 if (distanceSquared <= objectR * objectR) {
-                    selected = i;
-                    clicked = true;
+                    if(timeInBetween < 250) {
+                        //Double click
+                        SelectElementLeftClick(i);
+                    } else {
+                        selected = i;
+                        clicked = true;
+                    }
                 }
                 break;
             }
             case type.square:
+            {
                 let objectW = scene.objects[i][3];
                 let objectH = scene.objects[i][4];
 
-                if(e.offsetX > objectX - objectW / 2 && e.offsetX < objectX + objectW / 2 && e.offsetY > objectY - objectH / 2 && e.offsetY < objectY + objectH / 2) {
-                    selected = i;
-                    clicked = true;
+                if (e.offsetX > objectX - objectW / 2 && e.offsetX < objectX + objectW / 2 && e.offsetY > objectY - objectH / 2 && e.offsetY < objectY + objectH / 2) {
+                    if(timeInBetween < 250) {
+                        //Double click
+                        SelectElementLeftClick(i);
+                    } else {
+                        selected = i;
+                        clicked = true;
+                    }
                 }
                 break;
+            }
             case type.polygon:
             {
                 let objectR = scene.objects[i][3];
@@ -368,13 +398,19 @@ canvas.addEventListener("mousedown", (e) => {
                 let distanceSquared = dx * dx + dy * dy;
 
                 if (distanceSquared <= objectR * objectR) {
-                    selected = i;
-                    clicked = true;
+                    if(timeInBetween < 250) {
+                        //Double click
+                        SelectElementLeftClick(i);
+                    } else {
+                        selected = i;
+                        clicked = true;
+                    }
                 }
                 break;
             }
         }
     }
+    lastClick = now;
 })
 
 canvas.addEventListener("mousemove", (e) => {
@@ -385,6 +421,40 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("mouseup", (e) => {
     clicked = false;
+})
+
+//Number thingy pog
+document.addEventListener("mousemove", (e) => {
+    let div = document.getElementById("NumberIndicator");
+    div.style.left = `${e.pageX + 15}px`;
+    div.style.top = `${e.pageY + 15}px`;
+})
+
+function ShowNumberIndicator() {
+    let div = document.getElementById("NumberIndicator");
+    div.style.opacity = "100%";
+}
+
+function HideNumberIndicator() {
+    let div = document.getElementById("NumberIndicator");
+    div.style.opacity = "0";
+}
+
+function SetNumberIndicator(value) {
+    document.getElementById("NumberIndicator").innerHTML = value;
+}
+
+//K slider
+k.addEventListener("mouseenter", () => {
+    ShowNumberIndicator();
+})
+
+k.addEventListener("mouseleave", () => {
+    HideNumberIndicator();
+})
+
+k.addEventListener("mousemove", () => {
+    SetNumberIndicator(k.value)
 })
 
 window.requestAnimationFrame(frame)

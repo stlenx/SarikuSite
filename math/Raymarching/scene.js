@@ -212,7 +212,9 @@ class Scene {
     }
 
     RemoveObject(index) {
+        console.log(this.objects)
         this.objects.splice(index, 1)
+        console.log(this.objects)
         this.InitCalc()
     }
 
