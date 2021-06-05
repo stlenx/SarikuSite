@@ -237,6 +237,5 @@ class Scene {
         }
 
         this.ImageData.data.set(buf8);
-
     }
 }

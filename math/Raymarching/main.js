@@ -20,6 +20,7 @@ const type = {
     polygon: 2
 }
 
+let mousePos = new Vector2(0,0)
 let clicked = false;
 let drawBorders = false;
 let TypeToMake = 0;
@@ -334,6 +335,7 @@ function AddElementHTML() {
 
 lastClick = Date.now();
 canvas.addEventListener("mousedown", (e) => {
+    mousePos = new Vector2(e.offsetX, e.offsetY)
     let now = Date.now();
     let timeInBetween = now - lastClick;
     for(let i = 0; i < scene.objects.length; i++) {
@@ -358,8 +360,8 @@ canvas.addEventListener("mousedown", (e) => {
             {
                 let objectR = scene.objects[i][3];
 
-                let dx = objectX - e.offsetX;
-                let dy = objectY - e.offsetY;
+                let dx = objectX - mousePos.x;
+                let dy = objectY - mousePos.y;
                 let distanceSquared = dx * dx + dy * dy;
 
                 if (distanceSquared <= objectR * objectR) {
@@ -378,7 +380,7 @@ canvas.addEventListener("mousedown", (e) => {
                 let objectW = scene.objects[i][3];
                 let objectH = scene.objects[i][4];
 
-                if (e.offsetX > objectX - objectW / 2 && e.offsetX < objectX + objectW / 2 && e.offsetY > objectY - objectH / 2 && e.offsetY < objectY + objectH / 2) {
+                if (mousePos.x > objectX - objectW / 2 && mousePos.x < objectX + objectW / 2 && mousePos.y > objectY - objectH / 2 && mousePos.y < objectY + objectH / 2) {
                     if(timeInBetween < 250) {
                         //Double click
                         SelectElementLeftClick(i);
@@ -393,8 +395,8 @@ canvas.addEventListener("mousedown", (e) => {
             {
                 let objectR = scene.objects[i][3];
 
-                let dx = objectX - e.offsetX;
-                let dy = objectY - e.offsetY;
+                let dx = objectX - mousePos.x;
+                let dy = objectY - mousePos.y;
                 let distanceSquared = dx * dx + dy * dy;
 
                 if (distanceSquared <= objectR * objectR) {
@@ -415,8 +417,10 @@ canvas.addEventListener("mousedown", (e) => {
 
 canvas.addEventListener("mousemove", (e) => {
     if(scene.objects.length < 1 || !clicked) return;
-    scene.objects[selected][0] = e.offsetX;
-    scene.objects[selected][1] = e.offsetY;
+    let difference = new Vector2(e.offsetX - mousePos.x, e.offsetY - mousePos.y)
+    scene.objects[selected][0] += difference.x;
+    scene.objects[selected][1] += difference.y;
+    mousePos = new Vector2(e.offsetX, e.offsetY)
 })
 
 canvas.addEventListener("mouseup", (e) => {
