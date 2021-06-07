@@ -55,7 +55,7 @@ let mouse = {
     gradient.addColorStop(0, "magenta");
     gradient.addColorStop(1, "blue");
     ctx.fillStyle = gradient;
-    ctx.fillText('SARIKU', 5, 30);
+    ctx.fillText('BERNAL', 5, 30);
 }
 
 const data = ctx.getImageData(0, 0, 500, 100);
