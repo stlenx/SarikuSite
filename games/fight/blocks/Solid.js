@@ -21,7 +21,7 @@ class Solid extends Block {
                 image.src = `${path}sprites/solidLR.png`;
                 break;
             case 4: //Block on top
-                image.src = `${path}sprites/solidLR.png`;
+                image.src = `${path}sprites/solid.png`;
                 break;
             case 5: //Block on top and at the left
                 image.src = `${path}sprites/solidL.png`;
