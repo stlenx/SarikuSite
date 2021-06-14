@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fight!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<script src="../../../misc/js+.js" defer></script>
+
+<script src="../blocks/block.js" defer></script>
+<script src="../blocks/Solid.js" defer></script>
+<script src="../blocks/SemiSolid.js" defer></script>
+
+<script src="../player.js" defer></script>
+
+<script src="../level.js" defer></script>
+<script src="main.js" defer></script>
+
+<div class="controls">
+    <input placeholder="Enter FEN" type="text" onkeyup="FENChange(this.value)" size="30" style="font-size:2em;" id="FENinput">
+    <div class="InvalidFEN" id="invalidFEN">Invalid FEN!!</div>
+
+    <div class="buttonsContainer">
+        <div class="BUTTON selected" onclick="SelectType(this)" id="0">
+            <img  src="../sprites/solidLRT.png" alt="gay">
+        </div>
+
+        <div class="BUTTON" onclick="SelectType(this)" id="1">
+            <img  src="../sprites/semisolidLR.png" alt="gay">
+        </div>
+    </div>
+</div>
+
+<canvas id="scene"></canvas>
+
+</body>
+</html>

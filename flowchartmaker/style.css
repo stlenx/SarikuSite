@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway&family=Padauk");
+
+:root{
+    --lightPrimary: #f3f3f3;
+    --lightSecondary: #e2e2e2; /* Remember to change stupid js */
+
+    --fontHeader: 'Raleway', sans-serif;
+    --fontText: 'Padauk', sans-serif;
+}
+
+.menu {
+    font-family: var(--fontText);
+    background-color: var(--lightPrimary);
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+    border-radius: 10px;
+    font-size: 20px;
+    overflow: hidden;
+
+    /* Position */
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: scale(0);
+    transform-origin: top left;
+}
+
+.menu.visible {
+    transform: scale(1);
+    transition: transform 200ms ease-in-out;
+}
+
+.menuButton {
+    padding: 5px;
+}
+
+.menuButton:hover {
+    background-color: var(--lightSecondary);
+    box-shadow: 0 0 4px 2px var(--lightSecondary);
+    cursor: pointer;
+}
+
+.chart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+#grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -2;
+}
+
+body {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+
+    background: var(--lightPrimary);
+
+    overflow: hidden;
+}
+
+/* Styling for elements */
+
+.element {
+    background-color: var(--lightPrimary);
+    position: absolute;
+    padding: 50px;
+    font-family: var(--fontText);
+    /* border-style: solid; */
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+    font-size: 24px;
+
+    text-align: center;
+
+    transform: translate(-50%, -50%);
+}
+.square {
+    border-radius: 5px;
+}

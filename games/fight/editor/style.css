@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway&family=Padauk");
+
+:root {
+    --veryDark: #0a0a0a;
+
+    --dark: #121213;
+    --light: #dfdfdf;
+
+    --lightSecondary: #cccccc;
+
+    --darkSecondary: #1d1d1e;
+    --darkSecondary1: #2f2f32;
+    --darkSecondary2: #525255;
+
+    --fontHeader: 'Raleway', sans-serif;
+    --fontText: 'Padauk', sans-serif;
+}
+
+body {
+    background-color: var(--veryDark);
+    overflow: hidden;
+}
+
+canvas {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    margin: 0;
+    transform: translate(-100%);
+}
+
+input[type="text"] {
+    background-color: var(--darkSecondary1);
+    color: var(--light);
+
+    border-radius: 5px;
+}
+
+.controls {
+    position: absolute;
+    top: 1%;
+    left: 1%;
+}
+
+.InvalidFEN {
+    font-family: var(--fontHeader);
+    font-size: 2em;
+    font-weight: bold;
+    color: red;
+
+    margin-top: 0.25em;
+
+    opacity: 0;
+}
+
+.buttonsContainer {
+    display: flex;
+    flex-wrap:wrap;
+    text-align:center;
+    justify-content: center;
+
+    background-color: var(--darkSecondary1);
+    border-radius: 5px;
+}
+
+.BUTTON {
+    height: 25%;
+    width: 25%;
+
+    margin: 20px;
+    padding: 30px;
+    border-radius: 5px;
+}
+
+.selected {
+    background-color: var(--darkSecondary2);
+}
+
+img {
+    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: pixelated; /* Chrome */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+
+    width: 100%;
+    height: auto;
+}
