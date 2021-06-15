@@ -1,9 +1,12 @@
 class Player {
-    constructor(x, y, s, level) {
+    constructor(x, y, s, level, color) {
         this.x = x;
         this.y = y;
         this.s = s;
         this.level = level;
+        this.color = color;
+
+        this.hp = 100;
 
         this.left = false;
         this.right = false;
@@ -15,11 +18,13 @@ class Player {
         this.onAir = false;
 
         this.canDown = false;
+
+        this.movementOffset = (this.level.size * 0.1);
     }
 
     Jump() {
         if(this.canJump > 0) {
-            this.vel.y -= 10;
+            this.vel.y -= 10 / this.movementOffset;
             this.onAir = true;
             this.canDown = true;
             this.CheckCollisions(16)
@@ -28,8 +33,13 @@ class Player {
     }
 
     Draw() {
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.s / this.level.size, this.s / this.level.size)
+
+        ctx.fillStyle = "#1a1a1a";
+        let width = this.s * 0.1;
+
+        ctx.fillRect(this.x - width * 0.25, this.y - ((this.s / this.level.size) * 0.2) * 2, width, (this.s / this.level.size) * 0.2)
     }
 
     DebugDraw() {
@@ -48,15 +58,15 @@ class Player {
         this.y += this.vel.y * interval;
 
         //Add gravity
-        this.vel.y += 0.25;
+        this.vel.y += 0.25  / this.movementOffset;
 
         //Add player movement
-        if(this.left && this.vel.x > -10) {
-            this.vel.x -= 5;
+        if(this.left && this.vel.x > -10  / this.movementOffset) {
+            this.vel.x -= 5  / this.movementOffset;
         }
 
-        if(this.right && this.vel.x < 10) {
-            this.vel.x += 5;
+        if(this.right && this.vel.x < 10  / this.movementOffset) {
+            this.vel.x += 5  / this.movementOffset;
         }
 
         if(!this.right && !this.left) {
@@ -64,7 +74,7 @@ class Player {
         }
 
         if(this.down && this.onAir && this.canDown) {
-            this.vel.y += 10;
+            this.vel.y += 10  / this.movementOffset;
             this.canDown = false;
         }
 

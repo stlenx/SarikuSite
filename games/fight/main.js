@@ -6,10 +6,18 @@ ctx.imageSmoothingEnabled = false;
 let background = new Image()
 background.src = "background.jpg";
 
-let level = new Level("//////15sss/ss5b4b/7bssssb/7b4b/5ssb4b2sss/7b4b/7bssssb/ss5b4b/7b4b/5ssb4b2sss/7bssssb/12b/12b/bbbbbbbbbbbbbbbbbbbb 20", canvas.width)
+//  //3ssss///1sss2sss///1bbbbbbbb 10
+//  //////15sss/ss5b4b/7bssssb/7b4b/5ssb4b2sss/7b4b/7bssssb/ss5b4b/7b4b/5ssb4b2sss/7bssssb/12b/12b/bbbbbbbbbbbbbbbbbbbb 20
+let level = new Level("//3ssss///1sss2sss///1bbbbbbbb 10", canvas.width)
 level.LoadSprites()
 
-let player = new Player(100,0, canvas.width, level)
+//let player = new Player(100,0, canvas.width, level, "blue")
+//let player2 = new Player(canvas.width - 100,0, canvas.width, level, "red")
+
+let players = [
+    new Player(100,0, canvas.width, level, "blue"),
+    new Player(canvas.width - 100,0, canvas.width, level, "red")
+]
 
 let lastFrame = Date.now()
 function frame() {
@@ -21,11 +29,11 @@ function frame() {
 
     level.Draw()
 
-    player.Draw()
-
-    player.DebugDraw()
-
-    player.Update(dt)
+    players.forEach((player) => {
+        player.Draw()
+        player.DebugDraw()
+        player.Update(dt)
+    })
 
     window.requestAnimationFrame(frame)
 }
@@ -33,16 +41,30 @@ function frame() {
 window.addEventListener("keydown", (e) => {
      switch (e.code) {
          case "Space":
-             player.Jump();
+             players[0].Jump();
              break;
          case "KeyA":
-             player.left = true;
+             players[0].left = true;
              break;
          case "KeyD":
-             player.right = true;
+             players[0].right = true;
              break;
          case "KeyS":
-             player.down = true;
+             players[0].down = true;
+             break;
+
+         //Second player
+         case "ArrowUp":
+             players[1].Jump();
+             break;
+         case "ArrowLeft":
+             players[1].left = true;
+             break;
+         case "ArrowRight":
+             players[1].right = true;
+             break;
+         case "ArrowDown":
+             players[1].down = true;
              break;
      }
 })
@@ -50,13 +72,24 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("keyup", (e) => {
     switch (e.code) {
         case "KeyA":
-            player.left = false;
+            players[0].left = false;
             break;
         case "KeyD":
-            player.right = false;
+            players[0].right = false;
             break;
         case "KeyS":
-            player.down = false;
+            players[0].down = false;
+            break;
+
+            //Second player
+        case "ArrowLeft":
+            players[1].left = false;
+            break;
+        case "ArrowRight":
+            players[1].right = false;
+            break;
+        case "ArrowDown":
+            players[1].down = false;
             break;
     }
 })
