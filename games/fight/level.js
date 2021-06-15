@@ -57,19 +57,19 @@ class Level {
                     switch (block.type) {
                         case 0: //Solid
                             //Check each side for using appropriate sprite
-                            if(level[x][y + 1] !== undefined && level[x][y].type === block.type) { //Check below
+                            if(level[x][y + 1] !== undefined && level[x][y + 1].type === block.type) { //Check below
                                 block.posType = 1 << 3 | block.posType;
                             }
 
-                            if(level[x][y - 1] !== undefined && level[x][y].type === block.type) { //Check above
+                            if(level[x][y - 1] !== undefined && level[x][y - 1].type === block.type) { //Check above
                                 block.posType = 1 << 2 | block.posType;
                             }
 
-                            if(level[x + 1][y] !== undefined && level[x][y].type === block.type) { //Check right
+                            if(level[x + 1][y] !== undefined && level[x + 1][y].type === block.type) { //Check right
                                 block.posType = 1 << 1 | block.posType;
                             }
 
-                            if(level[x - 1][y] !== undefined && level[x][y].type === block.type) { //Check left
+                            if(level[x - 1][y] !== undefined && level[x - 1][y].type === block.type) { //Check left
                                 block.posType = 1 | block.posType;
                             }
                             break;

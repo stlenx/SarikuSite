@@ -218,19 +218,19 @@ function UpdateLevel(newLevel, size) {
                 switch (block.type) {
                     case 0: //Solid
                         //Check each side for using appropriate sprite
-                        if(newLevel[nx][ny + 1] !== undefined && newLevel[nx][ny].type === block.type) { //Check below
+                        if(newLevel[nx][ny + 1] !== undefined && newLevel[nx][ny + 1].type === block.type) { //Check below
                             block.posType = 1 << 3 | block.posType;
                         }
 
-                        if(newLevel[nx][ny - 1] !== undefined && newLevel[nx][ny].type === block.type) { //Check above
+                        if(newLevel[nx][ny - 1] !== undefined && newLevel[nx][ny - 1].type === block.type) { //Check above
                             block.posType = 1 << 2 | block.posType;
                         }
 
-                        if(newLevel[nx + 1][ny] !== undefined && newLevel[nx][ny].type === block.type) { //Check right
+                        if(newLevel[nx + 1][ny] !== undefined && newLevel[nx + 1][ny].type === block.type) { //Check right
                             block.posType = 1 << 1 | block.posType;
                         }
 
-                        if(newLevel[nx - 1][ny] !== undefined && newLevel[nx][ny].type === block.type) { //Check left
+                        if(newLevel[nx - 1][ny] !== undefined && newLevel[nx - 1][ny].type === block.type) { //Check left
                             block.posType = 1 | block.posType;
                         }
 

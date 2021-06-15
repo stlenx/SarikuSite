@@ -98,14 +98,26 @@ class Player {
                                 this.x = blockX + blockS;
                             }
                         }
-                    } else {
-                        this.vel.y = 0;
-                        this.y = blockY - blockS;
+                    } else { //On top of block yayy
+                        if(block.type === 0) {
+                            this.vel.y = 0;
+                            this.y = blockY - blockS;
 
-                        this.onAir = false; //Pretty self explanatory isn't it?
-                        this.canDown = true;
-                        //Reset jump (2 for double jump)
-                        this.canJump = 2;
+                            this.onAir = false; //Pretty self explanatory isn't it?
+                            this.canDown = true;
+                            //Reset jump (2 for double jump)
+                            this.canJump = 2;
+                        } else { //Special behaviour for semi solids
+                            if(this.y + s !== blockY || !this.down) { //Go through lol
+                                this.vel.y = 0;
+                                this.y = blockY - blockS;
+
+                                this.onAir = false; //Pretty self explanatory isn't it?
+                                this.canDown = true;
+                                //Reset jump (2 for double jump)
+                                this.canJump = 2;
+                            }
+                        }
                     }
                 } else if(this.x+s <= blockX) { //On left of block
                     if(block.type === 0) {

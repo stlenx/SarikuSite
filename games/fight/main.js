@@ -6,7 +6,7 @@ ctx.imageSmoothingEnabled = false;
 let background = new Image()
 background.src = "background.jpg";
 
-let level = new Level("///5bbbb/5b/5b/bb3b/5b/1bbbbbbbb 10", canvas.width)
+let level = new Level("//3ssss///1sss2sss///1bbbbbbbb 10", canvas.width)
 level.LoadSprites()
 
 let player = new Player(100,0, canvas.width, level)
