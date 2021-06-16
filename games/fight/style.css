@@ -19,12 +19,39 @@
 body {
     background-color: var(--veryDark);
     overflow: hidden;
+    color: var(--light);
+
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
 }
 
-canvas {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    margin: 0;
-    transform: translate(-50%);
+.Title {
+    text-align: center;
+    font-family: var(--fontHeader);
+    font-weight: bold;
+    font-size: 6em;
+}
+
+.RoomList {
+    justify-content: center;
+    background-color: var(--darkSecondary);
+}
+
+.room {
+    background-color: var(--darkSecondary1);
+
+    border-radius: 5px;
+    text-align: center;
+    font-family: var(--fontText);
+    font-weight: bold;
+    font-size: 3em;
+
+    margin: 20px;
+}
+
+.room:hover {
+    cursor: pointer;
+    background-color: var(--darkSecondary2);
 }
