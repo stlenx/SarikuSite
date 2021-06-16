@@ -52,7 +52,9 @@ Http.onreadystatechange = function () {
         let data = JSON.parse(this.responseText);
 
         data.forEach((player) => {
-            let createdPlayer = new Player(player.x,player.y, canvas.width, level, "green");
+            let translatedPosition = TranslatePosition(new Vector2(player.x, player.y))
+
+            let createdPlayer = new Player(translatedPosition.x, translatedPosition.y, canvas.width, level, "green");
             createdPlayer.left = player.left;
             createdPlayer.right = player.right;
             createdPlayer.down = player.down;
@@ -94,8 +96,9 @@ Http.onreadystatechange = function () {
                 players[i].left = data[i].left;
                 players[i].right = data[i].right;
                 players[i].down = data[i].down;
-                players[i].x = data[i].x;
-                players[i].y = data[i].y;
+                let translatedPosition = TranslatePosition(new Vector2(data[i].x, data[i].y))
+                players[i].x = translatedPosition.x;
+                players[i].y = translatedPosition.y;
                 players[i].vel.x = data[i].vx;
                 players[i].vel.y = data[i].vy;
             }
@@ -124,14 +127,16 @@ function frame() {
     })
 
     if(elapsedMS > 100) {
+        let translatedPosition = ConvertToGeneralPositions(new Vector2(players[playerID].x, players[playerID].y))
+
         Http.open("PUT", updateUrl);
         Http.setRequestHeader("Content-Type", "application/json")
         Http.send(JSON.stringify({
             "Left": players[playerID].left,
             "Down": players[playerID].down,
             "Right": players[playerID].right,
-            "X": players[playerID].x,
-            "Y": players[playerID].y,
+            "X": translatedPosition.x,
+            "Y": translatedPosition.y,
             "Vx": players[playerID].vel.x,
             "Vy": players[playerID].vel.y
         }));
@@ -172,5 +177,19 @@ window.addEventListener("keyup", (e) => {
             break;
     }
 })
+
+function TranslatePosition(pos) {
+    pos.x = Remap(pos.x, 0, 1000, 0, canvas.width)
+    pos.y = Remap(pos.y, 0, 1000, 0, canvas.width)
+
+    return pos;
+}
+
+function ConvertToGeneralPositions(pos) {
+    pos.x = Remap(pos.x, 0, canvas.width, 0, 1000)
+    pos.y = Remap(pos.y, 0, canvas.width, 0, 1000)
+
+    return pos;
+}
 
 window.requestAnimationFrame(frame)
