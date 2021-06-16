@@ -1,5 +1,7 @@
 let Remap = (value, from1, to1, from2, to2) => (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 
+let Clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
 let getLength = number => number.toString().length;
 
 let getRandom = (min, max) => Math.random() * (max - min) + min;
@@ -113,6 +115,11 @@ class Vector2 {
         let h = this.Length()
         this.x /= h;
         this.y /= h;
+    }
+
+    ReturnNormalized() {
+        let h = this.Length()
+        return new Vector2(this.x / h, this.y / h)
     }
 
     mult(vector) {

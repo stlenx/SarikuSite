@@ -14,11 +14,8 @@ let room = cringe.searchParams.get("room");
 
 let domain = "fight.sariku.gay";
 
-let saveData = JSON.parse(localStorage.getItem('useLocalIp'));
-if (saveData !== null) domain = "192.168.0.69:6969";
-
 const Http = new XMLHttpRequest();
-const url=`http://${domain}/games/${room}/join`; //Change to http://fight.sariku.gay/games http://192.168.0.69:6969/games
+const url=`https://${domain}/games/${room}/join`; //Change to http://fight.sariku.gay/games http://192.168.0.69:6969/games
 //192.168.0.69
 
 Http.onreadystatechange = function () {
@@ -68,7 +65,7 @@ Http.onreadystatechange = function () {
     // end of state change: it can be after some time (async)
 };
 
-const updateUrl = `http://${domain}/games/${room}/${playerID}`; //Change to `http://fight.sariku.gay/games/${room}/${playerID}`
+const updateUrl = `https://${domain}/games/${room}/${playerID}`; //Change to `http://fight.sariku.gay/games/${room}/${playerID}`
 Http.open("PUT", updateUrl, false);
 Http.setRequestHeader("Content-Type", "application/json")
 Http.send(JSON.stringify({
@@ -93,13 +90,15 @@ Http.onreadystatechange = function () {
                 players.push(createdPlayer)
             }
 
-            players[i].left = data[i].left;
-            players[i].right = data[i].right;
-            players[i].down = data[i].down;
-            players[i].x = data[i].x;
-            players[i].y = data[i].y;
-            players[i].vel.x = data[i].vx;
-            players[i].vel.y = data[i].vy;
+            if(i !== playerID) {
+                players[i].left = data[i].left;
+                players[i].right = data[i].right;
+                players[i].down = data[i].down;
+                players[i].x = data[i].x;
+                players[i].y = data[i].y;
+                players[i].vel.x = data[i].vx;
+                players[i].vel.y = data[i].vy;
+            }
         }
     }
 
@@ -175,11 +174,3 @@ window.addEventListener("keyup", (e) => {
 })
 
 window.requestAnimationFrame(frame)
-
-function UseLocal() {
-    localStorage.setItem('useLocalIp', true);
-}
-
-function UseOnline() {
-    localStorage.clear();
-}

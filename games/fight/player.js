@@ -11,8 +11,10 @@ class Player {
         this.left = false;
         this.right = false;
         this.down = false;
+        this.action1 = false;
 
         this.vel = new Vector2(0,0);
+        this.dir = new Vector2(0,0);
 
         this.canJump = 0;
         this.onAir = false;
@@ -22,14 +24,23 @@ class Player {
         this.movementOffset = (this.level.size * 0.1);
     }
 
+    get Direction() {
+        return this.dir.ReturnNormalized();
+    }
+
     Jump() {
         if(this.canJump > 0) {
             this.vel.y -= 10 / this.movementOffset;
             this.onAir = true;
             this.canDown = true;
             this.CheckCollisions(16)
+            this.dir.y -= 10 / this.movementOffset
             this.canJump--;
         }
+    }
+
+    Attack() {
+
     }
 
     Draw() {
@@ -37,9 +48,15 @@ class Player {
         ctx.fillRect(this.x, this.y, this.s / this.level.size, this.s / this.level.size)
 
         ctx.fillStyle = "#1a1a1a";
-        let width = this.s * 0.1;
+        let width = this.s * 0.2;
 
-        ctx.fillRect(this.x - width * 0.25, this.y - ((this.s / this.level.size) * 0.2) * 2, width, (this.s / this.level.size) * 0.2)
+        ctx.fillRect(this.x + ((this.s / this.level.size) / 2) - width / 2, this.y - ((this.s / this.level.size) * 0.2) * 2, width, (this.s / this.level.size) * 0.2)
+
+
+        ctx.fillStyle = "green";
+        let health = Remap(this.hp, 0, 100, 0, width);
+        health = Clamp(health, 0, width)
+        ctx.fillRect(this.x + ((this.s / this.level.size) / 2) - width / 2, this.y - ((this.s / this.level.size) * 0.2) * 2, health, (this.s / this.level.size) * 0.2)
     }
 
     DebugDraw() {
@@ -76,6 +93,24 @@ class Player {
         if(this.down && this.onAir && this.canDown) {
             this.vel.y += 10  / this.movementOffset;
             this.canDown = false;
+        }
+
+        if(this.hp <= 0) { //if you die, respawn
+            this.hp = 100;
+            this.x = this.s / 2;
+            this.y = 0;
+
+            this.vel = new Vector2(0,0);
+        }
+
+        if(this.y > this.s * 2) { //If you fall off the map, die
+            this.hp = 0;
+        }
+
+        //ATTACK
+        if(this.action1) {
+            this.Attack()
+            this.action1 = false;
         }
 
         //Check collisions
@@ -122,6 +157,7 @@ class Player {
                                 this.vel.y = 0;
                                 this.y = blockY - blockS;
 
+                                this.dir.y = 0;
                                 this.onAir = false; //Pretty self explanatory isn't it?
                                 this.canDown = true;
                                 //Reset jump (2 for double jump)
