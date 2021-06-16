@@ -15,10 +15,10 @@ let room = cringe.searchParams.get("room");
 let domain = "fight.sariku.gay";
 
 let saveData = JSON.parse(localStorage.getItem('useLocalIp'));
-if (saveData !== null) domain = "192.168.0.69:6969";
+if (saveData !== null) domain = "192.168.0.69";
 
 const Http = new XMLHttpRequest();
-const url=`http://${domain}/games/${room}/join`; //Change to http://fight.sariku.gay/games http://192.168.0.69:6969/games
+const url=`https://${domain}/games/${room}/join`; //Change to http://fight.sariku.gay/games http://192.168.0.69:6969/games
 //192.168.0.69
 
 Http.onreadystatechange = function () {
