@@ -49,9 +49,16 @@ body {
     font-size: 3em;
 
     margin: 20px;
+
+    display: flex;
+    justify-content: center;
 }
 
 .room:hover {
     cursor: pointer;
     background-color: var(--darkSecondary2);
+}
+
+.roomPlayers {
+    margin-left: 2em;
 }

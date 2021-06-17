@@ -14,14 +14,27 @@ Http.onreadystatechange = () => {
 function AddRoom(room) {
     let container = document.getElementById("rooms");
 
-    let newDiv = document.createElement("div");
-    newDiv.setAttribute("class", "room")
-    newDiv.innerHTML = room.id;
-    newDiv.onclick = function () {
+    //Make container div
+    let roomDiv = document.createElement("div");
+    roomDiv.setAttribute("class", "room")
+    //roomDiv.innerHTML = room.id;
+    roomDiv.onclick = function () {
         location.href = `game/index.html?room=${room.id}`;
     }
 
-    container.appendChild(newDiv)
+    //Make roomId div
+    let roomId = document.createElement("div");
+    roomId.setAttribute("class", "roomId")
+    roomId.innerHTML = room.id;
+
+    let roomPlayers = document.createElement("div");
+    roomPlayers.setAttribute("class", "roomPlayers")
+    roomPlayers.innerHTML = `Players: ${room.players}/4`;
+
+    roomDiv.appendChild(roomId)
+    roomDiv.appendChild(roomPlayers)
+
+    container.appendChild(roomDiv)
 }
 
 Http.open("GET", url);
