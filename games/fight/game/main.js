@@ -108,9 +108,7 @@ Http.onreadystatechange = function () {
             lastId = data.updateId;
 
             if(Object.keys(players).length !== Object.keys(data.players).length) { // CHANGE THISSSS OMG THE SERVER DOESENT ACTUALLY GIVE YOU PLAYER CLASSES YOU IDIOT
-                let player = players[playerID];
-
-                players = {};
+                let newPlayerList = {};
 
                 for (const id in data.players) {
                     let newPlayer = data.players[id];
@@ -128,11 +126,13 @@ Http.onreadystatechange = function () {
                         createdPlayer.dir.x = newPlayer.dx;
                         createdPlayer.dir.y = newPlayer.dy;
 
-                        players[id] = createdPlayer;
+                        newPlayerList[id] = createdPlayer;
                     }
                 }
 
-                players[playerID] = player;
+                newPlayerList[playerID] = players[playerID];
+
+                players = newPlayerList;
             } else {
                 for (const id in data.players) {
                     let player = data.players[id];
