@@ -52,8 +52,11 @@ window.addEventListener("keydown", (e) => {
          case "KeyS":
              players[0].down = true;
              break;
-         case "KeyE":
+         case "KeyP":
              players[0].action1 = true;
+             break;
+         case "KeyW":
+             players[0].up = true;
              break;
 
          //Second player
@@ -82,6 +85,9 @@ window.addEventListener("keyup", (e) => {
             break;
         case "KeyS":
             players[0].down = false;
+            break;
+        case "KeyW":
+            players[0].up = false;
             break;
 
             //Second player

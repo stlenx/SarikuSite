@@ -11,6 +11,7 @@ class Player {
         this.left = false;
         this.right = false;
         this.down = false;
+        this.up = false;
         this.action1 = false;
 
         this.vel = new Vector2(0,0);
@@ -34,13 +35,28 @@ class Player {
             this.onAir = true;
             this.canDown = true;
             this.CheckCollisions(16)
-            this.dir.y -= 10 / this.movementOffset
             this.canJump--;
         }
     }
 
     Attack() {
+        let dir = this.Direction;
+        dir.Scale(this.s / this.level.size);
+        let s = (this.s / this.level.size) / 2;
 
+        let pos = new Vector2(this.x + s + dir.x, this.y + s + dir.y) //Center point
+
+        players.forEach((player) => {
+            if(player === this) return;
+            if(squareCollision(
+                new Vector2(pos.x - s, pos.y - s),
+                new Vector2(pos.x + s, pos.y + s),
+                new Vector2(player.x, player.y),
+                new Vector2(player.x + s*2, player.y + s*2))) {
+
+                player.hp -= 15;
+            }
+        })
     }
 
     Draw() {
@@ -64,7 +80,10 @@ class Player {
         ctx.strokeStyle = "green";
         ctx.beginPath();
         ctx.moveTo(this.x + (this.s / this.level.size) / 2, this.y + (this.s / this.level.size) / 2);
-        ctx.lineTo((this.x + (this.s / this.level.size) / 2) + this.vel.x * 10, (this.y + (this.s / this.level.size) / 2) + this.vel.y * 10);
+
+        let dir = this.Direction;
+        dir.Scale(this.s / this.level.size);
+        ctx.lineTo((this.x + (this.s / this.level.size) / 2) + dir.x, (this.y + (this.s / this.level.size) / 2) + dir.y);
         ctx.stroke();
         ctx.closePath();
     }
@@ -80,19 +99,35 @@ class Player {
         //Add player movement
         if(this.left && this.vel.x > -10  / this.movementOffset) {
             this.vel.x -= 5  / this.movementOffset;
+            this.dir.x -= 10 / this.movementOffset
         }
 
         if(this.right && this.vel.x < 10  / this.movementOffset) {
             this.vel.x += 5  / this.movementOffset;
+            this.dir.x += 10 / this.movementOffset
         }
 
+        //If you're not going either left or right stop
         if(!this.right && !this.left) {
             this.vel.x = 0;
+            this.dir.x = 0;
         }
 
         if(this.down && this.onAir && this.canDown) {
             this.vel.y += 10  / this.movementOffset;
             this.canDown = false;
+        }
+
+        if(this.down) {
+            this.dir.y = 10 / this.movementOffset
+        }
+
+        if (this.up) {
+            this.dir.y = -10 / this.movementOffset;
+        }
+
+        if(!this.down && !this.up) {
+            this.dir.y = 0;
         }
 
         if(this.hp <= 0) { //if you die, respawn
