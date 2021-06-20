@@ -62,7 +62,7 @@ Http.onreadystatechange = function () {
 
             let translatedPosition = TranslatePosition(new Vector2(player.x, player.y))
 
-            let createdPlayer = new Player(translatedPosition.x, translatedPosition.y, canvas.width, level, "green");
+            let createdPlayer = new Player(translatedPosition.x, translatedPosition.y, canvas.width, level, player.color);
             createdPlayer.left = player.left;
             createdPlayer.right = player.right;
             createdPlayer.down = player.down;
@@ -85,6 +85,7 @@ Http.open("PUT", updateUrl, false);
 Http.setRequestHeader("Content-Type", "application/json")
 Http.send(JSON.stringify({
     "Id": 69420,
+    "Color": "Cringe",
     "Left": false,
     "Down": false,
     "Right": false,
@@ -115,7 +116,7 @@ Http.onreadystatechange = function () {
 
                     if(id !== playerID) {
                         let translatedPosition = TranslatePosition(new Vector2(newPlayer.x, newPlayer.y))
-                        let createdPlayer = new Player(translatedPosition.x, translatedPosition.y, canvas.width, level, "green");
+                        let createdPlayer = new Player(translatedPosition.x, translatedPosition.y, canvas.width, level, newPlayer.color);
                         createdPlayer.left = newPlayer.left;
                         createdPlayer.right = newPlayer.right;
                         createdPlayer.down = newPlayer.down;
@@ -204,12 +205,9 @@ function Update() {
         "Vx": players[playerID].vel.x,
         "Vy": players[playerID].vel.y,
         "Dx": players[playerID].dir.x,
-        "Dy": players[playerID].dir.y
+        "Dy": players[playerID].dir.y,
+        "Color": "DumbShitColor"
     }));
-}
-
-function AddPlayer() {
-    
 }
 
 window.addEventListener("keydown", (e) => {
