@@ -95,46 +95,6 @@ function ValidateFEN(FEN) {
         line = 0;
     }
 
-    /* OLD
-    for(let i = 0; i < positions.length; i++) { //Loop through each character in the FEN
-        let symbol = positions[i];
-
-        //Check if there's fucky wucky characters
-        if(symbol !== "/" && symbol !== "b" && symbol !== "s") {
-            if(isNaN(symbol)) {
-                return false;
-            }
-        }
-
-        if(symbol === "/") { //If the character is a / we skip line
-            line = 0;
-            column++;
-
-            //Check if we went over teh size limit
-            if(column > size) {
-                return false;
-            }
-        } else {
-            if(isNaN(symbol)) {
-                line++;
-
-                //Check if we went over the size limit
-                if(line > size) {
-                    return false;
-                }
-            } else {
-                line += parseInt(symbol);
-
-                //Check if we went over the size limit
-                if(line > size) {
-                    return false;
-                }
-            }
-        }
-    }
-
-     */
-
     mouse.size = size;
 
     return true;

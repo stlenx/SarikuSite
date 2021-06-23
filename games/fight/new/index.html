@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New room</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="controls">
+  <button class="wideButton" onclick="buttonPressed()">Make room</button>
+    <div class="invalidFEN" id="invalidFEN">
+        Invalid FEN
+    </div>
+</div>
+
+<div class="iframeContainer">
+  <iframe src="../editor/index.html" title="Editor lol" height="100%" width="100%" id="iframe"></iframe>
+</div>
+
+<script src="main.js" defer></script>
+
+</body>
+</html>

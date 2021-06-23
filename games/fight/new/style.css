@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway&family=Padauk");
+
+:root {
+    --veryDark: #0a0a0a;
+
+    --dark: #121213;
+    --light: #dfdfdf;
+
+    --lightSecondary: #cccccc;
+
+    --darkSecondary: #1d1d1e;
+    --darkSecondary1: #2f2f32;
+    --darkSecondary2: #525255;
+
+    --fontHeader: 'Raleway', sans-serif;
+    --fontText: 'Padauk', sans-serif;
+}
+
+body {
+    background-color: var(--veryDark);
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+iframe {
+    border:none;
+}
+
+.iframeContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.controls {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.invalidFEN {
+    text-align: center;
+    color: #f53636;
+
+    background-color: var(--darkSecondary1);
+
+    border-radius: 5px;
+
+    font-size: 1.2em;
+    font-weight: bold;
+    font-family: var(--fontText);
+
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+
+    /* ANIMATION STUFF */
+    opacity: 0;
+    transform: translate(0, -100%);
+    transition: transform 200ms ease-in-out, opacity 200ms ease-in-out;
+}
+
+.invalidFEN.visible {
+    opacity: 1;
+    transform: translate(0, 0);
+    transition: transform 200ms ease-in-out, opacity 200ms ease-in-out;
+}
+
+button {
+    background-color: var(--darkSecondary1); /* Green lol */
+    color: var(--light);
+    border: none;
+    text-align: center;
+    display: inline-block;
+    font-size: 1.5em;
+    padding: 12px 18px;
+    margin: 16px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: var(--darkSecondary2);
+}
+
+button.wideButton {
+    padding: 12px 32px;
+}
