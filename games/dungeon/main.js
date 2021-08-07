@@ -1,45 +1,43 @@
-let testWalls = [];
 let player;
 let map;
 
-let dimensions = 10;
-let maxTunnels = 100;
+let dimensions = 20;
+let maxTunnels = 150;
 let maxLength = 10;
 
 function setup() {
     map = new Map(dimensions, maxTunnels, maxLength);
     map.generateMap()
-
-    console.log(map.map)
-
     map.generateWalls()
 
-    //testWalls.push(new Wall(new Vector2(100, 100), new Vector2(50, 0.0001)))
-    //testWalls.push(new Wall(new Vector2(100, 100), new Vector2(0, 50)))
-
-    player = new Player(new Vector2(100, 200), map.walls);
+    player = new Player(map);
 }
 
+
 function frame() {
-    player.draw();
-
-    player.walls.forEach((wall) => {
-        wall.draw()
-    })
-
-    if(input.KeyD) {
-       player.dir += 5;
+    if(input.KeyQ) {
+        player.dir -= 1;
     }
 
-    if(input.KeyA) {
-        player.dir -= 5;
+    if(input.KeyE) {
+        player.dir += 1;
     }
 
     if(input.KeyW) {
         player.forward()
     }
 
+    if(input.KeyA) {
+        player.left()
+    }
+
     if(input.KeyS) {
         player.backwards()
     }
+
+    if(input.KeyD) {
+        player.right()
+    }
+
+    player.draw();
 }

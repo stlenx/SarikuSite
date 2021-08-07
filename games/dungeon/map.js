@@ -3,6 +3,7 @@ class Map {
         this.dimensions = dimensions;
         this.maxTunnels = maxTunnels;
         this.maxLength = maxLength;
+        this.wallWidth = 100;
     }
 
     generateMap() {
@@ -12,6 +13,8 @@ class Map {
 
         let x = Math.floor(getRandom(1, this.dimensions - 1));
         let y = Math.floor(getRandom(1, this.dimensions - 1));
+
+        this.starting = new Vector2(x, y);
 
         let directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
@@ -41,8 +44,9 @@ class Map {
 
     generateWalls() {
         this.walls = [];
-        let wallWidth = 50;
-        let halfWidth = wallWidth * 0.5;
+        let halfWidth = this.wallWidth * 0.5;
+
+        this.starting.mult(new Vector2(this.wallWidth, this.wallWidth))
 
         //Detect horizontal walls
         for(let y = 1; y < this.map.length; y++) {
@@ -52,28 +56,28 @@ class Map {
                 if(this.map[x][y] === 0) {
                     if(this.map[x][y-1] !== 0) {
                         if(lastWall === null) {
-                            lastWall = new Wall(new Vector2(x * wallWidth - halfWidth, y * wallWidth - halfWidth), new Vector2(wallWidth, 0.0001));
+                            lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth - halfWidth), new Vector2(this.wallWidth, 0.0001));
                         } else {
-                            let currentX = x * wallWidth - halfWidth;
+                            let currentX = x * this.wallWidth - halfWidth;
                             if(lastWall.pos.x + lastWall.dir.x === currentX) {
-                                lastWall.dir.x += wallWidth;
+                                lastWall.dir.x += this.wallWidth;
                             } else {
                                 this.walls.push(lastWall);
-                                lastWall = new Wall(new Vector2(currentX, y * wallWidth - halfWidth), new Vector2(wallWidth, 0.0001));
+                                lastWall = new Wall(new Vector2(currentX, y * this.wallWidth - halfWidth), new Vector2(this.wallWidth, 0.0001));
                             }
                         }
                     }
 
                     if(this.map[x][y+1] !== 0) {
                         if(secondaryWall === null) {
-                            secondaryWall = new Wall(new Vector2(x * wallWidth - halfWidth, y * wallWidth + halfWidth), new Vector2(wallWidth, 0.0001));
+                            secondaryWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth + halfWidth), new Vector2(this.wallWidth, 0.0001));
                         } else {
-                            let currentX = x * wallWidth - halfWidth;
+                            let currentX = x * this.wallWidth - halfWidth;
                             if(secondaryWall.pos.x + secondaryWall.dir.x === currentX) {
-                                secondaryWall.dir.x += wallWidth;
+                                secondaryWall.dir.x += this.wallWidth;
                             } else {
                                 this.walls.push(secondaryWall);
-                                secondaryWall = new Wall(new Vector2(currentX, y * wallWidth + halfWidth), new Vector2(wallWidth, 0.0001));
+                                secondaryWall = new Wall(new Vector2(currentX, y * this.wallWidth + halfWidth), new Vector2(this.wallWidth, 0.0001));
                             }
                         }
                     }
@@ -95,28 +99,28 @@ class Map {
                 if(this.map[x][y] === 0) {
                     if(this.map[x-1][y] !== 0) {
                         if(lastWall === null) {
-                            lastWall = new Wall(new Vector2(x * wallWidth - halfWidth, y * wallWidth - halfWidth), new Vector2(0.0001, wallWidth));
+                            lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth - halfWidth), new Vector2(0.0001, this.wallWidth));
                         } else {
-                            let currentY = y * wallWidth - halfWidth;
+                            let currentY = y * this.wallWidth - halfWidth;
                             if(lastWall.pos.y + lastWall.dir.y === currentY) {
-                                lastWall.dir.y += wallWidth;
+                                lastWall.dir.y += this.wallWidth;
                             } else {
                                 this.walls.push(lastWall);
-                                lastWall = new Wall(new Vector2(x * wallWidth - halfWidth, currentY), new Vector2(0.0001, wallWidth));
+                                lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, currentY), new Vector2(0.0001, this.wallWidth));
                             }
                         }
                     }
 
                     if(this.map[x+1][y] !== 0) {
                         if(secondaryWall === null) {
-                            secondaryWall = new Wall(new Vector2(x * wallWidth + halfWidth, y * wallWidth - halfWidth), new Vector2(0.0001, wallWidth));
+                            secondaryWall = new Wall(new Vector2(x * this.wallWidth + halfWidth, y * this.wallWidth - halfWidth), new Vector2(0.0001, this.wallWidth));
                         } else {
-                            let currentY = y * wallWidth - halfWidth;
+                            let currentY = y * this.wallWidth - halfWidth;
                             if(secondaryWall.pos.y + secondaryWall.dir.y === currentY) {
-                                secondaryWall.dir.y += wallWidth;
+                                secondaryWall.dir.y += this.wallWidth;
                             } else {
                                 this.walls.push(secondaryWall);
-                                secondaryWall = new Wall(new Vector2(x * wallWidth + halfWidth, currentY), new Vector2(0.0001, wallWidth));
+                                secondaryWall = new Wall(new Vector2(x * this.wallWidth + halfWidth, currentY), new Vector2(0.0001, this.wallWidth));
                             }
                         }
                     }
