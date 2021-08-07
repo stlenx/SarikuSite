@@ -6,10 +6,14 @@ class Player {
         this.map = map;
 
         this.pos = map.starting;
+
+        this.wallImage = new Image();
+        this.wallImage.src = "img/wall.png";
     }
 
     draw() {
         let lines = [];
+        let wall = [];
         const amount = canvas.width;
         let halfFOV = this.fov * 0.5;
 
@@ -21,7 +25,10 @@ class Player {
             let result = null;
 
             let record = Infinity;
-            this.map.walls.forEach((wall) => {
+            let recordIndex = null;
+
+            for(let i = 0; i < this.map.walls.length; i++) {
+                let wall = this.map.walls[i];
 
                 let collision = wall.hit(this.pos, dir.ReturnAdd(this.pos));
 
@@ -30,13 +37,19 @@ class Player {
                     if(dist < record) {
                         result = collision;
                         record = dist;
+
+                        //Thing for texture mapping
+                        if(wall.dir.x >= this.map.wallWidth) { //Horizontal
+                            recordIndex = Remap(collision.x, wall.pos.x, wall.pos.x + this.map.wallWidth, 0, 1);
+                        } else { //Vertical
+                            recordIndex = Remap(collision.y, wall.pos.y, wall.pos.y + this.map.wallWidth, 0, 1);
+                        }
                     }
                 }
-            })
+            }
 
-            //1° × π/180
-            // * Math.cos(a * (Math.PI / 180)
             lines.push(record * Math.cos((this.dir - a) * (Math.PI / 180)));
+            wall.push(recordIndex);
         }
 
         //Draw ceiling
@@ -48,16 +61,18 @@ class Player {
         ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2)
 
         for(let i = 0; i < lines.length; i++) {
-            let max = canvas.height * 400;
-
             const dst = lines[i];
-            const dstSQ = dst*dst;
             const w = canvas.width / lines.length;
 
-            let color = (dimensions*dimensions * 25) / dst;
-            ctx.fillStyle = `rgb(${color},${color},${color})`;
+            let color = Remap(dst, 0, canvas.height, 0, 1);
+            ctx.fillStyle = `rgba(0,0,0,${color})`;
             let h = (dimensions*dimensions * canvas.height) / dst;
             let x = w * i;
+            let y = (canvas.height / 2) - h/2;
+
+            let section = wall[i] - Math.floor(wall[i]);
+
+            ctx.drawImage(this.wallImage, this.wallImage.width * section, 0, 1, this.wallImage.height, x, y, w, h);
             ctx.fillRect(x, (canvas.height / 2) - h/2, w, h);
         }
     }
@@ -87,19 +102,6 @@ class Player {
     }
 
     move(dir) {
-        let nextPos = this.pos.ReturnAdd(dir.ReturnScaled(10));
-
-        let inside = false;
-
-        this.map.walls.forEach((wall) => {
-            let result = wall.hit(this.pos, nextPos);
-            if(result !== false) {
-                inside = true;
-            }
-        })
-
-        if(!inside) {
-            this.pos.add(dir);
-        }
+        this.pos.add(dir);
     }
 }

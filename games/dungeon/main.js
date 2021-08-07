@@ -2,13 +2,15 @@ let player;
 let map;
 
 let dimensions = 20;
-let maxTunnels = 150;
-let maxLength = 10;
+let maxTunnels = 30;
+let maxLength = 20;
 
 function setup() {
     map = new Map(dimensions, maxTunnels, maxLength);
     map.generateMap()
     map.generateWalls()
+
+    console.log(map)
 
     player = new Player(map);
 }

@@ -3,7 +3,7 @@ class Map {
         this.dimensions = dimensions;
         this.maxTunnels = maxTunnels;
         this.maxLength = maxLength;
-        this.wallWidth = 100;
+        this.wallWidth = 200;
     }
 
     generateMap() {
