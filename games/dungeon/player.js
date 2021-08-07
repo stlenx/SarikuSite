@@ -1,6 +1,6 @@
 class Player {
     constructor(map) {
-        this.speed = 2.5;
+        this.speed = 5;
         this.dir = 0;
         this.fov = 60;
         this.map = map;
@@ -9,9 +9,18 @@ class Player {
 
         this.wallImage = new Image();
         this.wallImage.src = "img/wall.png";
+
+        this.Gun = new Image();
+        this.Gun.src = "img/gunRest.png";
+
+        this.GunShoot = new Image();
+        this.GunShoot.src = "img/gunShoot.png";
+
+        this.shooted = false;
+        this.shootCountdown = 0;
     }
 
-    draw() {
+    draw(dt) {
         let lines = [];
         let wall = [];
         const amount = canvas.width;
@@ -52,13 +61,8 @@ class Player {
             wall.push(recordIndex);
         }
 
-        //Draw ceiling
-        ctx.fillStyle = "green";
-        ctx.fillRect(0, 0, canvas.width, canvas.height / 2)
-
-        //Draw floor
-        ctx.fillStyle = "blue";
-        ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2)
+        ctx.fillStyle = "black";
+        ctx.fillRect(0,0, canvas.width, canvas.height)
 
         for(let i = 0; i < lines.length; i++) {
             const dst = lines[i];
@@ -75,6 +79,26 @@ class Player {
             ctx.drawImage(this.wallImage, this.wallImage.width * section, 0, 1, this.wallImage.height, x, y, w, h);
             ctx.fillRect(x, (canvas.height / 2) - h/2, w, h);
         }
+
+        //Draw gun
+        let h = 108 * 5;
+        let w = 100 * 5;
+        if(this.shooted) {
+            ctx.drawImage(this.GunShoot, canvas.width - w, canvas.height - h, w, h)
+        } else {
+            ctx.drawImage(this.Gun, canvas.width - w, canvas.height - h, w, h)
+        }
+
+        if(this.shootCountdown > 500) {
+            this.shooted = false;
+            this.shootCountdown = 0;
+        } else {
+            this.shootCountdown += dt;
+        }
+    }
+
+    shoot() {
+        this.shooted = true;
     }
 
     forward() {

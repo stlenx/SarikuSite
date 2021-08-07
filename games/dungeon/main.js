@@ -6,6 +6,8 @@ let maxTunnels = 30;
 let maxLength = 20;
 
 function setup() {
+    ctx.imageSmoothingEnabled = false;
+
     map = new Map(dimensions, maxTunnels, maxLength);
     map.generateMap()
     map.generateWalls()
@@ -16,7 +18,7 @@ function setup() {
 }
 
 
-function frame() {
+function frame(dt) {
     if(input.KeyQ) {
         player.dir -= 1;
     }
@@ -41,5 +43,9 @@ function frame() {
         player.right()
     }
 
-    player.draw();
+    player.draw(dt);
+}
+
+function mousedown() {
+    player.shoot();
 }

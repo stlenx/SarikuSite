@@ -370,6 +370,10 @@ function animationFrame() {
     window.requestAnimationFrame(animationFrame)
 }
 
+if (typeof  mousedown == 'function') {
+    window.onmousedown = mousedown;
+}
+
 if (typeof frame == 'function') {
     window.requestAnimationFrame(animationFrame)
 }
