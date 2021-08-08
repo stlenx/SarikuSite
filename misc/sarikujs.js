@@ -353,7 +353,7 @@ window.addEventListener("mousemove", (e) => {
     mouse.y = e.offsetY;
 })
 
-if (typeof setup == 'function') {
+if(typeof setup == 'function') {
     setup()
 }
 
