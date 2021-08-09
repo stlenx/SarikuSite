@@ -1,15 +1,17 @@
 class Player {
-    constructor(map) {
+    constructor(map, shadows) {
         this.speed = 10;
         this.dir = 0;
         this.fov = 60;
         this.renderDistance = 2000;
         this.map = map;
+        this.shadows = shadows;
 
         this.pos = map.starting;
 
         this.rCanvas = document.createElement("canvas");
         this.context = this.rCanvas.getContext("2d");
+        this.context.imageSmoothingEnabled = false;
         this.rCanvas.setAttribute("width", canvas.width * 0.3);
         this.rCanvas.setAttribute("height", canvas.height * 0.3);
         this.imageData = this.context.getImageData(0, 0, this.rCanvas.width, this.rCanvas.height);
@@ -118,14 +120,15 @@ class Player {
 
         ctx.drawImage(this.rCanvas, 0, canvas.height / 2, canvas.width, canvas.height);
 
-        let gradient = ctx.createLinearGradient(0,canvas.height / 2, 0,canvas.height);
+        if(this.shadows) {
+            let gradient = ctx.createLinearGradient(0,canvas.height / 2, 0,canvas.height);
 
-        gradient.addColorStop(Remap(this.renderDistance, 0, 2500, 1, 0), "rgba(0,0,0,1)");
-        gradient.addColorStop(1, "rgba(0,0,0,0)");
+            gradient.addColorStop(Remap(this.renderDistance, 0, 2500, 1, 0), "rgba(0,0,0,1)");
+            gradient.addColorStop(1, "rgba(0,0,0,0)");
 
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+        }
     }
 
     drawWalls() {
@@ -180,9 +183,7 @@ class Player {
 
             const dst = lines[i];
             const w = canvas.width / lines.length;
-
-            let color = Remap(dst, 0, viewDistance, 0, 1);
-            ctx.fillStyle = `rgba(0,0,0,${color})`;
+            
             let h = (dimensions*dimensions * canvas.height) / dst;
             let x = w * i;
             let y = (canvas.height / 2) - h/2;
@@ -191,8 +192,14 @@ class Player {
             let ix = imageWidth * section;
 
             ctx.drawImage(this.wallImage, ix, 0, 1, this.wallImage.height, x, y, w, h);
-            h+=2;
-            ctx.fillRect(x, (canvas.height / 2) - h/2, w, h);
+
+            if(this.shadows) {
+                let color = Remap(dst, 0, viewDistance, 0, 1);
+                ctx.fillStyle = `rgba(0,0,0,${color})`;
+
+                h+=2;
+                ctx.fillRect(x, (canvas.height / 2) - h/2, w, h);
+            }
         }
     }
 

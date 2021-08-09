@@ -28,7 +28,7 @@ function setup() {
 
     console.log(map)
 
-    player = new Player(map);
+    player = new Player(map, true);
 }
 
 
@@ -62,4 +62,10 @@ function frame(dt) {
 
 function mousedown() {
     player.shoot();
+}
+
+function resize() {
+    canvas.setAttribute("width", window.innerWidth)
+    canvas.setAttribute("height", window.innerHeight)
+    ctx.imageSmoothingEnabled = false;
 }
