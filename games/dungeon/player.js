@@ -3,6 +3,7 @@ class Player {
         this.speed = 10;
         this.dir = 0;
         this.fov = 60;
+        this.renderDistance = 2000;
         this.map = map;
 
         this.pos = map.starting;
@@ -34,9 +35,11 @@ class Player {
 
         this.drawWalls()
 
+        this.drawMap()
+
         //Draw gun
-        let h = 108 * 5;
-        let w = 100 * 5;
+        let h = this.GunShoot.height * canvas.height * 0.005;
+        let w = this.GunShoot.width * canvas.height * 0.005;
         if(this.shooted) {
             ctx.drawImage(this.GunShoot, canvas.width - w, canvas.height - h, w, h)
         } else {
@@ -79,7 +82,10 @@ class Player {
         let buf8 = new Uint8ClampedArray(buf);
         let data = new Uint32Array(buf);
 
-        for (let y = 0; y < this.rCanvas.height / 2; y++) {
+        let halfHeight = this.rCanvas.height * 0.5;
+        let start = Math.floor(Remap(this.renderDistance, 0, 2500, halfHeight, 0));
+
+        for (let y = start; y < halfHeight; y++) {
             let SampleDepth = y / this.rCanvas.height / 2;
 
             let StartX = (FarX1 - NearX1) / (SampleDepth) + NearX1;
@@ -114,17 +120,16 @@ class Player {
 
         let gradient = ctx.createLinearGradient(0,canvas.height / 2, 0,canvas.height);
 
-        gradient.addColorStop(0.17, "rgba(0,0,0,1)");
+        gradient.addColorStop(Remap(this.renderDistance, 0, 2500, 1, 0), "rgba(0,0,0,1)");
         gradient.addColorStop(1, "rgba(0,0,0,0)");
 
-    // Set the fill style and draw a rectangle
         ctx.fillStyle = gradient;
         ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
 
     }
 
     drawWalls() {
-        let viewDistance = 2000;
+        let viewDistance = this.renderDistance;
 
         let lines = [];
         let wall = [];
@@ -191,6 +196,51 @@ class Player {
         }
     }
 
+    drawMap() {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0,0, canvas.height * 0.3, canvas.height * 0.3)
+
+        let size = canvas.height * 0.29;
+        let o = 2.5;
+        let upscale = size / dimensions;
+
+        //Draw current sqare
+        let x = Math.floor((this.pos.x + 100) / this.map.wallWidth);
+        let y = Math.floor((this.pos.y + 100) / this.map.wallWidth);
+
+        ctx.fillStyle = "red";
+        ctx.fillRect(x * upscale + o, y * upscale + o, size / 20, size / 20);
+
+        //Draw walls
+        for(let x = 0; x < dimensions; x++) {
+            for(let y = 0; y < dimensions; y++) {
+                if(this.map.map[x][y] === 1) {
+                    ctx.fillStyle = "green";
+                    ctx.fillRect(x * upscale + o, y * upscale + o, size / 20, size / 20);
+                }
+            }
+        }
+
+        //Drawing separating lines
+        ctx.beginPath();
+            for(let x = 0; x < dimensions+1; x++) {
+            let px = x * upscale + o;
+            ctx.moveTo(px, o);
+            ctx.lineTo(px, size + o);
+        }
+            for(let y = 0; y < dimensions+1; y++) {
+            let py = y * upscale;
+            ctx.moveTo(o, py + o);
+            ctx.lineTo(size + o, py + o);
+        }
+        ctx.stroke();
+        ctx.closePath();
+
+        x = ((this.pos.x + 100) / this.map.wallWidth) * upscale + o;
+        y = ((this.pos.y + 100) / this.map.wallWidth) * upscale + o;
+        StrokeCircle(new Vector2(x, y), 3);
+    }
+
     shoot() {
         this.shooted = true;
     }
@@ -220,6 +270,20 @@ class Player {
     }
 
     move(dir) {
-        this.pos.add(dir);
+        let x = Math.floor((this.pos.x + this.map.wallWidth / 2) / this.map.wallWidth);
+        let y = Math.floor((this.pos.y + this.map.wallWidth / 2) / this.map.wallWidth);
+
+        let nx = Math.floor((this.pos.x + dir.x + this.map.wallWidth / 2) / this.map.wallWidth);
+        let ny = Math.floor((this.pos.y + dir.y + this.map.wallWidth / 2) / this.map.wallWidth);
+
+        if(this.map.map[nx][y] === 0) {
+            this.pos.x += dir.x;
+        }
+
+        if(this.map.map[x][ny] === 0) {
+            this.pos.y += dir.y;
+        }
+
+        //this.pos.add(dir);
     }
 }

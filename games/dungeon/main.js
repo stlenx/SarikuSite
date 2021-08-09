@@ -1,5 +1,7 @@
 let img = new Image();
 img.src = "img/floor.png";
+
+
 img.onload = function() {
     //Get the image data
     let c = document.createElement('canvas');
