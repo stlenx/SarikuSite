@@ -51,6 +51,7 @@ class Map {
         let halfWidth = this.wallWidth * 0.5;
 
         this.starting.mult(new Vector2(this.wallWidth, this.wallWidth))
+        this.ending.mult(new Vector2(this.wallWidth, this.wallWidth))
 
         //Detect horizontal walls
         for(let y = 1; y < this.map.length; y++) {
@@ -60,28 +61,28 @@ class Map {
                 if(this.map[x][y] === 0) {
                     if(this.map[x][y-1] !== 0) {
                         if(lastWall === null) {
-                            lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth - halfWidth), new Vector2(this.wallWidth, 0.0001));
+                            lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth - halfWidth), new Vector2(this.wallWidth, 0));
                         } else {
                             let currentX = x * this.wallWidth - halfWidth;
                             if(lastWall.pos.x + lastWall.dir.x === currentX) {
                                 lastWall.dir.x += this.wallWidth;
                             } else {
                                 this.walls.push(lastWall);
-                                lastWall = new Wall(new Vector2(currentX, y * this.wallWidth - halfWidth), new Vector2(this.wallWidth, 0.0001));
+                                lastWall = new Wall(new Vector2(currentX, y * this.wallWidth - halfWidth), new Vector2(this.wallWidth, 0));
                             }
                         }
                     }
 
                     if(this.map[x][y+1] !== 0) {
                         if(secondaryWall === null) {
-                            secondaryWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth + halfWidth), new Vector2(this.wallWidth, 0.0001));
+                            secondaryWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth + halfWidth), new Vector2(this.wallWidth, 0));
                         } else {
                             let currentX = x * this.wallWidth - halfWidth;
                             if(secondaryWall.pos.x + secondaryWall.dir.x === currentX) {
                                 secondaryWall.dir.x += this.wallWidth;
                             } else {
                                 this.walls.push(secondaryWall);
-                                secondaryWall = new Wall(new Vector2(currentX, y * this.wallWidth + halfWidth), new Vector2(this.wallWidth, 0.0001));
+                                secondaryWall = new Wall(new Vector2(currentX, y * this.wallWidth + halfWidth), new Vector2(this.wallWidth, 0));
                             }
                         }
                     }
@@ -103,28 +104,28 @@ class Map {
                 if(this.map[x][y] === 0) {
                     if(this.map[x-1][y] !== 0) {
                         if(lastWall === null) {
-                            lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth - halfWidth), new Vector2(0.0001, this.wallWidth));
+                            lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, y * this.wallWidth - halfWidth), new Vector2(0, this.wallWidth));
                         } else {
                             let currentY = y * this.wallWidth - halfWidth;
                             if(lastWall.pos.y + lastWall.dir.y === currentY) {
                                 lastWall.dir.y += this.wallWidth;
                             } else {
                                 this.walls.push(lastWall);
-                                lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, currentY), new Vector2(0.0001, this.wallWidth));
+                                lastWall = new Wall(new Vector2(x * this.wallWidth - halfWidth, currentY), new Vector2(0, this.wallWidth));
                             }
                         }
                     }
 
                     if(this.map[x+1][y] !== 0) {
                         if(secondaryWall === null) {
-                            secondaryWall = new Wall(new Vector2(x * this.wallWidth + halfWidth, y * this.wallWidth - halfWidth), new Vector2(0.0001, this.wallWidth));
+                            secondaryWall = new Wall(new Vector2(x * this.wallWidth + halfWidth, y * this.wallWidth - halfWidth), new Vector2(0, this.wallWidth));
                         } else {
                             let currentY = y * this.wallWidth - halfWidth;
                             if(secondaryWall.pos.y + secondaryWall.dir.y === currentY) {
                                 secondaryWall.dir.y += this.wallWidth;
                             } else {
                                 this.walls.push(secondaryWall);
-                                secondaryWall = new Wall(new Vector2(x * this.wallWidth + halfWidth, currentY), new Vector2(0.0001, this.wallWidth));
+                                secondaryWall = new Wall(new Vector2(x * this.wallWidth + halfWidth, currentY), new Vector2(0, this.wallWidth));
                             }
                         }
                     }

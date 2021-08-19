@@ -17,7 +17,10 @@ class Player {
         this.imageData = this.context.getImageData(0, 0, this.rCanvas.width, this.rCanvas.height);
 
         this.wallImage = new Image();
-        this.wallImage.src = "img/drt.jpg";
+        this.wallImage.src = "img/ixi.png";
+
+        this.enemy = new Image();
+        this.enemy.src = "img/chin.jpg";
 
         this.Gun = new Image();
         this.Gun.src = "img/gunRest.png";
@@ -35,7 +38,11 @@ class Player {
 
         this.drawFloor()
 
+        //console.time("walls")
+
         this.drawWalls()
+
+        //console.timeEnd("walls");
 
         this.drawMap()
 
@@ -132,14 +139,15 @@ class Player {
     }
 
     drawWalls() {
-        let viewDistance = this.renderDistance;
+        const viewDistance = this.renderDistance;
 
         let lines = [];
         let wall = [];
+        let enemies = [];
         const amount = canvas.width / 6;
-        let halfFOV = this.fov * 0.5;
-
-        //console.time('calculate')
+        const w = canvas.width / amount;
+        const halfFOV = this.fov * 0.5;
+        const imageWidth = this.wallImage.width - 1;
 
         let increment = this.fov / amount;
         for(let a = this.dir - halfFOV; a < this.dir + halfFOV; a+=increment) {
@@ -176,20 +184,15 @@ class Player {
             wall.push(recordIndex);
         }
 
-        //console.time('draw-calculated')
-
         for(let i = 0; i < lines.length; i++) {
-            let imageWidth = this.wallImage.width - 1;
-
             const dst = lines[i];
-            const w = canvas.width / lines.length;
-            
-            let h = (dimensions*dimensions * canvas.height) / dst;
-            let x = w * i;
-            let y = (canvas.height / 2) - h/2;
 
-            let section = wall[i] - Math.floor(wall[i]);
-            let ix = imageWidth * section;
+            const h = (dimensions*dimensions * canvas.height) / dst;
+            const x = w * i;
+            const y = (canvas.height / 2) - h/2;
+
+            const section = wall[i] - Math.floor(wall[i]);
+            const ix = imageWidth * section;
 
             ctx.drawImage(this.wallImage, ix, 0, 1, this.wallImage.height, x, y, w, h);
 
@@ -197,8 +200,7 @@ class Player {
                 let color = Remap(dst, 0, viewDistance, 0, 1);
                 ctx.fillStyle = `rgba(0,0,0,${color})`;
 
-                h+=2;
-                ctx.fillRect(x, (canvas.height / 2) - h/2, w, h);
+                ctx.fillRect(x, (canvas.height / 2) - h/2, w, h + 2);
             }
         }
     }
@@ -214,6 +216,13 @@ class Player {
         //Draw current sqare
         let x = Math.floor((this.pos.x + 100) / this.map.wallWidth);
         let y = Math.floor((this.pos.y + 100) / this.map.wallWidth);
+
+        ctx.fillStyle = "red";
+        ctx.fillRect(x * upscale + o, y * upscale + o, size / 20, size / 20);
+
+        //Draw karo
+        x = Math.floor((this.map.ending.x + 100) / this.map.wallWidth);
+        y = Math.floor((this.map.ending.y + 100) / this.map.wallWidth);
 
         ctx.fillStyle = "red";
         ctx.fillRect(x * upscale + o, y * upscale + o, size / 20, size / 20);
@@ -252,27 +261,27 @@ class Player {
         this.shooted = true;
     }
 
-    forward() {
+    forward(dt) {
         let dir = getVector2FromAngle(this.dir);
-        dir.Scale(this.speed);
+        dir.Scale(this.speed * (16/dt));
         this.move(dir);
     }
 
-    left() {
+    left(dt) {
         let dir = getVector2FromAngle(this.dir - 90);
-        dir.Scale(this.speed / 1.5);
+        dir.Scale(this.speed / 1.5 * (16/dt));
         this.move(dir);
     }
 
-    right() {
+    right(dt) {
         let dir = getVector2FromAngle(this.dir + 90);
-        dir.Scale(this.speed / 1.5);
+        dir.Scale(this.speed / 1.5 * (16/dt));
         this.move(dir);
     }
 
-    backwards() {
+    backwards(dt) {
         let dir = getVector2FromAngle(this.dir);
-        dir.Scale(-this.speed/2);
+        dir.Scale(-this.speed/2 * (16/dt));
         this.move(dir);
     }
 
@@ -290,7 +299,5 @@ class Player {
         if(this.map.map[x][ny] === 0) {
             this.pos.y += dir.y;
         }
-
-        //this.pos.add(dir);
     }
 }
