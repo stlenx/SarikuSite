@@ -34,15 +34,12 @@ class Map {
                     x = nextX;
                     y = nextY;
                 }
-
-                if(maxTunnels === 1 && i === length-1) {
-                    this.ending = new Vector2(x, y);
-                }
             }
 
             maxTunnels--;
         }
 
+        this.ending = new Vector2(0, 0);
         this.map = map;
     }
 

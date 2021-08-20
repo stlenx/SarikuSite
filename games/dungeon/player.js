@@ -127,14 +127,29 @@ class Player {
 
         ctx.drawImage(this.rCanvas, 0, canvas.height / 2, canvas.width, canvas.height);
 
+        ctx.save();
+        ctx.scale(-1, 1);
+        ctx.rotate(Math.PI);
+
+        ctx.drawImage(this.rCanvas, 0, -canvas.height / 2, canvas.width, canvas.height);
+
+        ctx.restore();
+
         if(this.shadows) {
             let gradient = ctx.createLinearGradient(0,canvas.height / 2, 0,canvas.height);
-
             gradient.addColorStop(Remap(this.renderDistance, 0, 2500, 1, 0), "rgba(0,0,0,1)");
             gradient.addColorStop(1, "rgba(0,0,0,0)");
 
             ctx.fillStyle = gradient;
             ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+
+
+            gradient = ctx.createLinearGradient(0,0, 0,canvas.height / 2);
+            gradient.addColorStop(Remap(this.renderDistance, 0, 2500, 0, 1), "rgba(0,0,0,1)");
+            gradient.addColorStop(0, "rgba(0,0,0,0)");
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
         }
     }
 
