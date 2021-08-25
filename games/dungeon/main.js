@@ -1,5 +1,5 @@
-let img = new Image();
-img.src = "img/floor.jpg";
+let floorImage = new Image();
+floorImage.src = "img/floor_brick.png";
 
 let player;
 let map;
@@ -19,14 +19,14 @@ function setup() {
 
     player = new Player(map, true);
 
-    img.onload = function() {
+    floorImage.onload = function() {
         //Get the image data
         let c = document.createElement('canvas');
-        c.setAttribute("width", img.width);
-        c.setAttribute("height", img.height);
+        c.setAttribute("width", floorImage.width);
+        c.setAttribute("height", floorImage.height);
         let c4 = c.getContext('2d');
-        c4.drawImage(img, 0, 0);
-        player.image = c4.getImageData(0, 0, img.width, img.height);
+        c4.drawImage(floorImage, 0, 0);
+        player.image = c4.getImageData(0, 0, floorImage.width, floorImage.height);
     };
 }
 

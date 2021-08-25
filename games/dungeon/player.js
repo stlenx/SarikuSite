@@ -1,6 +1,6 @@
 class Player {
     constructor(map, shadows) {
-        this.speed = 10;
+        this.speed = 5;
         this.dir = 0;
         this.fov = 60;
         this.renderDistance = 2000;
@@ -17,10 +17,10 @@ class Player {
         this.imageData = this.context.getImageData(0, 0, this.rCanvas.width, this.rCanvas.height);
 
         this.wallImage = new Image();
-        this.wallImage.src = "img/ixi.png";
+        this.wallImage.src = "img/brick.png";
 
         this.enemy = new Image();
-        this.enemy.src = "img/chin.jpg";
+        this.enemy.src = "img/riperino.jpg";
 
         this.Gun = new Image();
         this.Gun.src = "img/gunRest.png";
@@ -38,11 +38,9 @@ class Player {
 
         this.drawFloor()
 
-        //console.time("walls")
-
         this.drawWalls()
 
-        //console.timeEnd("walls");
+        this.drawSprites()
 
         this.drawMap()
 
@@ -60,6 +58,18 @@ class Player {
             this.shootCountdown = 0;
         } else {
             this.shootCountdown += dt;
+        }
+    }
+
+    drawSprites() {
+        let halfFOV = this.fov * .85;
+
+        let vector = getVector2(this.pos, this.map.ending);
+        let dir = Math.atan2(vector.x, vector.y) * -(180 / Math.PI) + 90;
+
+        if(dir > this.dir - halfFOV && dir < this.dir + halfFOV) { //Looking at karo
+            console.log(true)
+            ctx.drawImage(this.enemy, Remap(dir, this.dir-halfFOV, this.dir + halfFOV, 0, canvas.width), 0, this.enemy.width, this.enemy.height)
         }
     }
 
@@ -112,7 +122,7 @@ class Player {
                 SampleX = SampleX % 1;
                 SampleY = SampleY % 1;
 
-                let index = (Math.floor(SampleY * img.height) + Math.floor(SampleX * img.width) * this.image.width) * 4;
+                let index = (Math.floor(SampleY * floorImage.height) + Math.floor(SampleX * floorImage.width) * this.image.width) * 4;
 
                 data[y * this.imageData.width + x] =
                     (255   << 24) |	// alpha
@@ -142,7 +152,6 @@ class Player {
 
             ctx.fillStyle = gradient;
             ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
 
             gradient = ctx.createLinearGradient(0,0, 0,canvas.height / 2);
             gradient.addColorStop(Remap(this.renderDistance, 0, 2500, 0, 1), "rgba(0,0,0,1)");
@@ -224,30 +233,29 @@ class Player {
         ctx.fillStyle = "white";
         ctx.fillRect(0,0, canvas.height * 0.3, canvas.height * 0.3)
 
-        let size = canvas.height * 0.29;
-        let o = 2.5;
+        let size = canvas.height * 0.3;
         let upscale = size / dimensions;
 
         //Draw current sqare
         let x = Math.floor((this.pos.x + 100) / this.map.wallWidth);
         let y = Math.floor((this.pos.y + 100) / this.map.wallWidth);
 
-        ctx.fillStyle = "red";
-        ctx.fillRect(x * upscale + o, y * upscale + o, size / 20, size / 20);
+        ctx.fillStyle = "rgb(255,117,117)";
+        ctx.fillRect(x * upscale, y * upscale, size / 20, size / 20);
 
         //Draw karo
         x = Math.floor((this.map.ending.x + 100) / this.map.wallWidth);
         y = Math.floor((this.map.ending.y + 100) / this.map.wallWidth);
 
-        ctx.fillStyle = "red";
-        ctx.fillRect(x * upscale + o, y * upscale + o, size / 20, size / 20);
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(x * upscale, y * upscale, size / 20, size / 20);
 
         //Draw walls
         for(let x = 0; x < dimensions; x++) {
             for(let y = 0; y < dimensions; y++) {
                 if(this.map.map[x][y] === 1) {
                     ctx.fillStyle = "green";
-                    ctx.fillRect(x * upscale + o, y * upscale + o, size / 20, size / 20);
+                    ctx.fillRect(x * upscale, y * upscale, size / 20, size / 20);
                 }
             }
         }
@@ -255,21 +263,32 @@ class Player {
         //Drawing separating lines
         ctx.beginPath();
             for(let x = 0; x < dimensions+1; x++) {
-            let px = x * upscale + o;
-            ctx.moveTo(px, o);
-            ctx.lineTo(px, size + o);
+            let px = x * upscale;
+            ctx.moveTo(px, 0);
+            ctx.lineTo(px, size);
         }
             for(let y = 0; y < dimensions+1; y++) {
             let py = y * upscale;
-            ctx.moveTo(o, py + o);
-            ctx.lineTo(size + o, py + o);
+            ctx.moveTo(0, py);
+            ctx.lineTo(size, py);
         }
         ctx.stroke();
         ctx.closePath();
 
-        x = ((this.pos.x + 100) / this.map.wallWidth) * upscale + o;
-        y = ((this.pos.y + 100) / this.map.wallWidth) * upscale + o;
+        x = ((this.pos.x + 100) / this.map.wallWidth) * upscale;
+        y = ((this.pos.y + 100) / this.map.wallWidth) * upscale;
         StrokeCircle(new Vector2(x, y), 3);
+
+        //Draw FOV
+        let dst = 200;
+        let halfFOV = this.fov * .5;
+        let left = getVector2FromAngle(this.dir - halfFOV);
+        let right = getVector2FromAngle(this.dir + halfFOV);
+        left.Scale(dst);
+        right.Scale(dst);
+
+        StrokeLine(new Vector2(x, y), new Vector2(x + left.x, y + left.y));
+        StrokeLine(new Vector2(x, y), new Vector2(x + right.x, y + right.y));
     }
 
     shoot() {

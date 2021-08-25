@@ -15,9 +15,11 @@ class Map {
         let y = Math.floor(getRandom(1, this.dimensions - 1));
 
         this.starting = new Vector2(x, y);
+        this.ending = new Vector2(x, y);
 
         let directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
+        let hasSetEnd = false;
         while(maxTunnels !== 0) {
             let length = Math.ceil(Math.random() * this.maxLength);
             let dir = directions[Math.floor(Math.random() * directions.length)];
@@ -36,10 +38,15 @@ class Map {
                 }
             }
 
+            if(!hasSetEnd && getRandom(1,2) > 1.5) {
+                this.ending.x = x;
+                this.ending.y = y;
+                hasSetEnd = true;
+            }
+
             maxTunnels--;
         }
 
-        this.ending = new Vector2(0, 0);
         this.map = map;
     }
 
