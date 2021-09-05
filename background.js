@@ -252,11 +252,11 @@ function renderBalls(){
 }
 
 // Update balls
-function updateBalls(){
+function updateBalls(dt){
     let new_balls = [];
     Array.prototype.forEach.call(balls, function(b){
-        b.x += b.vx;
-        b.y += b.vy;
+        b.x += b.vx * (dt / 16);
+        b.y += b.vy * (dt / 16);
 
         if(b.x > -(50) && b.x < (can_w+50) && b.y > -(50) && b.y < (can_h+50)){
             new_balls.push(b);
@@ -309,15 +309,21 @@ function addBallIfy(){
     }
 }
 
+
 // Render
+let lastFrame = Date.now();
 function render(){
+    let now = Date.now();
+    let dt = now - lastFrame;
+    lastFrame = now;
+
     ctx.clearRect(0, 0, can_w, can_h);
 
     renderBalls();
 
     renderLines();
 
-    updateBalls();
+    updateBalls(dt);
 
     addBallIfy();
 

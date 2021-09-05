@@ -100,7 +100,7 @@ span.ripple {
 }
 
 .article {
-    padding-top: 60px;
+    padding-top: 80px;
     margin-left: auto;
     text-align: center;
 }
@@ -112,10 +112,34 @@ span.ripple {
     border-radius: 5px;
 }
 
+@keyframes wipe-enter {
+    0% {
+        transform: scale(0, .025);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1, .025);
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .articleTD-animate {
+        animation: wipe-enter 0.75s 1;
+    }
+}
+
 .articleTD {
     width: 50%;
     font-family: 'Comfortaa', cursive;
     color: white;
+}
+
+.round {
+    border-radius: 5px;
 }
 
 p {
