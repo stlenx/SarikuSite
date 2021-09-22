@@ -71,6 +71,7 @@ function getVideo(output) {
     //Variations time
     let container = document.getElementById("variations");
 
+    //Reset variations before adding the new ones
     while (container.hasChildNodes()) container.removeChild(container.lastChild)
 
     let pos = 0;
@@ -93,6 +94,21 @@ function getVideo(output) {
 
         pos++;
     });
+
+    //Extra info! -Twiple-
+    let synonyms = document.getElementById("synonyms");
+    while (synonyms.hasChildNodes()) synonyms.removeChild(synonyms.lastChild)
+
+    output.pageResults.pageDetails.synonyms.forEach((synonym) => {
+        let text = document.createElement("h3");
+        text.innerHTML = capitalizeFirstLetter(synonym.toLowerCase());
+        text.classList.add("synonym")
+        synonyms.appendChild(text);
+    })
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function makeRadioInput(id, name, value, onclick) {

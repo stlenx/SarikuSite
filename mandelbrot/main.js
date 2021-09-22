@@ -244,6 +244,7 @@ for (let i = 600; i < 200000000; i*=1.01)
     }
 
  */
+let test = `dasdas${size}`
 
 function DrawImage(values) {
     for (let x = 0; x < size; x++) {
