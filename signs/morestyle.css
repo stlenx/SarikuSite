@@ -47,11 +47,8 @@
 }
 
 .articleTD label:hover {
+    cursor: pointer;
     background-color: #ffffff;
-}
-
-.articleTD input[type="radio"]:focus + label {
-    border: 2px dashed #ffffff;
 }
 
 .articleTD input[type="radio"]:checked + label {

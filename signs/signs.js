@@ -74,8 +74,8 @@ function getVideo(output) {
     //Reset variations before adding the new ones
     while (container.hasChildNodes()) container.removeChild(container.lastChild)
 
-    let pos = 0;
-    Array.prototype.forEach.call(output.pageResults.variations, function(i){
+    for(let pos = 0; pos < output.pageResults.variations.length; pos++) {
+        let i = output.pageResults.variations[pos];
         //Make the radio button
         let input = makeRadioInput(i.type,"variations", i.url, function() { getSign(this.value); })
 
@@ -91,9 +91,7 @@ function getVideo(output) {
         //Add the new elements
         container.appendChild(input)
         container.appendChild(tag)
-
-        pos++;
-    });
+    }
 
     //Extra info! -Twiple-
     let synonyms = document.getElementById("synonyms");
