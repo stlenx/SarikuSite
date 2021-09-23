@@ -2,6 +2,13 @@ const Http = new XMLHttpRequest();
 const url='https://5t77ip5on5.execute-api.eu-west-2.amazonaws.com/prod/asl';
 let loadedSign = ""
 
+//Here we load html elements so we don't need to constantly load them over and over again
+let noSignText = document.getElementById("NoInfo");
+let mainContainer = document.getElementById("MainContainer");
+let synonyms = document.getElementById("synonyms");
+let context = document.getElementById("context");
+let sentence = document.getElementById("sentence");
+
 Http.onreadystatechange = () => {
     if (Http.readyState !== 4 || Http.status !== 200) return; // Check for ready because xmlhttprequest gae
 
@@ -94,15 +101,43 @@ function getVideo(output) {
     }
 
     //Extra info! -Twiple-
-    let synonyms = document.getElementById("synonyms");
+    LoadExtraInfo(output.pageResults.pageDetails);
+}
+
+function LoadExtraInfo(pageDetails) {
+    noSignText.classList.add("hidden");
+
+    mainContainer.classList.remove("hidden");
+
     while (synonyms.hasChildNodes()) synonyms.removeChild(synonyms.lastChild)
 
-    output.pageResults.pageDetails.synonyms.forEach((synonym) => {
+    pageDetails.synonyms.forEach((synonym) => {
         let text = document.createElement("h3");
         text.innerHTML = capitalizeFirstLetter(synonym.toLowerCase());
         text.classList.add("synonym")
         synonyms.appendChild(text);
     })
+
+    while (context.hasChildNodes()) context.removeChild(context.lastChild)
+
+    {
+        let text = document.createElement("h3");
+        let innerHTML = pageDetails.context ? pageDetails.context : pageDetails.meaning;
+        text.innerHTML = capitalizeFirstLetter(innerHTML.toLowerCase());
+        text.classList.add("synonym")
+        context.appendChild(text);
+    }
+
+
+    while (sentence.hasChildNodes()) sentence.removeChild(sentence.lastChild)
+
+    {
+        let text = document.createElement("h3");
+        let innerHTML = pageDetails.sentence ? pageDetails.sentence : "No example given";
+        text.innerHTML = capitalizeFirstLetter(innerHTML.toLowerCase());
+        text.classList.add("synonym")
+        sentence.appendChild(text);
+    }
 }
 
 function capitalizeFirstLetter(string) {

@@ -56,10 +56,41 @@
 }
 
 
-.SynonymTitle {
+#NoInfo {
+    font-size: 3em;
+    font-family: 'Comfortaa', cursive;
+    color: white;
+}
+
+#NoInfo td img {
+    width: 1em;
+}
+
+.hidden {
+    visibility: hidden !important;
+}
+
+#MainContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+#SynonymContainer {
+    width: 100%;
+}
+
+#UseInSentenceContainer {
+    width: 100%;
+}
+
+.extraTitle {
     text-decoration: underline;
     font-family: 'Comfortaa', cursive;
     color: white;
+}
+
+#UseInSentenceContainer div {
+    margin-bottom: 75px;
 }
 
 .synonym {
