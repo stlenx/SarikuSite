@@ -1,20 +1,42 @@
 /* Extra custom stuff :O */
 
+body {
+    background-color: #f1f1f1;
+}
+
+.titleHeaderThing {
+    text-align: center;
+    font-size: 4em;
+    font-family: var(--header-font);
+}
+
+.titleHeaderThing span {
+    border-bottom: black solid;
+}
+
+.articleTable {
+    background-color: #ffffff;
+}
+
 .articleTD video {
-    margin-bottom: 5px;
+    width: unset;
+    border-radius: 3px;
 }
 
 .articleTD input[type=text] {
-    margin-top: 20px;
+    /* box-shadow: 0 8px 24px rgba(0,0,0, 0.1), 0 4px 24px rgba(0,0,0, 0.1); */
+
+
+    margin: 25px 0;
 
     font-size: 1rem;
     text-align: center;
     outline: transparent;
 
-    border-width: 5px;
-    border-style: solid;
-    border-color: #ffffff;
-    border-radius: 4px;
+    padding: 6px;
+
+    border: unset;
+    border-bottom: #0a0a0a solid 2px;
 }
 
 .articleTD input[type=radio] {
@@ -24,15 +46,13 @@
 }
 
 .articleTD label {
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 10px;
+    margin: 30px 10px;
 
     display: inline-block;
     color: #0c0c0c;
-    background-color: #b3b3b3;
+    border: #0a0a0a solid 2px;
     padding: 10px 20px;
-    font-family: sans-serif, Arial;
+    font-family: var(--text-font);
     font-size: 1em;
     font-weight: bold;
     border-radius: 4px;
@@ -48,18 +68,20 @@
 
 .articleTD label:hover {
     cursor: pointer;
-    background-color: #ffffff;
+    background-color: #efefef;
 }
 
 .articleTD input[type="radio"]:checked + label {
-    background-color: #ffffff;
+    background-color: #1c1c1c;
+    color: #ececec;
 }
 
 
 #NoInfo {
+    line-height: 2;
     font-size: 3em;
-    font-family: 'Comfortaa', cursive;
-    color: white;
+    font-family: var(--text-font);
+    color: black;
 }
 
 #NoInfo td img {
@@ -68,25 +90,32 @@
 
 .hidden {
     visibility: hidden !important;
+    display: none;
+}
+
+.extraTitleTitle {
+    padding: unset;
+    display: block;
+    color: black;
+    margin-top: 40px;
 }
 
 #MainContainer {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    flex-flow: wrap;
+
+    margin-bottom: 40px;
 }
 
-#SynonymContainer {
-    width: 100%;
-}
-
-#UseInSentenceContainer {
-    width: 100%;
+.flexContainer {
+    flex: 0 0 25%;
 }
 
 .extraTitle {
     text-decoration: underline;
-    font-family: 'Comfortaa', cursive;
-    color: white;
+    font-family: var(--header-font);
+    color: black;
 }
 
 #UseInSentenceContainer div {
@@ -94,6 +123,8 @@
 }
 
 .synonym {
-    font-family: 'Comfortaa', cursive;
-    color: white;
+    font-family: var(--text-font);
+    color: black;
+    display: inline-block;
+    margin: 5px;
 }

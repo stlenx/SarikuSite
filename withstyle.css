@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Urbanist&display=swap');
+
+:root {
+    --text-font: 'Roboto', sans-serif;
+    --header-font: 'Urbanist', sans-serif;
+}
+
 body {
     background-color: #252423;
     overflow-x: hidden;
@@ -46,7 +53,7 @@ div.menuButton {
 
 button.menuButton {
     font-size: 2em;
-    font-family: 'Comfortaa', cursive;
+    font-family: var(--header-font);
 
     position: relative;
     overflow: hidden;
@@ -63,7 +70,7 @@ button.menuButton {
 
 button.articleButton {
     font-size: 2em;
-    font-family: 'Comfortaa', cursive;
+    font-family: var(--header-font);
 
     position: relative;
     overflow: hidden;
@@ -100,9 +107,18 @@ span.ripple {
 }
 
 .article {
-    padding-top: 80px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     margin-left: auto;
     text-align: center;
+}
+
+.article:first-child {
+    padding-top: 80px;
+}
+
+.article:last-child {
+    padding-bottom: 80px;
 }
 
 .articleTable {
@@ -134,7 +150,7 @@ span.ripple {
 
 .articleTD {
     width: 50%;
-    font-family: 'Comfortaa', cursive;
+    font-family: var(--text-font);
     color: white;
 }
 
@@ -144,7 +160,7 @@ span.ripple {
 
 p {
     font-size: 1.5em;
-    font-family: 'Comfortaa', cursive;
+    font-family: var(--text-font);
     color: white;
 }
 
@@ -156,7 +172,7 @@ th {
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 25pt;
-    font-family: 'Comfortaa', cursive;
+    font-family: var(--header-font);
     color: white;
 }
 
@@ -175,7 +191,7 @@ a:active {
 
 input {
     font-size: 1em;
-    font-family: 'Comfortaa', cursive;
+    font-family: var(--text-font);
     margin-bottom: 10px;
 }
 

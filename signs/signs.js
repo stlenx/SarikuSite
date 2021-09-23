@@ -1,5 +1,5 @@
 const Http = new XMLHttpRequest();
-const url='https://5t77ip5on5.execute-api.eu-west-2.amazonaws.com/prod/asl';
+const url='https://api.benaclegames.com/sl/asl';
 let loadedSign = ""
 
 //Here we load html elements so we don't need to constantly load them over and over again
@@ -72,6 +72,9 @@ function getInterpretations(output) {
 }
 
 function getVideo(output) {
+    //https://www.signingsavvy.com/media/mp4-hd/21/21609.mp4
+    //Example video url
+
     document.getElementById('source').setAttribute("src", output.pageResults.videoURL)
     document.getElementById('video').load()
 

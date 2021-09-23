@@ -6,52 +6,34 @@
     <link rel="icon" href="../img/icon.jpg">
     <link rel="stylesheet" href="../withstyle.css">
     <link rel="stylesheet" href="morestyle.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
     <script src="../misc/js+.js" defer></script>
 </head>
 <body>
 
 <div class="main" id="id">
+    <script src="signs.js" defer></script>
+
     <div class="canvas">
         <script src="../background.js" defer></script>
         <canvas id="bannerCanvas"></canvas>
     </div>
 
     <div class="site">
-        <div class="menu">
-            <script src="../buttons.js" defer></script>
-            <table class="menuTable">
-                <td class="menuTD">
-                    <div class="menuButton">
-                        <button type="button" class="menuButton" id="../aboutme.html">About me</button>
-                    </div>
-                </td>
-                <td class="menuTD">
-                    <div class="menuButton">
-                        <button type="button" class="menuButton" id="../index.html">Projects</button>
-                    </div>
-                </td>
-                <td class="menuTD">
-                    <div class="menuButton">
-                        <button type="button" class="menuButton" id="../pictures/pictures.html">Pictures</button>
-                    </div>
-                </td>
-                <td class="menuTD">
-                    <div class="menuButton">
-                        <button type="button" class="menuButton" id="../games/index.html">Games</button>
-                    </div>
-                </td>
-            </table>
+        <div class="titleHeaderThing">
+            <span>
+                SIGN SEARCH
+            </span>
         </div>
+
         <div class="content">
             <div class="article">
                 <script src="signs.js" defer></script>
                 <table class="articleTable">
                     <tbody>
+                    <!-- Who made this -->
                     <tr>
                         <td class="articleTD">
-                            <input placeholder="Enter sign" type="text" name="sign" onkeyup="inputChanged(this.value)" size="15" style="font-size:2em;" id="textInput">
+                            <input placeholder="Enter sign" type="text" name="sign" onkeyup="inputChanged(this.value)" size="25" style="font-size:2em;" id="textInput">
                         </td>
                     </tr>
                     <tr>
@@ -60,7 +42,7 @@
                     </tr>
                     <tr>
                         <td class="articleTD">
-                            <video height="500" id="video" autoplay muted loop>
+                            <video height="450" width="800" id="video" autoplay muted loop>
                                 <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" id="source" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
@@ -75,10 +57,9 @@
             </div>
 
             <div class="article">
-                <script src="signs.js" defer></script>
                 <table class="articleTable">
                     <thead>
-                        <th>
+                        <th class="extraTitleTitle">
                             Extra information
                         </th>
                     </thead>
@@ -92,7 +73,7 @@
 
                     <tr>
                         <td id="MainContainer" class="hidden">
-                            <div id="SynonymContainer">
+                            <div class="flexContainer">
                                 <h2 class="extraTitle">
                                     Synonyms
                                 </h2>
@@ -102,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <div id="UseInSentenceContainer">
+                            <div class="flexContainer">
                                 <div>
                                     <h2 class="extraTitle">
                                         Context
