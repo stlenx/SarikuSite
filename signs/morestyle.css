@@ -1,7 +1,53 @@
 /* Extra custom stuff :O */
+.noSelect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
 
 body {
     background-color: #f1f1f1;
+}
+
+@keyframes TopLeftButton {
+    0% {
+        top: 30px;
+        left: 30px;
+        padding: 25px;
+    }
+    100% {
+        top: 25px;
+        left: 25px;
+        padding: 30px;
+    }
+}
+
+.topLeft {
+    background-color: #ffffff;
+    position:fixed;
+    top: 30px;
+    left: 30px;
+    z-index:100;
+
+    padding: 25px;
+    border-radius: 50%;
+    box-shadow: 0 8px 24px rgba(0,0,0, 0.1), 0 4px 24px rgba(0,0,0, 0.1);
+}
+
+.topLeft:hover {
+    cursor: pointer;
+    animation: TopLeftButton 0.2s;
+    top: 25px;
+    left: 25px;
+    padding: 30px;
+}
+
+.topLeft img {
+    width: 2em;
 }
 
 .titleHeaderThing {
