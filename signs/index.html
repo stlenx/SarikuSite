@@ -12,6 +12,7 @@
 
 <div class="main" id="id">
     <script src="signs.js" defer></script>
+    <script src="darkMode.js" defer></script>
 
     <div class="canvas">
         <script src="../background.js" defer></script>
@@ -22,6 +23,10 @@
         <div class="topButtons noSelect">
             <div class="topLeft" onclick="document.location.href = '../index.html';">
                 <img src="return-button.svg" alt="return button">
+            </div>
+
+            <div class="topRight noSelect" onclick="toggle();">
+                <img src="moon.svg" alt="dark-mode toggle button" id="themeSvg">
             </div>
         </div>
 

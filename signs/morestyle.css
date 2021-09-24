@@ -1,4 +1,28 @@
 /* Extra custom stuff :O */
+:root {
+    --background: #f1f1f1;
+    --almost-white: #efefef;
+    --clear: #ffffff;
+    --dark: black;
+
+}
+
+html[data-theme="dark"] {
+    --background: #2e2e2e;
+    --almost-white: #2b2b2b;
+    --clear: black;
+    --dark: white;
+    --svg: brightness(0) invert(1);
+}
+
+html[data-theme="light"] {
+    --background: #f1f1f1;
+    --almost-white: #efefef;
+    --clear: white;
+    --dark: black;
+    --svg: brightness(0);
+}
+
 .noSelect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -10,12 +34,26 @@
 }
 
 body {
-    background-color: #f1f1f1;
+    background-color: var(--background);
+}
+
+.topRight {
+    background-color: var(--clear);
+    position: fixed;
+    top: 55px;
+    left: calc(100% - 55px);
+
+    transform: translate(-50%, -50%);
+
+    transition: padding 0.2s;
+    padding: 1.5%;
+    border-radius: 50%;
+    box-shadow: 0 8px 24px rgba(0,0,0, 0.1), 0 4px 24px rgba(0,0,0, 0.1);
 }
 
 .topLeft {
-    background-color: #ffffff;
-    position:fixed;
+    background-color: var(--clear);
+    position: fixed;
     top: 55px;
     left: 55px;
     z-index:100;
@@ -28,13 +66,14 @@ body {
     box-shadow: 0 8px 24px rgba(0,0,0, 0.1), 0 4px 24px rgba(0,0,0, 0.1);
 }
 
-.topLeft:hover {
+.topButtons div:hover {
     cursor: pointer;
     transition: padding 0.2s;
     padding: 2%;
 }
 
-.topLeft img {
+.topButtons div img {
+    filter: var(--svg);
     width: 2em;
 }
 
@@ -45,11 +84,12 @@ body {
 }
 
 .titleHeaderThing span {
-    border-bottom: black solid;
+    color: var(--dark);
+    border-bottom: var(--dark) solid;
 }
 
 .articleTable {
-    background-color: #ffffff;
+    background-color: var(--clear);
 }
 
 .articleTD video {
@@ -70,7 +110,7 @@ body {
     padding: 6px;
 
     border: unset;
-    border-bottom: #0a0a0a solid 2px;
+    border-bottom: var(--dark) solid 2px;
 }
 
 .articleTD input[type=radio] {
@@ -83,8 +123,8 @@ body {
     margin: 30px 10px;
 
     display: inline-block;
-    color: #0c0c0c;
-    border: #0a0a0a solid 2px;
+    color: var(--dark);
+    border: var(--dark) solid 2px;
     padding: 10px 20px;
     font-family: var(--text-font);
     font-size: 1em;
@@ -102,12 +142,12 @@ body {
 
 .articleTD label:hover {
     cursor: pointer;
-    background-color: #efefef;
+    background-color: var(--almost-white);
 }
 
 .articleTD input[type="radio"]:checked + label {
-    background-color: #1c1c1c;
-    color: #ececec;
+    background-color: var(--dark);
+    color: var(--almost-white);
 }
 
 
@@ -115,7 +155,7 @@ body {
     line-height: 2;
     font-size: 3em;
     font-family: var(--text-font);
-    color: black;
+    color: var(--dark);
 }
 
 #NoInfo td img {
@@ -130,7 +170,7 @@ body {
 .extraTitleTitle {
     padding: unset;
     display: block;
-    color: black;
+    color: var(--dark);
     margin-top: 40px;
 }
 
@@ -149,7 +189,7 @@ body {
 .extraTitle {
     text-decoration: underline;
     font-family: var(--header-font);
-    color: black;
+    color: var(--dark);
 }
 
 #UseInSentenceContainer div {
@@ -158,7 +198,7 @@ body {
 
 .synonym {
     font-family: var(--text-font);
-    color: black;
+    color: var(--dark);
     display: inline-block;
     margin: 5px;
 }
