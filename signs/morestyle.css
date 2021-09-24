@@ -13,37 +13,25 @@ body {
     background-color: #f1f1f1;
 }
 
-@keyframes TopLeftButton {
-    0% {
-        top: 30px;
-        left: 30px;
-        padding: 25px;
-    }
-    100% {
-        top: 25px;
-        left: 25px;
-        padding: 30px;
-    }
-}
-
 .topLeft {
     background-color: #ffffff;
     position:fixed;
-    top: 30px;
-    left: 30px;
+    top: 55px;
+    left: 55px;
     z-index:100;
 
-    padding: 25px;
+    transform: translate(-50%, -50%);
+
+    transition: padding 0.2s;
+    padding: 1.5%;
     border-radius: 50%;
     box-shadow: 0 8px 24px rgba(0,0,0, 0.1), 0 4px 24px rgba(0,0,0, 0.1);
 }
 
 .topLeft:hover {
     cursor: pointer;
-    animation: TopLeftButton 0.2s;
-    top: 25px;
-    left: 25px;
-    padding: 30px;
+    transition: padding 0.2s;
+    padding: 2%;
 }
 
 .topLeft img {
