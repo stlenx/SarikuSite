@@ -109,6 +109,9 @@ body {
 
     padding: 6px;
 
+    color: var(--dark);
+
+    background-color: var(--clear);
     border: unset;
     border-bottom: var(--dark) solid 2px;
 }
