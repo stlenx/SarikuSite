@@ -49,16 +49,7 @@ let mouse = {
     radius: window.innerWidth * 0.078
 }
 
-{
-    ctx.font = 'bold 16px Verdana';
-    let gradient = ctx.createLinearGradient(0, 0, 70, 0);
-    gradient.addColorStop(0, "magenta");
-    gradient.addColorStop(1, "blue");
-    ctx.fillStyle = gradient;
-    ctx.fillText('SARIKU', 5, 30);
-}
-
-const data = ctx.getImageData(0, 0, 500, 100);
+let data;
 
 class Particle {
     constructor(x, y, color){
@@ -111,18 +102,34 @@ class Particle {
     }
 }
 
-for (let y = 0; y < data.height; y++) {
-    for (let x = 0; x < data.width; x++) {
-        if (data.data[((x + y * data.width) * 4) + 3] > 128) {
-            let index = (x + y * data.width) * 4;
-            let R = data.data[index];
-            let G = data.data[index + 1];
-            let B = data.data[index + 2];
-            let color = "rgb(" + R + "," + G + "," + B + ")";
-            particleArray.push(new Particle(x * (window.innerWidth * 0.0078) - (window.innerWidth * 0.057) + (window.innerWidth /4), y * (window.innerWidth * 0.0078) - (window.innerWidth * 0.078), color));
+function doText() {
+    particleArray = [];
+    particleSize = window.innerWidth * 0.0052;
+    mouse.radius = window.innerWidth * 0.078;
+
+    ctx.font = 'bold 16px Verdana';
+    let gradient = ctx.createLinearGradient(0, 0, 70, 0);
+    gradient.addColorStop(0, "magenta");
+    gradient.addColorStop(1, "blue");
+    ctx.fillStyle = gradient;
+    ctx.fillText('SARIKU', 5, 30);
+    data = ctx.getImageData(0, 0, 500, 100);
+
+    for (let y = 0; y < data.height; y++) {
+        for (let x = 0; x < data.width; x++) {
+            if (data.data[((x + y * data.width) * 4) + 3] > 128) {
+                let index = (x + y * data.width) * 4;
+                let R = data.data[index];
+                let G = data.data[index + 1];
+                let B = data.data[index + 2];
+                let color = "rgb(" + R + "," + G + "," + B + ")";
+                particleArray.push(new Particle(x * (window.innerWidth * 0.0078) - (window.innerWidth * 0.057) + (window.innerWidth /4), y * (window.innerWidth * 0.0078) - (window.innerWidth * 0.078), color));
+            }
         }
     }
 }
+
+doText();
 
 function connect() {
     let maxD = window.innerWidth * 1.87;
@@ -364,6 +371,7 @@ function initCanvas(){
 window.addEventListener('resize', function(e){
     console.log('Window Resize...');
     initCanvas();
+    doText();
 });
 
 window.addEventListener('load', function(e){
