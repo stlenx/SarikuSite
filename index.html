@@ -45,20 +45,22 @@
                     </td>
                 </table>
             </div>
+
             <div class="content">
                 <div class="article">
-                    <table class="articleTable">
-                        <thead>
-                            <th COLSPAN="2">Discord sign language bot</th>
-                        </thead>
-                        <tbody>
-                            <td class="articleTD">
+                    <div class="article-container">
+                        <div class="article-header">
+                            Discord sign language bot
+                        </div>
+
+                        <div class="article-content">
+                            <div class="article-image">
                                 <video muted autoplay loop class="round">
                                     <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
-                            </td>
-                            <td class="articleTD">
+                            </div>
+                            <div class="article-text">
                                 <p>
                                     Discord bot for searching asl or bsl signs for words. Written in C#, it uses DSharp+ to interact with discord, scrappysharp to scrap the elements from signingsavvy.com
                                     and external api for Vrchat signs (generally very similar to irl ones but nice to have).<br>
@@ -68,21 +70,23 @@
                                 </p>
 
                                 <button type="button" class="articleButton" id="signs/index.html">ONLINE VERSION</button>
-                            </td>
-                        </tbody>
-                    </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="article">
-                    <table class="articleTable">
-                        <thead>
-                            <th colspan="2">Mandelbrot set renderer (and other fractals)</th>
-                        </thead>
-                        <tbody>
-                            <td class="articleTD">
-                                <img src="img/Mandelbrot.png" class="imageContent round">
-                            </td>
-                            <td class="articleTD">
+                    <div class="article-container">
+                        <div class="article-header">
+                            Mandelbrot set renderer (and other fractals)
+                        </div>
+
+                        <div class="article-content">
+                            <div class="article-image">
+                                <img src="img/Mandelbrot.png">
+                            </div>
+
+                            <div class="article-text">
                                 <p>
                                     Simple C# app to calculate and display the mandelbrot set and Burning ship fractals.
                                     Counts with options for color, number of maximum iterations calculated, zoom and offset. <br>
@@ -96,67 +100,71 @@
                                 </p>
 
                                 <button type="button" class="articleButton" id="mandelbrot/index.html">ONLINE VERSION</button>
-                            </td>
-                        </tbody>
-                    </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="article">
-                    <table class="articleTable">
-                        <thead>
-                        <th colspan="2">Bézier curve procedural animator</th>
-                        </thead>
-                        <tbody>
-                        <td class="articleTD">
-                            <img src="img/BezierCurve.png" class="imageContent round">
-                        </td>
-                        <td class="articleTD">
-                            <p>
-                                Pure Javascript page to show how a Bézier curve is formed. On startup it shows a default 3 point curve. <br>
-                                <br>
-                                Hold ctrl key and click to add a new control point, hold left shift to delete a control point. You can click and hold, drag,
-                                to make a square for selecting multiple points at the same time, just as you would in windows. Once you have selected the points you can move them by dragging
-                                the square around. <br>
-                                <br>
-                                On the top left corner there is a preview to see what the curve looks like. Right next to it there is a control to enable or disable the animation of t. <br>
-                                <br>
-                                T is a value that is used to create the curve. It goes from 0 to 1 and once it's reached 1 the curve is completed. By enabling the animation of t it will automatically
-                                slowly increase and restart once it's reached 1. If you disable it, a slider will appear on it's side for manually controlling the value of t.
-                            </p>
+                    <div class="article-container">
+                        <div class="article-header">
+                            Bézier curve procedural animator
+                        </div>
 
-                            <button type="button" class="articleButton" id="math/curves/index.html">CHECK PAGE</button>
-                        </td>
-                        </tbody>
-                    </table>
+                        <div class="article-content">
+                            <div class="article-image">
+                                <img src="img/BezierCurve.png" alt="cool image">
+                            </div>
+
+                            <div class="article-text">
+                                <p>
+                                    Pure Javascript page to show how a Bézier curve is formed. On startup it shows a default 3 point curve. <br>
+                                    <br>
+                                    Hold ctrl key and click to add a new control point, hold left shift to delete a control point. You can click and hold, drag,
+                                    to make a square for selecting multiple points at the same time, just as you would in windows. Once you have selected the points you can move them by dragging
+                                    the square around. <br>
+                                    <br>
+                                    On the top left corner there is a preview to see what the curve looks like. Right next to it there is a control to enable or disable the animation of t. <br>
+                                    <br>
+                                    T is a value that is used to create the curve. It goes from 0 to 1 and once it's reached 1 the curve is completed. By enabling the animation of t it will automatically
+                                    slowly increase and restart once it's reached 1. If you disable it, a slider will appear on it's side for manually controlling the value of t.
+                                </p>
+
+                                <button type="button" class="articleButton" id="math/curves/index.html">CHECK PAGE</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="article">
-                    <table class="articleTable">
-                        <thead>
-                        <th colspan="2">Raymarching based shape blend</th>
-                        </thead>
-                        <tbody>
-                        <td class="articleTD">
-                            <img src="img/Raymarching.png" class="imageContent round">
-                        </td>
-                        <td class="articleTD">
-                            <p>
-                                With a technique based on raymarching (and i say based because there's no actual marching being done as it's not necessary), this little project displays different
-                                shapes on the screen.<br>
-                                <br>
-                                Use the inspector at the right to add shapes with different colors and values, rename them on the objects list by double clicking, or change their values
-                                by selecting them and using the inspector at the right.<br>
-                                <br>
-                                Click to drag the objects on the screen or, by double clicking, select them.<br>
-                                <br>
-                                Change how much the objects blend with each other and enable or disable the drawing of the borders of the shapes in the settings tab.
-                                The visual representation runs on on gpu thanks to <a href="https://gpu.rocks/#/">GPU.js</a>!
-                            </p>
+                    <div class="article-container">
+                        <div class="article-header">
+                            Raymarching based shape blend
+                        </div>
 
-                            <button type="button" class="articleButton" id="math/Raymarching/index.html">CHECK PAGE</button>
-                        </td>
-                        </tbody>
-                    </table>
+                        <div class="article-content">
+                            <div class="article-image">
+                                <img src="img/Raymarching.png" alt="yoo colors">
+                            </div>
+
+                            <div class="article-text">
+                                <p>
+                                    With a technique based on raymarching (and i say based because there's no actual marching being done as it's not necessary), this little project displays different
+                                    shapes on the screen.<br>
+                                    <br>
+                                    Use the inspector at the right to add shapes with different colors and values, rename them on the objects list by double clicking, or change their values
+                                    by selecting them and using the inspector at the right.<br>
+                                    <br>
+                                    Click to drag the objects on the screen or, by double clicking, select them.<br>
+                                    <br>
+                                    Change how much the objects blend with each other and enable or disable the drawing of the borders of the shapes in the settings tab.
+                                    The visual representation runs on on gpu thanks to <a href="https://gpu.rocks/#/">GPU.js</a>!
+                                </p>
+
+                                <button type="button" class="articleButton" id="math/Raymarching/index.html">CHECK PAGE</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,37 +1,4 @@
 /* Extra custom stuff :O */
-:root {
-    --background: #f1f1f1;
-    --almost-white: #efefef;
-    --clear: #ffffff;
-    --dark: black;
-
-}
-
-html[data-theme="dark"] {
-    --background: #2e2e2e;
-    --almost-white: #2b2b2b;
-    --clear: black;
-    --dark: white;
-    --svg: brightness(0) invert(1);
-}
-
-html[data-theme="light"] {
-    --background: #f1f1f1;
-    --almost-white: #efefef;
-    --clear: white;
-    --dark: black;
-    --svg: brightness(0);
-}
-
-.noSelect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
-}
 
 body {
     background-color: var(--background);
@@ -83,24 +50,13 @@ body {
     border-bottom: var(--dark) solid;
 }
 
-.articleTable {
-    background-color: var(--clear);
-}
-
-.articleTD video {
+video {
     width: 80%;
     height: 20%;
     border-radius: 3px;
 }
 
-.content {
-    transition: width 0.3s;
-}
-
-.articleTD input[type=text] {
-    /* box-shadow: 0 8px 24px rgba(0,0,0, 0.1), 0 4px 24px rgba(0,0,0, 0.1); */
-
-
+[type=text] {
     margin: 25px 0;
 
     font-size: 2em;
@@ -118,13 +74,13 @@ body {
     border-bottom: var(--dark) solid 2px;
 }
 
-.articleTD input[type=radio] {
+input[type=radio] {
     opacity: 0;
     position: fixed;
     width: 0;
 }
 
-.articleTD label {
+label {
     margin: 30px 10px;
 
     display: inline-block;
@@ -145,12 +101,12 @@ body {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-.articleTD label:hover {
+label:hover {
     cursor: pointer;
     background-color: var(--almost-white);
 }
 
-.articleTD input[type="radio"]:checked + label {
+input[type="radio"]:checked + label {
     background-color: var(--dark);
     color: var(--almost-white);
 }
@@ -163,7 +119,7 @@ body {
     color: var(--dark);
 }
 
-#NoInfo td img {
+#NoInfo img {
     width: 1.2em;
 }
 
@@ -173,10 +129,13 @@ body {
 }
 
 .extraTitleTitle {
-    padding: unset;
     display: block;
     color: var(--dark);
-    margin-top: 40px;
+    padding-top: 20px;
+}
+
+.article-content {
+    margin-top: unset;
 }
 
 #MainContainer {
@@ -184,10 +143,10 @@ body {
     justify-content: space-evenly;
     flex-flow: wrap;
 
-    margin-bottom: 40px;
+    padding-bottom: 40px;
 }
 
-.flexContainer {
+#MainContainer div {
     flex: 0 0 25%;
 }
 
@@ -210,21 +169,17 @@ body {
 
 /* PHONE STUFF EWWW YUK*/
 @media screen and (max-width: 1000px) {
-    .content {
-        width: 100%;
-    }
-
-    .articleTD video {
+    video {
         width: 100%;
         height: 20%;
         border-radius: 3px;
     }
 
-    .articleTD input[type=text] {
+    input[type=text] {
         font-size: 3.5em;
     }
 
-    .articleTD label {
+    label {
         font-size: 1.5em;
     }
 
@@ -234,6 +189,10 @@ body {
 
     .topButtons div {
         padding: 3%;
+    }
+
+    .topButtons div:hover {
+        padding: 4%;
     }
 
     th {

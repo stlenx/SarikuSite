@@ -39,86 +39,75 @@
         <div class="content">
             <div class="article">
                 <script src="signs.js" defer></script>
-                <table class="articleTable">
-                    <tbody>
-                    <!-- Who made this -->
-                    <tr>
-                        <td class="articleTD">
-                            <input placeholder="Enter sign" type="text" name="sign" onkeyup="inputChanged(this.value)" size="25" id="textInput">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="articleTD" id="container">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="articleTD">
-                            <video height="450" width="800" id="video" autoplay muted loop>
-                                <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" id="source" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="articleTD" id="variations">
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+
+                <div class="article-container">
+                    <div class="inputThingie">
+                        <input placeholder="Enter sign" type="text" name="sign" onkeyup="inputChanged(this.value)" size="25" id="textInput">
+                    </div>
+
+                    <div id="container">
+
+                    </div>
+
+                    <div>
+                        <video height="450" width="800" id="video" autoplay muted loop>
+                            <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" id="source" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    <div id="variations">
+
+                    </div>
+                </div>
             </div>
 
             <div class="article">
-                <table class="articleTable">
-                    <thead>
-                        <th class="extraTitleTitle">
+                <div class="article-container">
+                    <div class="article-header">
+                        <span class="extraTitleTitle">
                             Extra information
-                        </th>
-                    </thead>
-                    <tbody>
+                        </span>
+                    </div>
 
-                    <tr id="NoInfo">
-                        <td>
-                            No sign loaded <img src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f937.svg" alt=":person_shrugging:"/>
-                        </td>
-                    </tr>
+                    <div id="NoInfo">
+                        No sign loaded <img src="https://twemoji.maxcdn.com/v/13.1.0/svg/1f937.svg" alt=":person_shrugging:"/>
+                    </div>
 
-                    <tr>
-                        <td id="MainContainer" class="hidden">
-                            <div class="flexContainer">
+                    <div class="article-content hidden" id="MainContainer">
+                        <div>
+                            <h2 class="extraTitle">
+                                Synonyms
+                            </h2>
+
+                            <div id="synonyms">
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <div>
                                 <h2 class="extraTitle">
-                                    Synonyms
+                                    Context
                                 </h2>
 
-                                <div id="synonyms">
+                                <div id="context">
 
                                 </div>
                             </div>
 
-                            <div class="flexContainer">
-                                <div>
-                                    <h2 class="extraTitle">
-                                        Context
-                                    </h2>
+                            <div>
+                                <h2 class="extraTitle">
+                                    Use in a sentence
+                                </h2>
 
-                                    <div id="context">
+                                <div id="sentence">
 
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h2 class="extraTitle">
-                                        Use in a sentence
-                                    </h2>
-
-                                    <div id="sentence">
-
-                                    </div>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

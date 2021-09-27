@@ -1,3 +1,5 @@
+/*
+
 const observer = new IntersectionObserver(entries => {
     entries.forEach((e) => {
         const table = e.target.getElementsByClassName("articleTable")[0];
@@ -19,3 +21,5 @@ const articles = document.getElementsByClassName("article");
 for(let i = 0; i < articles.length; i++) {
     observer.observe(articles[i]);
 }
+
+ */
