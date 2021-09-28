@@ -13,22 +13,12 @@ let ball = {
         phase: 0,
         cR : 3
     },
-    ball_color = {
-        r: 4,
-        g: 100,
-        b: 255
-        //4, 100, 255
-        //old rgb = 207, 255,4
-    },
     R = 2,
     balls = [],
     alpha_f = 0.03,
-    alpha_phase = 0,
-
 // Line
     link_line_width = 0.8,
-    dis_limit = 300, //old 260
-    add_mouse_point = true,
+    dis_limit = 300,
     mouse_in = false,
     mouse_ball = {
         x: 0,
@@ -66,14 +56,15 @@ class Particle {
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.closePath();
         ctx.fill();
+        ctx.closePath();
     }
 
     Update() {
-        let distance = getDistanceBetween(new Vector2(this.x, this.y), new Vector2(mouse.x, mouse.y))
-
         let direction = getVector2(new Vector2(this.x, this.y), new Vector2(mouse.x, mouse.y))
+
+        let distance = direction.Length();
+
         direction = new Vector2(direction.x / distance, direction.y / distance)
 
         // distance past which the force is zero
@@ -132,14 +123,17 @@ function doText() {
 doText();
 
 function connect() {
-    let maxD = window.innerWidth * 1.87;
-    let lineWidth = window.innerWidth * 0.001;
+    let maxD = window.innerWidth * 2;
+    let minD = window.innerWidth * 1.2;
+
+    ctx.lineWidth = window.innerWidth * 0.001;
+
     for (let a = 0; a < particleArray.length; a++) {
         for (let b = a; b < particleArray.length; b++) {
             let distance = ((particleArray[a].x - particleArray[b].x) * (particleArray[a].x - particleArray[b].x))
                 + ((particleArray[a].y - particleArray[b].y) * (particleArray[a].y - particleArray[b].y));
 
-            if (distance < maxD) {
+            if (distance < maxD && distance > minD) {
                 let opacityValue = 1 - (distance / maxD);
                 let dx = mouse.x - particleArray[a].x;
                 let dy = mouse.y - particleArray[a].y;
@@ -150,12 +144,15 @@ function connect() {
                     particleArray[a].size = particleSize;
                 }
 
-                ctx.strokeStyle = 'rgba(255,255,255,' + opacityValue + ')';
-                ctx.lineWidth = lineWidth;
+                ctx.strokeStyle = `rgba(255,255,255,${opacityValue})`;
+
                 ctx.beginPath();
+
                 ctx.moveTo(particleArray[a].x, particleArray[a].y);
                 ctx.lineTo(particleArray[b].x, particleArray[b].y);
+
                 ctx.stroke();
+                ctx.closePath();
             }
         }
     }
@@ -239,6 +236,7 @@ function getRandomBall(){
             }
     }
 }
+
 function randomSidePos(length){
     return Math.ceil(Math.random() * length);
 }
@@ -248,8 +246,7 @@ function renderBalls(){
     Array.prototype.forEach.call(balls, function(b){
         if(!b.hasOwnProperty('type')){
 
-            ctx.fillStyle = 'rgba('+b.cR+','+0+','+255+','+b.alpha+')';
-            //ctx.fillStyle = 'rgba('+ball_color.r+','+ball_color.g+','+ball_color.b+','+b.alpha+')';
+            ctx.fillStyle = 'rgba('+b.cR+',0,255,'+b.alpha+')';
             ctx.beginPath();
             ctx.arc(b.x, b.y, R, 0, Math.PI*2, true);
             ctx.closePath();
