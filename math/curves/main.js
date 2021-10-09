@@ -1,14 +1,10 @@
-let canvas = document.getElementById("scene")
-canvas.setAttribute('width', window.innerWidth);
-canvas.setAttribute('height', window.innerHeight);
-let ctx = canvas.getContext("2d");
-
 let lastT = Date.now()
 let res = 0.01;
 let pointsZ = 15
 let clicked = -1;
 let key = null;
 let animate = true;
+let t = 0;
 
 let selectionBox = {
     x: 0,
@@ -19,16 +15,21 @@ let selectionBox = {
     my: 0,
     points: []
 }
-let points = [
-    new Vector2(Math.floor(canvas.width / 3),Math.floor(canvas.height / 2)),
-    new Vector2(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2 + canvas.height / 3)),
-    new Vector2(Math.floor((canvas.width / 3) * 2), Math.floor(canvas.height / 2))
-]
 
-let curve = new Curve(points)
+let points, curve;
+
+function setup() {
+    points = [
+        new Vector2(Math.floor(canvas.width / 3),Math.floor(canvas.height / 2)),
+        new Vector2(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2 + canvas.height / 3)),
+        new Vector2(Math.floor((canvas.width / 3) * 2), Math.floor(canvas.height / 2))
+    ];
+
+    curve = new Curve(points)
+}
 
 function DrawPoints() {
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "rgb(73,165,66)";
     points.forEach((point) => {
         ctx.fillRect(point.x - pointsZ / 2, point.y - pointsZ / 2, pointsZ, pointsZ)
     })
@@ -87,18 +88,12 @@ function ReCalculate() {
     curve.t = bezierCurve.t;
 }
 
-let t = 0;
-function frame() {
-    ctx.clearRect(0,0,canvas.width, canvas.height)
-
-    let now = Date.now()
-    let delta = lastT - now;
-    lastT = now;
-
+function frame(dt) {
     if(t > 1) {
         t = 0;
         curve.t = [];
     }
+
     updateInputs()
 
     curve.Draw(t)
@@ -108,21 +103,19 @@ function frame() {
     DrawPreview()
 
     if(animate) {
-        let interval = delta / 16;
+        let interval = dt / 16;
 
-        t+= res * (interval * -1);
+        t+= res * interval;
     }
-
-    window.requestAnimationFrame(frame)
 }
 
 function updateInputs() {
     let slider = document.getElementById("tRange");
-    if(slider !== null) {
-        if(t !== slider.value) {
-            t = parseFloat(slider.value);
-            ReCalculate()
-        }
+    if(slider === null) return;
+
+    if(t !== slider.value) {
+        t = parseFloat(slider.value);
+        ReCalculate()
     }
 }
 
@@ -265,7 +258,7 @@ canvas.addEventListener("mousemove", (e) => {
     }
 })
 
-canvas.addEventListener("mouseup", (e) => {
+canvas.addEventListener("mouseup", () => {
     clicked = -1;
 })
 
@@ -273,8 +266,6 @@ window.addEventListener("keydown", (e) => {
     key = e.code;
 })
 
-window.addEventListener("keyup", (e) => {
+window.addEventListener("keyup", () => {
     key = null;
 })
-
-window.requestAnimationFrame(frame)
