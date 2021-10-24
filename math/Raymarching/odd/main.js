@@ -9,7 +9,7 @@ let points = [];
 for(let i = 0; i < 10; i++) {
     let posX = getRandom(0, canvas.width);
     let posY = getRandom(0, canvas.height);
-    circles.push(new Circle(new Vector2(posX, posY), getRandom(20,100)));
+    circles.push(new OldCircle(new Vector2(posX, posY), getRandom(20,100)));
 }
 
 let point = new Point(new Vector2(500,500), 0, circles, 5000)

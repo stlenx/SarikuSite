@@ -1,5 +1,42 @@
 /* Extra custom stuff :O */
 
+/* Theme changer bullshit :OOOO */
+
+#themeChanger {
+    position: absolute;
+    z-index: 50;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background-color:white;
+
+    mix-blend-mode: difference;
+}
+
+canvas {
+    z-index: 200;
+}
+
+@keyframes circleSwitch {
+    0% {
+        width: 0;
+        height: 0;
+    }
+    100% {
+        width: 800vw;
+        height: 800vw;
+    }
+}
+
+.animateCircle {
+    width: 800vw;
+    height: 800vw;
+
+    animation: ease-in-out circleSwitch 0.7s;
+}
+
 body {
     background-color: var(--background);
 }
@@ -54,6 +91,9 @@ video {
     width: 80%;
     height: 20%;
     border-radius: 3px;
+
+    position: relative;
+    z-index: 200;
 }
 
 [type=text] {

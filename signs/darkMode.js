@@ -14,15 +14,19 @@ if (storedTheme) {
 }
 
 function toggle() {
-    if (!isDarkMode) { //Make it black :smirk:
+    if(!isDarkMode) {
         svg.src = "sun.svg";
+    } else {
+        svg.src = "moon.svg";
+    }
+
+    if (!isDarkMode) { //Make it black :smirk:
         document.documentElement.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark'); //add this
     }
     else { //Cum time
-        svg.src = "moon.svg";
         document.documentElement.setAttribute('data-theme', 'light');
         localStorage.setItem('theme', 'light'); //add this
-    }  
-    isDarkMode = !isDarkMode;  
+    }
+    isDarkMode = !isDarkMode;
 }

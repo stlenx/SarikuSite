@@ -1,6 +1,8 @@
 const Http = new XMLHttpRequest();
 const url='https://api.benaclegames.com/sl/asl';
-let loadedSign = ""
+let loadedSign = "";
+
+let text = document.getElementById("textInput")
 
 //Here we load html elements so we don't need to constantly load them over and over again
 let noSignText = document.getElementById("NoInfo");
@@ -10,7 +12,12 @@ let context = document.getElementById("context");
 let sentence = document.getElementById("sentence");
 
 Http.onreadystatechange = () => {
-    if (Http.readyState !== 4 || Http.status !== 200) return; // Check for ready because xmlhttprequest gae
+    if (Http.readyState !== 4 || Http.status !== 200) {
+        if(Http.status === 404) {
+            text.style.color = "red";
+        }
+        return;
+    } // Check for ready because xmlhttprequest gae
 
     let output = JSON.parse(Http.responseText)
     console.log(output)
@@ -160,6 +167,7 @@ function makeRadioInput(id, name, value, onclick) {
 }
 
 function inputChanged(input) {
+    text.style.color = getComputedStyle(document.documentElement).getPropertyValue('--dark');
     let container = document.getElementById("container");
     while (container.hasChildNodes()) {
         container.removeChild(container.lastChild)
