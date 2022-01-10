@@ -6,12 +6,14 @@
     <link rel="icon" href="../img/icon.jpg">
     <link rel="stylesheet" href="../withstyle.css">
     <link rel="stylesheet" href="morestyle.css">
+    <link rel="stylesheet" href="sentenceGenerator.css">
     <script src="../misc/js+.js" defer></script>
 </head>
 <body>
 
 <div class="main" id="id">
     <script src="signs.js" defer></script>
+    <script src="sentenceGenerator.js" defer></script>
     <script src="darkMode.js" defer></script>
 
     <div class="canvas">
@@ -27,6 +29,10 @@
 
             <div class="topRight noSelect" onclick="toggle();">
                 <img src="moon.svg" alt="dark-mode toggle button" id="themeSvg">
+            </div>
+
+            <div class="bottomRight noSelect" onclick="toggleGenerator();">
+                <img src="asterisk.svg" alt="return button">
             </div>
         </div>
 
@@ -112,5 +118,36 @@
         </div>
     </div>
 </div>
+
+<div class="sentenceMain" id="mainContainerGenerator">
+    <div class="sentenceContent">
+        <div class="article-container">
+            <div class="generatorHeader" style="font-size: 3em;">
+                        <span class="extraTitleTitle">
+                            Sentence Generator
+                        </span>
+            </div>
+
+
+            <div class="generatorContent">
+                <div class="inputThingie">
+                    <input placeholder="Enter sentence" type="text" name="sign" onkeyup="ExecuteGenerator(this.value)" size="50">
+                </div>
+
+                <div class="progressContainer" id="progressC">
+                    <progress id="progressBar" value="0" max="100"></progress>
+                </div>
+
+                <div>
+                    <video height="450" width="800" id="videoGenerator" autoplay muted>
+                        <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" id="sourceGenerator" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

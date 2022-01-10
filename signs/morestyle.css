@@ -41,6 +41,11 @@ body {
     background-color: var(--background);
 }
 
+.topButtons {
+    position: absolute;
+    z-index: 50;
+}
+
 .topButtons div {
     line-height: 100%;
     background-color: var(--clear);
@@ -63,6 +68,11 @@ body {
 .topLeft {
     top: 69px;
     left: 69px;
+}
+
+.bottomRight {
+    top: calc(100% - 69px);
+    left: calc(100% - 69px);
 }
 
 .topButtons div:hover {
@@ -89,11 +99,9 @@ body {
 
 video {
     width: 80%;
-    height: 20%;
+    height: 100%;
     border-radius: 3px;
 
-    position: relative;
-    z-index: 200;
 }
 
 [type=text] {
@@ -169,6 +177,8 @@ input[type="radio"]:checked + label {
 }
 
 .extraTitleTitle {
+    font-family: var(--header-font);
+
     display: block;
     color: var(--dark);
     padding-top: 20px;

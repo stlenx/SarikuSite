@@ -134,10 +134,6 @@ class Vector2 {
         this.y += vector.y;
     }
 
-    ReturnAdd(vector) {
-        return new Vector2(this.x + vector.x, this.y + vector.y);
-    }
-
     minus(vector) {
         this.x -= vector.x;
         this.y -= vector.y;
@@ -324,19 +320,19 @@ let canvas = document.getElementById("canvas")
 if(canvas.getAttribute('property') !== null) {
     switch (canvas.getAttribute('property')) {
         case "fullscreen": {
-            canvas.setAttribute("width", window.innerWidth)
-            canvas.setAttribute("height", window.innerHeight)
+            canvas.setAttribute("width", window.innerWidth);
+            canvas.setAttribute("height", window.innerHeight);
             break;
         }
         case "square": {
-            canvas.setAttribute("width", window.innerHeight)
+            canvas.setAttribute("width", window.innerHeight);
             break;
         }
     }
 }
 let ctx = canvas.getContext("2d");
 
-let input = {}
+let input = {};
 
 let mouse = new Vector2(0, 0);
 
@@ -353,33 +349,34 @@ window.addEventListener("mousemove", (e) => {
     mouse.y = e.offsetY;
 })
 
-if(typeof setup == 'function') {
-    setup()
+if (typeof setup == 'function') {
+    setup();
 }
 
 let lastFrame = Date.now();
 function animationFrame() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     let now = Date.now();
     let dt = now - lastFrame;
     lastFrame = now;
 
-    frame(dt)
+    frame(dt);
 
-    window.requestAnimationFrame(animationFrame)
-}
-
-if (typeof  mousedown == 'function') {
-    window.onmousedown = mousedown;
+    window.requestAnimationFrame(animationFrame);
 }
 
 if (typeof frame == 'function') {
-    window.requestAnimationFrame(animationFrame)
+    window.requestAnimationFrame(animationFrame);
 }
 
 if (typeof resize == 'function') {
     window.onresize = resize;
+} else {
+    window.onresize = function () {
+        canvas.setAttribute("width", window.innerWidth);
+        canvas.setAttribute("height", window.innerHeight);
+    }
 }
 
 function StrokeLine(p1, p2) {

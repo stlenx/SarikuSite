@@ -1,4 +1,4 @@
-const Http = new XMLHttpRequest();
+let Http = new XMLHttpRequest();
 const url='https://api.benaclegames.com/sl/asl';
 let loadedSign = "";
 
@@ -177,6 +177,7 @@ function inputChanged(input) {
 }
 
 function getSign(sign) {
+    if(sign === "") return;
     loadedSign = sign;
     Http.open("GET", url);
     Http.setRequestHeader("sign", sign)
