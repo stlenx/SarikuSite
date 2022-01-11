@@ -8,13 +8,27 @@ let mainC = document.getElementById("mainContainerGenerator");
 let isOn = false;
 let progress = document.getElementById("progressBar");
 let progressC = document.getElementById("progressC");
+let sentenceDisplay = document.getElementById("sentenceDisplay");
 let v = document.getElementById("videoGenerator");
 let s = document.getElementById("sourceGenerator");
 
 API.onreadystatechange = () => {
     if (API.readyState !== 4 || API.status !== 200) {
         if(API.status === 404) {
+            if(words[Object.keys(loadedWords).length] === undefined) return; //Idk
 
+            ShowProgressBar(words.length);
+            loadedWords[words[Object.keys(loadedWords).length]] = "DOESNOTEXIST";
+            AddWordToDisplay(words[Object.keys(loadedWords).length - 1], Object.keys(loadedWords).length - 1, true);
+
+            if(Object.keys(loadedWords).length < words.length) {
+                getWord(words[Object.keys(loadedWords).length]);
+                return;
+            }
+
+            currentWord = 0;
+            HideProgressBar();
+            ShowWords();
         }
         return;
     } // Check for ready because xmlhttprequest gae
@@ -38,6 +52,7 @@ API.onreadystatechange = () => {
 
     ShowProgressBar(words.length);
     UpdateProgressBar(Object.keys(loadedWords).length);
+    AddWordToDisplay(words[Object.keys(loadedWords).length - 1], Object.keys(loadedWords).length - 1);
 
     if(Object.keys(loadedWords).length < words.length) {
         getWord(words[Object.keys(loadedWords).length]);
@@ -47,6 +62,16 @@ API.onreadystatechange = () => {
     currentWord = 0;
     HideProgressBar();
     ShowWords();
+}
+
+function AddWordToDisplay(word, id, nonExistant = false) {
+    let span = document.createElement("span");
+    span.innerText = word;
+    span.id = id;
+    if(nonExistant) {
+        span.classList.add("notExist");
+    }
+    sentenceDisplay.appendChild(span);
 }
 
 function HideProgressBar() {
@@ -75,11 +100,39 @@ function getLeInterpretations(output) {
 }
 
 function ShowWords() {
+    NeutralizeColors()
+
     let word = words[currentWord];
     let url = loadedWords[word];
 
+    if(url === "DOESNOTEXIST") {
+        //Skip word
+        if(Object.keys(loadedWords).length === 0) return;
+
+        currentWord++;
+        if(currentWord === words.length) {
+            currentWord = 0;
+        }
+
+        ShowWords();
+
+        return;
+    }
+
+    document.getElementById(currentWord).style.color = "rgb(55,255,0)";
+
     s.setAttribute("src", url);
     v.load()
+}
+
+function NeutralizeColors() {
+    let Words = sentenceDisplay.children;
+    for(let i = 0; i < Words.length; i++) {
+        let word = Words[i];
+        if(!word.classList.contains("notExist")) {
+            word.style.color = getComputedStyle(document.documentElement).getPropertyValue('--dark');
+        }
+    }
 }
 
 function toggleGenerator() {
@@ -100,6 +153,7 @@ function ExecuteGenerator(text) {
     words = text.split(" ");
     loadedWords = {};
 
+    while(sentenceDisplay.children.length > 0) sentenceDisplay.removeChild(sentenceDisplay.lastChild)
     getWord(words[0]);
 }
 

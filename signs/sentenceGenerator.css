@@ -28,3 +28,19 @@ html, body { height: 100%; }
 .progressContainer {
     display: none;
 }
+
+#sentenceDisplay {
+    font-family: var(--text-font);
+    font-weight: bolder;
+    font-size: 2em;
+
+    margin-bottom: 10px;
+}
+
+#sentenceDisplay span {
+    margin: 10px;
+}
+
+.notExist {
+    color: red;
+}
