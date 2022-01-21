@@ -217,6 +217,15 @@ input[type="radio"]:checked + label {
     margin: 5px;
 }
 
+
+.topRightDropdown {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+
+
 /* PHONE STUFF EWWW YUK*/
 @media screen and (max-width: 1000px) {
     video {

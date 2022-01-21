@@ -44,3 +44,41 @@ html, body { height: 100%; }
 .notExist {
     color: red;
 }
+
+#BetaThing {
+    text-align: left;
+    font-size: 1.5em;
+    font-weight: bolder;
+    font-family: var(--header-font);
+    color: #ffa829;
+    padding: 10px 15px;
+
+    width: fit-content;
+
+    border-radius: 500px;
+    border: #ffa829 4px solid;
+
+    transition: background-color 0.1s;
+}
+
+#BetaThing:hover {
+    background-color: rgba(255, 168, 41, 0.4);
+    cursor: pointer;
+}
+
+#BetaThing span {
+    position: absolute;
+    top: -2em;
+    left: 4em;
+    display: none;
+
+    width: 10em;
+    padding: 10px;
+    border-radius: 25px;
+    border: #ffa829 4px solid;
+    background-color: rgba(255, 168, 41, 0.4);
+}
+
+#BetaThing:hover span {
+    display: unset;
+}
