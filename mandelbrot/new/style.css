@@ -20,7 +20,6 @@ body {
     background-color: var(--veryDark);
     color: var(--light);
     font-family: var(--fontText);
-    overflow: hidden;
 
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
@@ -201,10 +200,19 @@ button.wideButton {
     .controls {
         position: absolute;
         left: 0;
-        top: 104vw;
+        top: 100vw;
+    }
+    .card {
+        border-radius: 0;
     }
     canvas {
         position: absolute;
+        top: 0;
         right: 0;
+
+        border-radius: 0;
+    }
+    body {
+        background-color: var(--darkSecondary);
     }
 }
