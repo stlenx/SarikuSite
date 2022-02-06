@@ -25,6 +25,9 @@ var Mandelbrot = {
   uniform float x_offsetU;
   uniform float y_offsetU;
   
+  uniform bool smoothResult;
+  uniform vec3 testCol;
+  
   int iterNum;
   float zoom;
   float x_offset;
@@ -58,6 +61,35 @@ var Mandelbrot = {
     col += 0.5 + 0.5*cos( 3.0 + i * 0.15 + vec3(0.0,0.6,1.0));
 
     return col;
+  }
+  
+  vec3 getColor3(float i, vec3 color) {
+    vec3 col = vec3(0.0);
+
+    col += 0.5 + 0.5*cos( 3.0 + i * 0.15 + color);
+
+    return col;
+  }
+  
+  float remap(float value, float from1, float to1, float from2, float to2) {
+    return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+  }
+  
+  vec3 getColor4(float i, vec3 color1, vec3 color2) {
+    float minR = min(color1.x, color2.x);
+    float minG = min(color1.y, color2.y);
+    float minB = min(color1.z, color2.z);
+    
+    float maxR = max(color1.x, color2.x);
+    float maxG = max(color1.y, color2.y);
+    float maxB = max(color1.z, color2.z);
+    
+    float max = float(iterNum);
+    float newR = remap(i, 0.0, max, minR, maxR);
+    float newG = remap(i, 0.0, max, minG, maxG);
+    float newB = remap(i, 0.0, max, minB, maxB);
+
+    return vec3(newR, newG, newB);
   }
 
   float smooth(float l, vec2 z) {
@@ -128,11 +160,16 @@ var Mandelbrot = {
         //Convert steps counter to float
         float l = float(steps);
 
-        //Smooth version
-        float sl = smooth(l, z);
-
         //Calculate color
-        vec3 col = getColor2(l);
+        vec3 col = vec3(0.0);
+        
+        //If smooth, make it smooth :D
+        if(smoothResult) {
+          float sl = smooth(l, z);
+          col = getColor2(sl);
+        } else {
+          col = getColor2(l);
+        }
   
         //Paint with color
         gl_FragColor = vec4(col, 1.0);

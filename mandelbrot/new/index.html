@@ -14,6 +14,7 @@
         <meta property="twitter:title" content="Mandelbrot Set - and other fractal stuff">
         <meta property="twitter:description" content="Play around with different fractals! and shit">
         <meta property="twitter:image" content="https://sariku.gay/mandelbrot/733fcb3147fa883f2393c5efe66c4195.jpg">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>Fractals</title>
         <link rel="stylesheet" href="style.css">
@@ -24,22 +25,27 @@
         <script src="ship.js"></script>
         <script src="main.js"></script>
 
-        <body>
-
-            <div>
-                <div class="controls">
-                    <div class="buttons">
-                        <button class="renderButton" type="button" onclick="MandelbrotSet()">Mandelbrot</button>
-                        <button class="renderButton" type="button" onclick="BurningShip()">Burning ship</button>
-                        <button class="renderButton" type="button" id="animation" onclick="Animate()">Animate</button>
-                        <button class="renderButton" type="button" onclick="location.href = '../index.html';">Go back</button>
-                        <button class="renderButton" type="button" id="julia" onclick="alwaysJulia()">Enable always Julia</button>
-                    </div>
-                    <input type="number" id="iterations" value="50" onkeyup="inputChanged(this.value)">
+        <div class="card controls">
+            <div class="cardTitle">Controls</div>
+            <div class="cardBody">
+                <div>
+                    <button class="renderButton" type="button" onclick="MandelbrotSet()">Mandelbrot</button>
+                    <button class="renderButton" type="button" onclick="BurningShip()">Burning ship</button>
+                    <button class="renderButton" type="button" id="animation" onclick="Animate()">Animate</button>
+                    <button class="renderButton" type="button" onclick="location.href = '../index.html';">Go back</button>
+                    <button class="renderButton" type="button" id="julia" onclick="alwaysJulia()">Enable always Julia</button>
                 </div>
-                <canvas id="glscreen"></canvas>
+                <label for="iterations" style="margin-left: 12px;">Iterations: </label>
+                <input type="number" id="iterations" value="50" onkeyup="inputChanged(this.value)">
+                <label for="checkbox">Smooth</label>
+                <div class="switch">
+                    <input id="checkbox" type="checkbox" class="switch-input" onchange="smoothMaybe(this.checked)"/>
+                    <label for="checkbox" class="switch-label">Switch</label>
+                </div>
             </div>
-        
-            </body>
+        </div>
+
+        <canvas id="glscreen"></canvas>
+
     </body>
 </html>
