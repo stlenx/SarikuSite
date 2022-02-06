@@ -1,0 +1,374 @@
+<!DOCTYPE HTML >
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>         GL_TILE_TESTBED           </title>
+
+<style>
+   
+    p{ font-size:12pt;}
+    h3,p,input,button,br{ 
+        padding:0px; 
+        margin:0px; 
+        font-family:"Andale Mono";
+    }
+    button,input{
+        padding:10px;
+    }
+</style>
+<script id="VERT_SHADER" type="NOT_JAVASCRIPT">
+  precision highp float;
+  
+  attribute vec2 a_position;
+  void main() {
+    gl_Position = vec4(a_position, 0, 1);
+  }
+</script>
+
+
+<script id="FRAG_SHADER" type="NOT_JAVASCRIPT">
+
+  //Must declare precision before declaring
+  //any uniforms:
+  ////////////////////////////////////////////////
+  #ifdef GL_FRAGMENT_PRECISION_HIGH
+    precision highp float;
+  #else
+    precision mediump float;
+  #endif
+  precision mediump int;
+  ////////////////////////////////////////////////
+
+  #define CANVAS_WID  640.0
+  #define CANVAS_HIG  480.0
+
+  #define TIL_WID     64.0
+  #define TIL_HIG     64.0
+  
+  //Uniforms exposed to HTML/JAVASCRIPT:
+  uniform float TIL_WID_EDIT;
+  uniform float TIL_HIG_EDIT;
+ 
+  float til_wid;
+  float til_hig;
+  
+
+  void main() {
+
+    //If uniforms have not set by user,
+    //use the default values set by the #define(s)
+    //==========================================//
+    if(TIL_WID_EDIT > 0.0){
+      til_wid = TIL_WID_EDIT;
+    }else{
+      til_wid = TIL_WID;
+    }
+    
+    if(TIL_HIG_EDIT > 0.0){
+      til_hig = TIL_HIG_EDIT;
+    }else{
+      til_hig = TIL_HIG;
+    }
+    //==========================================//
+    
+    //NOTE: on "gl_FragCoord" range:
+    //******************************************//
+    //web-gl: In terms of pixel/canvas coords.
+    //OpenGL: In terms of 0 to 1.
+    //******************************************//
+    
+    //:Calculate number of tiles shown on screen:
+    //:This may be fractional:
+    float NUM_TIL_X = CANVAS_WID / til_wid;
+    float NUM_TIL_Y = CANVAS_HIG / til_hig;
+
+    
+    vec2 FC_MOD;
+    FC_MOD.x = gl_FragCoord.x;
+    FC_MOD.y = gl_FragCoord.y;
+    
+    //You want all tiles to have the full range 
+    //of colors, so you always modulate by 
+    //CANVAS_WID and CANVAS_HIG, You scale by the 
+    //# of tiles on each axis which means the 
+    //gradient becomes steeper as the # of tiles
+    //increases.
+    FC_MOD.x = mod( gl_FragCoord.x*NUM_TIL_X, CANVAS_WID );
+    FC_MOD.y = mod( gl_FragCoord.y*NUM_TIL_Y, CANVAS_HIG );
+    
+    //[N]ormalize values into range 0 to 1:
+    //NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN//
+    float norm_X = (FC_MOD.x) / CANVAS_WID;
+    float norm_Y = (FC_MOD.y) / CANVAS_HIG;
+    //NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN//
+    
+    //Use [B]lue channel because why not?
+    //BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB//
+    float GRAD_X = gl_FragCoord.x / CANVAS_WID;
+    //BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB//
+ 
+    //Set the final [F]ragment colors:
+    //FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF//
+    gl_FragColor = vec4(norm_X, norm_Y, GRAD_X, 1.0);
+    //FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF//
+  }
+</script>
+
+</head> 
+                 
+<body onload="ON_LOADED_FUNCTION()" >
+
+    <h3> Open GL Tile TestBed            <h3>
+    <p> Author: John Mark Isaac Madison <p>
+    <p> Email : J4M4I5M7@hotmail.com    <p>
+
+    <canvas id="glCanvas"></canvas>
+    
+    </br>
+    <button onClick="PUT_WID();">TILE_WIDTH__IN_PIXELS</button> 
+    <input type="text" id="INPUT_WID" value="45">
+    </br>
+    
+    </br>
+    <button onClick="PUT_HIG();">TILE_HEIGHT_IN_PIXELS</button> 
+    <input type="text" id="INPUT_HIG" value="45">
+    </br>
+    
+    
+     
+<!-- SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS -->   
+<script id="BOILER_PLATE_CODE">
+    function ON_LOADED_FUNCTION(){
+        console.log("[ON_LOADED_FUNCTION]");
+        main();
+    }
+    
+    //:Takes the gl context object, if the input
+    //:is null, we likely failed to get the
+    //:context.
+    function HAS_OPEN_GL_CHECK(gl){
+      // Only continue if WebGL is 
+      // available and working
+      if (!gl) {
+        var msg = "";
+        msg += "[Unable to initialize WebGL.]";
+        msg += "[your browser or machine may]";
+        msg +=  "[not support it.]"
+        alert( msg );
+        return;
+      }
+    }
+    
+    function GET_INPUT_BOX_VALUE( elem_id ){
+        var box; //DOM input box
+        var val; //Value in input box.
+        box = document.getElementById( elem_id );
+        val = box.value;
+        return (0 + val); //cast to number.
+    }
+    
+    function PUT_WID(){
+        assert_program_and_gl_exist();
+        var val = GET_INPUT_BOX_VALUE("INPUT_WID");
+        SET_ATTR("TIL_WID_EDIT", val);
+    }
+    
+    function PUT_HIG(){
+        assert_program_and_gl_exist();
+        var val = GET_INPUT_BOX_VALUE("INPUT_HIG");
+        SET_ATTR("TIL_HIG_EDIT", val); 
+    }
+    
+    function SET_ATTR(gl_var_name, val){
+        if(val < 0 || val > 256 ){
+            alert("choose value between 0 to 256");
+            return;
+        }
+     
+        var loc; //<--location of variable.
+        loc = gl.getUniformLocation(
+            program    , 
+            gl_var_name
+        );
+        console.log(loc)
+        gl.useProgram(program);
+        gl.uniform1f(loc, val);
+    }
+    
+    function assert_program_and_gl_exist(){
+        if(!program){慌("[NO_PROGRAM_EXISTS]");}
+        if(!gl     ){慌("[NO_GL_EXISTS]");}
+    }
+    
+    //慌: "disconcerted, be confused, lose one's head"
+    //慌: In Code: ~Panic~
+    function 慌( panic_message ){
+        console.log( panic_message );
+        alert      ( panic_message );
+        throw      ( panic_message );
+    }
+  
+    function makeOpenGlContextUsingCanvas(c){
+        
+        //:Try what works in chrome and all the
+        //:respectable browsers first:
+        gl = c.getContext("webgl");
+        
+        if(!gl){
+            console.log("[Probably_In_IE]");
+            gl = c.getContext("experimental-webgl");
+        }else{
+            console.log("[Probably_NOT_IE]");
+        }
+        
+        HAS_OPEN_GL_CHECK( gl );
+        return gl;
+    }
+    
+    //: No "var" prefix, making them global:
+    function initGlobals(){
+        canvas = document.querySelector("#glCanvas");
+        if(!canvas){
+            alert("FAILED_TO_GET_CANVAS");
+        }else{
+            console.log("[GOT_CANVAS]");
+        }
+        
+        gl = makeOpenGlContextUsingCanvas(canvas);
+        
+        
+        //These dimensions are hard-coded into
+        //fragment shader code, so be careful
+        //about changing them:
+        canvas.width = 640;
+        canvas.height= 480;
+    
+        buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(
+        gl.ARRAY_BUFFER, 
+        new Float32Array([
+          -1.0, -1.0, 
+           1.0, -1.0, 
+          -1.0,  1.0, 
+          -1.0,  1.0, 
+           1.0, -1.0, 
+           1.0,  1.0]), 
+        gl.STATIC_DRAW
+        );
+        
+        //G == Global Container.
+        //To fix problems with rendering in I.E.
+        //(Internet Explorer)
+        //GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG//
+        var G = {}; 
+        G.canvas = canvas;
+        G.gl     = gl;
+        G.buffer = buffer;
+        
+        if( ! G.canvas ||
+            ! G.gl     ||
+            ! G.buffer  ){
+            慌("[Global_Container_Broken]");
+        }
+        
+        return G;
+        //GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG//
+    }
+    
+    function main(){
+    
+      G = initGlobals();
+      HAS_OPEN_GL_CHECK( G );
+      
+      gl.viewport(0,0,gl.drawingBufferWidth, gl.drawingBufferHeight);
+
+      setup();
+      render();
+    }
+    
+    function setup(){
+        var frag_dom = document.getElementById("FRAG_SHADER");
+        var frag_src = frag_dom.text;
+        console.log( frag_src );
+
+        F = createShader(
+            gl,gl.FRAGMENT_SHADER, frag_src
+        );
+
+        var vert_dom = document.getElementById("VERT_SHADER");
+        var vert_src = vert_dom.text;
+        console.log( vert_src );
+
+        V = createShader(
+            gl, gl.VERTEX_SHADER, vert_src
+        );
+
+        //**** MAKE "program" a GLOBAL VAR  ****//
+        program = createProgram(gl,V,F);
+        gl.useProgram( program );
+        
+        if(!program){
+            慌("PROGRAM_IS_NULL");
+        }
+    }
+    
+    function render(){
+      window.requestAnimationFrame(render,canvas);
+    
+      // Set clear color to black, fully opaque
+      gl.clearColor(0.0, 0.0, 0.5, 1.0);
+      
+      // Clear the color buffer with specified clear color
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      
+      //Directly before call to gl.drawArrays:
+      positionLocation = gl.getAttribLocation(program, "a_position");
+      gl.enableVertexAttribArray( positionLocation );
+      gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+      
+      
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+    
+    function createShader(gl,type,source){
+        //:Error Check For Bad Inputs:
+        if(!gl    ){慌("[NULL_GL]");}
+        if(!type  ){慌("[NULL_TY]");}
+        if(!source){慌("[NULL_SR]");}
+    
+        var shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        var res = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+        if( res ){
+            console.log("[SHADER_COMPILED!]");
+            return shader;
+        }
+        
+        console.log(gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        慌("[FAILED_TO_COMPILE_SHADER]");
+    }
+    
+    //:gl  : openGL context :
+    //:vert: vertex shader  :
+    //:frag: fragment shader:
+    function createProgram(gl,vert, frag){
+        var program = gl.createProgram();
+        gl.attachShader(program, vert);
+        gl.attachShader(program, frag);
+        gl.linkProgram (program);
+        var res = gl.getProgramParameter(program, gl.LINK_STATUS);
+        if( res ){
+            console.log("[PROGRAM_CREATED!]");
+            return program;
+        }
+        
+        console.log(gl.getProgramInfoLog(program));
+        gl.deleteProgram(program);
+    }
+
+</script>
+</body>
+</html>
