@@ -26,6 +26,7 @@ var Ship = {
   uniform float y_offsetU;
   
   uniform bool smoothResult;
+  uniform int whichColor;
   uniform vec3 testCol;
 
   int iterNum;
@@ -157,21 +158,24 @@ var Ship = {
       gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
     } else {
       //Convert steps counter to float
-      float l = float(steps);
+        float l = float(steps);
 
-      //Calculate color
+        //Calculate color
         vec3 col = vec3(0.0);
         
         //If smooth, make it smooth :D
         if(smoothResult) {
-          float sl = smooth(l, z);
-          col = getColor2(sl);
+          l = smooth(l,z);
+        }
+        
+        if(whichColor == 0) {
+          col = getColor1(l);
         } else {
           col = getColor2(l);
         }
-
-      //Paint with color
-      gl_FragColor = vec4(col, 1.0);
+  
+        //Paint with color
+        gl_FragColor = vec4(col, 1.0);
     }
   }
   `

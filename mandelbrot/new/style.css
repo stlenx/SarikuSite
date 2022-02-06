@@ -59,6 +59,15 @@ canvas {
     left: 12px;
 }
 
+.typeSelect {
+    margin-top: 12px;
+    margin-left: 12px;
+}
+
+.margin_left {
+    margin-left: 12px;
+}
+
 input {
     margin: 2px 12px;
     background-color: var(--darkSecondary1);
@@ -98,7 +107,6 @@ input[type=rage]:focus {
     outline: none;
 }
 
-
 input[type=radio] + label {
     background-color: var(--darkSecondary1); /* Green lol */
     color: var(--light);
@@ -124,10 +132,14 @@ button {
     display: inline-block;
     font-size: 16px;
     padding: 12px 18px;
-    margin: 16px 12px;
+    margin: 12px 8px;
     cursor: pointer;
     border-radius: 4px;
 }
+button:first-child {
+    margin-left: 12px;
+}
+
 
 button:hover {
     background-color: var(--darkSecondary2);

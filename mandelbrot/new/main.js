@@ -25,6 +25,7 @@ let program;
 let zoom = 3.0;
 let iterations = 50;
 let smoothReuslt = false;
+let colorFunction = 0;
 let current = "Mandelbrot";
 window.onload = init;
 
@@ -64,6 +65,7 @@ function MandelbrotSet() {
 
     SET_ATTR_FLOAT("x_offsetU", 0.5);
     SET_ATTR_INT("ITERNUM", iterations);
+    SET_ATTR_INT("whichColor", colorFunction);
     SET_ATTR_INT("smoothResult", smoothReuslt);
     current = "Mandelbrot";
 }
@@ -80,6 +82,7 @@ function BurningShip() {
 
     SET_ATTR_FLOAT("x_offsetU", 0.5);
     SET_ATTR_INT("ITERNUM", iterations);
+    SET_ATTR_INT("whichColor", colorFunction);
     SET_ATTR_INT("smoothResult", smoothReuslt);
     current = "Ship";
 }
@@ -87,6 +90,11 @@ function BurningShip() {
 function smoothMaybe(bool) {
     SET_ATTR_INT("smoothResult", bool);
     smoothReuslt = bool;
+}
+
+function changeColoring(coloring) {
+    SET_ATTR_INT("whichColor", coloring);
+    colorFunction = coloring;
 }
 
 let animationRunning = false;

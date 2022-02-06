@@ -35,9 +35,20 @@
                     <button class="renderButton" type="button" onclick="location.href = '../index.html';">Go back</button>
                     <button class="renderButton" type="button" id="julia" onclick="alwaysJulia()">Enable always Julia</button>
                 </div>
-                <label for="iterations" style="margin-left: 12px;">Iterations: </label>
+                <label for="iterations" class="margin_left">Iterations: </label>
                 <input type="number" id="iterations" value="50" onkeyup="inputChanged(this.value)">
-                <label for="checkbox">Smooth</label>
+            </div>
+            <div class="cardTitle">
+                Coloring
+            </div>
+            <div class="cardBody">
+                <input type="radio" id="rainbow" name="color" value="0" checked onclick="changeColoring(parseInt(this.value))">
+                <label for="rainbow" style="margin-left: 12px" class="radioInput">Rainbow</label>
+
+                <input type="radio" id="2_color" name="color" value="1" onclick="changeColoring(parseInt(this.value))">
+                <label for="2_color" class="radioInput">2-Color</label>
+
+                <label for="checkbox" class="margin_left">Smooth</label>
                 <div class="switch">
                     <input id="checkbox" type="checkbox" class="switch-input" onchange="smoothMaybe(this.checked)"/>
                     <label for="checkbox" class="switch-label">Switch</label>

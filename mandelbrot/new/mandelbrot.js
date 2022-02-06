@@ -26,6 +26,7 @@ var Mandelbrot = {
   uniform float y_offsetU;
   
   uniform bool smoothResult;
+  uniform int whichColor;
   uniform vec3 testCol;
   
   int iterNum;
@@ -165,8 +166,11 @@ var Mandelbrot = {
         
         //If smooth, make it smooth :D
         if(smoothResult) {
-          float sl = smooth(l, z);
-          col = getColor2(sl);
+          l = smooth(l,z);
+        }
+        
+        if(whichColor == 0) {
+          col = getColor1(l);
         } else {
           col = getColor2(l);
         }
