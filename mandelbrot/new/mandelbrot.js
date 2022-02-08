@@ -6,7 +6,7 @@ var Mandelbrot = {
   }
   `,
   fragment: `
-  #define NUM_STEPS   50
+  #define NUM_STEPS   500
   #define ZOOM_FACTOR 3.0
   #define X_OFFSET    0.5
   #define Y_OFFSET    0.0
@@ -19,20 +19,14 @@ var Mandelbrot = {
   precision mediump int;
   
   uniform int ITERNUM;
-  uniform float screenx;
-  uniform float screeny;
+  uniform vec2 iResolution;
+  uniform vec2 PAN;
   uniform float ZOOM;
-  uniform float x_offsetU;
-  uniform float y_offsetU;
-  
   uniform bool smoothResult;
   uniform int whichColor;
-  uniform vec3 testCol;
   
   int iterNum;
   float zoom;
-  float x_offset;
-  float y_offset;
   
   float hue2rgb(float p, float q, float t){
     if(t < 0.0) t += 1.0;
@@ -111,40 +105,22 @@ var Mandelbrot = {
       zoom = ZOOM_FACTOR;
     }
 
-    if(x_offsetU != 0.0) {
-      x_offset = x_offsetU;
-    } else {
-      x_offset = X_OFFSET;
-    }
-
-    if(y_offsetU != 0.0) {
-      y_offset = y_offsetU;
-    } else {
-      y_offset = Y_OFFSET;
-    }
-  
-    vec2 z;
-    float x,y;
+    vec2 pixel = (gl_FragCoord.xy / iResolution.xy - 0.5) * zoom;
+    pixel.x -= 0.5;
+    
+    vec2 Z = vec2(0.0);
+    vec2 C = pixel;
     int steps;
-
-    float normalizedX = (gl_FragCoord.x - (screenx / 2.0)) / screenx * zoom *
-                        (screenx / screeny) - x_offset;
-    float normalizedY = (gl_FragCoord.y - (screeny / 2.0)) / screeny * zoom *
-                        (screenx / screeny) - y_offset;
-  
-    z.x = normalizedX;
-    z.y = normalizedY;
   
     for (int i = 0; i < 100000; i++) {
-      
-      x = (z.x * z.x - z.y * z.y) + normalizedX;
-      y = (z.y * z.x + z.x * z.y) + normalizedY;
-      z.x = x;
-      z.y = y;
+      vec2 Z2;
+      Z2.x = Z.x*Z.x - Z.y*Z.y;
+      Z2.y = 2.0*(Z.x*Z.y);
+      Z = Z2 + C;
 
       steps = i;
 
-      float modulus = sqrt(x*x + y*y);
+      float modulus = sqrt(Z.x*Z.x + Z.y*Z.y);
       if (modulus > 20.0) {
         break;
       }
@@ -166,7 +142,7 @@ var Mandelbrot = {
         
         //If smooth, make it smooth :D
         if(smoothResult) {
-          l = smooth(l,z);
+          l = smooth(l,Z);
         }
         
         if(whichColor == 0) {

@@ -1,17 +1,9 @@
-let offsets2 = {
-    Mandelbrot: {
-        x: 0.70,
-        y: -0.35
-    },
-    Ship: {
-        x: 1.75,
-        y: 0
-    }
-}
 let offsets = {
-    Mandelbrot: {
-        x: 1.41856,
-        y: 0
+    Mandelbrot: { //-0.31750109, 0.48999993, 0.00000000000000588, 0.0
+        x: 0.51750109, //1.25698
+        y: 0.68999993, //0.37948
+        z: 0.00000000000000588, //X
+        w: 0    //Y
     },
     Ship: {
         x: 1.77006,
@@ -19,14 +11,17 @@ let offsets = {
     }
 }
 
-let gl;
-let canvas;
+let canvas = document.getElementById("glscreen");
+let gl = canvas.getContext("webgl");
 let program;
+let res;
+
 let zoom = 3.0;
-let iterations = 50;
+let iterations = 500;
 let smoothReuslt = false;
 let colorFunction = 0;
 let current = "Mandelbrot";
+
 window.onload = init;
 
 window.mobileCheck = function() {
@@ -63,28 +58,26 @@ function inputChanged(value) {
 function MandelbrotSet() {
     useShader(Mandelbrot);
 
-    SET_ATTR_FLOAT("x_offsetU", 0.5);
     SET_ATTR_INT("ITERNUM", iterations);
     SET_ATTR_INT("whichColor", colorFunction);
     SET_ATTR_INT("smoothResult", smoothReuslt);
     current = "Mandelbrot";
 }
 
-function MandelbrotSetJulia(x, y) {
-    useShader(MandelbrotJulia);
-
-    SET_ATTR_FLOAT("X", x);
-    SET_ATTR_FLOAT("Y", y);
-}
-
 function BurningShip() {
     useShader(Ship);
 
-    SET_ATTR_FLOAT("x_offsetU", 0.5);
     SET_ATTR_INT("ITERNUM", iterations);
     SET_ATTR_INT("whichColor", colorFunction);
     SET_ATTR_INT("smoothResult", smoothReuslt);
     current = "Ship";
+}
+
+function UpdateJulia(x, y) {
+    SET_ATTR_VEC2F("POS", x / res, y / res);
+    SET_ATTR_INT("ITERNUM", iterations);
+    SET_ATTR_INT("whichColor", colorFunction);
+    SET_ATTR_INT("smoothResult", smoothReuslt);
 }
 
 function smoothMaybe(bool) {
@@ -103,8 +96,7 @@ function Animate() {
     if(!animationRunning) {
         //Run animation
         zoom = 3.0;
-        SET_ATTR_FLOAT("x_offsetU", offsets[current].x);
-        SET_ATTR_FLOAT("y_offsetU", offsets[current].y);
+        SET_ATTR_VEC4F("PAN", offsets[current].x, offsets[current].y, offsets[current].z, offsets[current].w)
         document.getElementById('animation').innerHTML = "Stop";
         animateIn = true;
         animationRunning = true;
@@ -122,9 +114,33 @@ function alwaysJulia() {
         veryJulia = false;
     } else {
         document.getElementById('julia').innerHTML = "Disable always Julia";
+        switch (current) {
+            case "Mandelbrot":
+            {
+                useShader(MandelbrotJulia);
+                UpdateJulia(0, 0);
+                break;
+            }
+            case "Ship":
+            {
+                useShader(ShipJulia);
+                UpdateJulia(0, 0);
+                break;
+            }
+            default:
+                break;
+        }
+        UpdateJulia(0, 0);
         veryJulia = true;
     }
 }
+
+
+canvas.addEventListener("mousemove", (ev => {
+    if(veryJulia) {
+        UpdateJulia(ev.offsetX, ev.offsetY);
+    }
+}))
 
 function SET_ATTR_INT(gl_var_name, val){
     let loc = gl.getUniformLocation(program, gl_var_name);
@@ -138,20 +154,32 @@ function SET_ATTR_FLOAT(gl_var_name, val){
     gl.uniform1f(loc, val);
 }
 
+function SET_ATTR_VEC4F(gl_var_name, val1, val2, val3, val4) {
+    let loc = gl.getUniformLocation(program, gl_var_name);
+    gl.useProgram(program);
+    gl.uniform4f(loc, val1, val2, val3, val4);
+}
+
 function SET_ATTR_VEC3F(gl_var_name, val1, val2, val3) {
     let loc = gl.getUniformLocation(program, gl_var_name);
     gl.useProgram(program);
     gl.uniform3f(loc, val1, val2, val3);
 }
 
+function SET_ATTR_VEC2F(gl_var_name, val1, val2) {
+    let loc = gl.getUniformLocation(program, gl_var_name);
+    gl.useProgram(program);
+    gl.uniform2f(loc, val1, val2);
+}
+
 function useShader(shader) {
     //Grab and compile vertex shader
-    var gl_vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    let gl_vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(gl_vertexShader, shader.vertex);
     gl.compileShader(gl_vertexShader);
 
     //Create and compile fragment shader (Superior)
-    var gl_fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    let gl_fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(gl_fragmentShader, shader.fragment);
     gl.compileShader(gl_fragmentShader);
 
@@ -162,28 +190,22 @@ function useShader(shader) {
     gl.linkProgram(program);	
     gl.useProgram(program);
 
-    //Set width of shader
-    var loc = gl.getUniformLocation(program, "screenx");
-    gl.uniform1f(loc, canvas.width);
-
-    //Set height of shader
-    loc = gl.getUniformLocation(program, "screeny");
-    gl.uniform1f(loc, canvas.height);
+    //Set resolution of shader
+    let loc = gl.getUniformLocation(program, "iResolution");
+    gl.uniform2f(loc, canvas.width, canvas.height);
 }
 
 function init() {
-    canvas = document.getElementById("glscreen");
-    gl = canvas.getContext("webgl");
-
     let isMobile = window.mobileCheck();
 
     if(isMobile) {
-        canvas.width = Math.min(window.innerWidth, window.innerHeight);
-        canvas.height = Math.min(window.innerWidth, window.innerHeight);
+        res = Math.min(window.innerWidth, window.innerHeight);
     } else {
-        canvas.width = Math.min(window.innerWidth, window.innerHeight) * .98;
-        canvas.height = Math.min(window.innerWidth, window.innerHeight) * .98;
+        res = Math.min(window.innerWidth, window.innerHeight) * .98;
     }
+
+    canvas.width = res;
+    canvas.height = res;
 
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
@@ -191,23 +213,25 @@ function init() {
     gl.bufferData(
       gl.ARRAY_BUFFER, 
       new Float32Array([
-        -1.0, -1.0, 
-         1.0, -1.0, 
-        -1.0,  1.0, 
-        -1.0,  1.0, 
-         1.0, -1.0, 
-         1.0,  1.0]), 
+        -1.0, -1.0,
+         1.0, -1.0,
+        -1.0,  1.0,
+        -1.0,  1.0,
+         1.0, -1.0,
+         1.0,  1.0]),
       gl.STATIC_DRAW
     );
 
     useShader(Mandelbrot);
+
+    changeColoring(1);
 
     render();
 }
 
 let lastFrame = Date.now();
 function render() {
-    window.requestAnimationFrame(render, canvas);
+    window.requestAnimationFrame(render);
 
     let now = Date.now();
     let dt = now - lastFrame;
@@ -223,9 +247,8 @@ function render() {
         } else {
             zoom += zoom*.003* (16/dt);
         }
-        //zoom -= zoom*.003* (16/dt); // * (16/dt)
 
-        if(zoom < 0.00001) {
+        if(zoom < 0.00000000000000001) { //0.00000000000000001 with dp 0.00001 without
             //Go back
             animateIn = false;
             //Animate();

@@ -1,4 +1,4 @@
-var Ship = {
+let MandelbrotDP = {
   vertex: `
   attribute vec2 a_position;
   void main() {
@@ -20,7 +20,7 @@ var Ship = {
   
   uniform int ITERNUM;
   uniform vec2 iResolution;
-  uniform vec2 PAN;
+  uniform vec4 PAN;
   uniform float ZOOM;
   uniform bool smoothResult;
   uniform int whichColor;
@@ -86,58 +86,76 @@ var Ship = {
 
     return vec3(newR, newG, newB);
   }
-
-  float smooth(float l, vec2 z) {
-    float sl = l - log2(log2(dot(z,z))) + 2.0;
+  
+  vec2 DoubleMul(vec2 a, vec2 b) {
+    vec2 c;
+    c.y = a.y * b.y;
+    float l = a.x * b.x;
+    float r = a.x * b.y + a.y * b.x;
+    
+    c.x = l;
+    c.y += r;
+    
+    return c;
+  }
+  
+  float smooth(float l, vec4 z) {
+    //float sl = l - log2(log2(dot(z,z))) + 2.0;
+    float sl = l - log2(log2(dot((DoubleMul(z.xz,z.xz) + DoubleMul(z.yw,z.yw)),vec2(1)))) + 2.0;
     return sl;
   }
-    
+
   void main() {
     if(ITERNUM != 0) {
       iterNum = ITERNUM;
     } else {
       iterNum = NUM_STEPS;
     }
-
+  
     if(ZOOM != 0.0) {
       zoom = ZOOM;
     } else {
       zoom = ZOOM_FACTOR;
     }
-
-    vec2 pixel = (gl_FragCoord.xy / iResolution.xy - 0.5) * zoom;
-    pixel.x -= 0.5;
-    pixel.y *= -1.0;
     
-    vec2 Z = vec2(0.0);
-    vec2 C = pixel;
+    vec4 Z = vec4(0.0);
+    vec4 C = vec4(0.0);
     int steps;
-  
+    
+    vec4 pan = PAN;
+    //vec4 pan = vec4(-0.31750109, 0.48999993, 0.00000000000000588, 0.0);
+
+    vec2 pixel;
+    pixel = (gl_FragCoord.xy / iResolution.xy - 0.5) * zoom; 
+    //pixel.x -= 0.5;
+    
+    C.zw = pixel;
+    C -= pan;
+    
     for (int i = 0; i < 100000; i++) {
-      vec2 Z2;
-      Z2.x = Z.x*Z.x - Z.y*Z.y;
-      Z2.y = abs(2.0*(Z.x*Z.y));
+      vec4 Z2;
+      Z2.xz = DoubleMul(Z.xz,Z.xz) - DoubleMul(Z.yw,Z.yw);
+      Z2.yw = 2.0*DoubleMul(Z.xz,Z.yw);
       Z = Z2 + C;
-
+      
       steps = i;
-
-      float modulus = sqrt(Z.x*Z.x + Z.y*Z.y);
-      if (modulus > 20.0) {
+     
+      if ( dot((DoubleMul(Z.xz,Z.xz) + DoubleMul(Z.yw,Z.yw)),vec2(1)) > 20.0 ) {
         break;
       }
-
+      
       if(i == iterNum) {
         break;
       }
     }
-
+    
     if (steps >= iterNum-1) {
         //Paint black
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
     } else {
         //Convert steps counter to float
         float l = float(steps);
-
+        
         //Calculate color
         vec3 col = vec3(0.0);
         
@@ -151,10 +169,11 @@ var Ship = {
         } else {
           col = getColor2(l);
         }
-  
+        
         //Paint with color
         gl_FragColor = vec4(col, 1.0);
     }
   }
   `
 }
+

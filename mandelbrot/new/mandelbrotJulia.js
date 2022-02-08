@@ -9,6 +9,7 @@ var MandelbrotJulia = {
   #define NUM_STEPS   50
   #define ZOOM_FACTOR 3.0
   #define X_OFFSET    0.5
+  #define Y_OFFSET    0.0
   
   #ifdef GL_FRAGMENT_PRECISION_HIGH
     precision highp float;
@@ -18,12 +19,15 @@ var MandelbrotJulia = {
   precision mediump int;
   
   uniform int ITERNUM;
-  uniform float screenx;
-  uniform float screeny;
-  uniform float X;
-  uniform float Y;
+  uniform vec2 iResolution;
+  uniform vec2 PAN;
+  uniform vec2 POS;
+  uniform float ZOOM;
+  uniform bool smoothResult;
+  uniform int whichColor;
   
   int iterNum;
+  float zoom;
   
   float hue2rgb(float p, float q, float t){
     if(t < 0.0) t += 1.0;
@@ -33,62 +37,125 @@ var MandelbrotJulia = {
     if(t < 0.66) return p + (q - p) * (0.66 - t) * 6.0;
     return p;
   }
+
+  vec3 getColor1(float i) {
+    float hueValue = (1.0 / 50.0) * i;
+      
+    float q = 0.5 + 0.8 - 0.5 * 0.8;
+    float p = 2.0 * 0.5 - q;
+      
+    float r = hue2rgb(p, q, hueValue + 0.33);
+    float g = hue2rgb(p, q, hueValue);
+    float b = hue2rgb(p, q, hueValue - 0.33);
+
+    return vec3(r, g, b);
+  }
+
+  vec3 getColor2(float i) {
+    vec3 col = vec3(0.0);
+
+    col += 0.5 + 0.5*cos( 3.0 + i * 0.15 + vec3(0.0,0.6,1.0));
+
+    return col;
+  }
+  
+  vec3 getColor3(float i, vec3 color) {
+    vec3 col = vec3(0.0);
+
+    col += 0.5 + 0.5*cos( 3.0 + i * 0.15 + color);
+
+    return col;
+  }
+  
+  float remap(float value, float from1, float to1, float from2, float to2) {
+    return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+  }
+  
+  vec3 getColor4(float i, vec3 color1, vec3 color2) {
+    float minR = min(color1.x, color2.x);
+    float minG = min(color1.y, color2.y);
+    float minB = min(color1.z, color2.z);
+    
+    float maxR = max(color1.x, color2.x);
+    float maxG = max(color1.y, color2.y);
+    float maxB = max(color1.z, color2.z);
+    
+    float max = float(iterNum);
+    float newR = remap(i, 0.0, max, minR, maxR);
+    float newG = remap(i, 0.0, max, minG, maxG);
+    float newB = remap(i, 0.0, max, minB, maxB);
+
+    return vec3(newR, newG, newB);
+  }
+
+  float smooth(float l, vec2 z) {
+    float sl = l - log2(log2(dot(z,z))) + 2.0;
+    return sl;
+  }
     
   void main() {
-    if(ITERNUM > 0) {
+    if(ITERNUM != 0) {
       iterNum = ITERNUM;
     } else {
       iterNum = NUM_STEPS;
     }
-  
-    vec2 z;
-    float x,y;
-    int steps;
-    int max;
-    max = 50;
-    float normalizedX = (gl_FragCoord.x - (screenx / 2.0)) / screenx * ZOOM_FACTOR *
-                        (screenx / screeny) - X_OFFSET;
-    float normalizedY = (gl_FragCoord.y - (screeny / 2.0)) / screeny * ZOOM_FACTOR;
-  
-    if(X > 0.0) {
-      //replace with X Y
-      x = (X - (screenx / 2.0)) / screenx * ZOOM_FACTOR *
-                        (screenx / screeny) - X_OFFSET;
-      y = (Y - (screeny / 2.0)) / screeny * ZOOM_FACTOR;
+
+    if(ZOOM != 0.0) {
+      zoom = ZOOM;
+    } else {
+      zoom = ZOOM_FACTOR;
     }
 
-    z.x = normalizedX;
-    z.y = normalizedY;
+    vec2 pixel = (gl_FragCoord.xy / iResolution - 0.5) * zoom;
+    
+    vec2 point = (POS.xy - 0.5) * zoom;
+    point.y *= -1.0;
+    
+    vec2 Z = pixel;
+    vec2 C = point;
+    int steps;
   
     for (int i = 0; i < 100000; i++) {
+      vec2 Z2;
+      Z2.x = Z.x*Z.x - Z.y*Z.y;
+      Z2.y = 2.0*(Z.x*Z.y);
+      Z = Z2 + C;
+
+      steps = i;
+
+      float modulus = sqrt(Z.x*Z.x + Z.y*Z.y);
+      if (modulus > 20.0) {
+        break;
+      }
+
       if(i == iterNum) {
         break;
       }
-      
-      steps = i;
-      x = (z.x * z.x - z.y * z.y) + normalizedX;
-      y = (z.y * z.x + z.x * z.y) + normalizedY;
-      if((x * x + y * y) > 4.0) {
-        break;
-      }
-      z.x = x;
-      z.y = y;
     }
-  
-    if (steps == iterNum-1) {
+
+    if (steps >= iterNum-1) {
+        //Paint black
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
     } else {
-        float i_float = float(steps);
-        float hueValue = (1.0 / 50.0) * i_float;
+        //Convert steps counter to float
+        float l = float(steps);
+
+        //Calculate color
+        vec3 col = vec3(0.0);
         
-        float q = 0.5 + 0.8 - 0.5 * 0.8;
-        float p = 2.0 * 0.5 - q;
+        //If smooth, make it smooth :D
+        if(smoothResult) {
+          l = smooth(l,Z);
+        }
+        
+        if(whichColor == 0) {
+          col = getColor1(l);
+        } else {
+          col = getColor2(l);
+        }
   
-        float r = hue2rgb(p, q, hueValue + 0.33);
-        float g = hue2rgb(p, q, hueValue);
-        float b = hue2rgb(p, q, hueValue - 0.33);
-  
-        gl_FragColor = vec4(r, g, b, 1.0);
+        //Paint with color
+        gl_FragColor = vec4(col, 1.0);
     }
   }
   `

@@ -21,9 +21,11 @@
     </header>
     <body>
         <script src="mandelbrot.js"></script>
+        <script src="mandelbrotDP.js"></script>
         <script src="mandelbrotJulia.js"></script>
         <script src="ship.js"></script>
-        <script src="main.js"></script>
+        <script src="shipJulia.js"></script>
+        <script src="main.js" defer></script>
 
         <div class="card controls">
             <div class="cardTitle">Controls</div>
@@ -36,16 +38,16 @@
                     <button class="renderButton" type="button" id="julia" onclick="alwaysJulia()">Enable always Julia</button>
                 </div>
                 <label for="iterations" class="margin_left">Iterations: </label>
-                <input type="number" id="iterations" value="50" onkeyup="inputChanged(this.value)">
+                <input type="number" id="iterations" value="500" onkeyup="inputChanged(this.value)">
             </div>
             <div class="cardTitle">
                 Coloring
             </div>
             <div class="cardBody">
-                <input type="radio" id="rainbow" name="color" value="0" checked onclick="changeColoring(parseInt(this.value))">
+                <input type="radio" id="rainbow" name="color" value="0" onclick="changeColoring(parseInt(this.value))">
                 <label for="rainbow" style="margin-left: 12px" class="radioInput">Rainbow</label>
 
-                <input type="radio" id="2_color" name="color" value="1" onclick="changeColoring(parseInt(this.value))">
+                <input type="radio" id="2_color" name="color" value="1" checked onclick="changeColoring(parseInt(this.value))">
                 <label for="2_color" class="radioInput">2-Color</label>
 
                 <label for="checkbox" class="margin_left">Smooth</label>

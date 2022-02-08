@@ -1,4 +1,4 @@
-var Ship = {
+var ShipJulia = {
   vertex: `
   attribute vec2 a_position;
   void main() {
@@ -6,7 +6,7 @@ var Ship = {
   }
   `,
   fragment: `
-  #define NUM_STEPS   500
+  #define NUM_STEPS   50
   #define ZOOM_FACTOR 3.0
   #define X_OFFSET    0.5
   #define Y_OFFSET    0.0
@@ -21,6 +21,7 @@ var Ship = {
   uniform int ITERNUM;
   uniform vec2 iResolution;
   uniform vec2 PAN;
+  uniform vec2 POS;
   uniform float ZOOM;
   uniform bool smoothResult;
   uniform int whichColor;
@@ -105,12 +106,13 @@ var Ship = {
       zoom = ZOOM_FACTOR;
     }
 
-    vec2 pixel = (gl_FragCoord.xy / iResolution.xy - 0.5) * zoom;
-    pixel.x -= 0.5;
-    pixel.y *= -1.0;
+    vec2 pixel = (gl_FragCoord.xy / iResolution - 0.5) * zoom;
     
-    vec2 Z = vec2(0.0);
-    vec2 C = pixel;
+    vec2 point = (POS.xy - 0.5) * zoom;
+    point.y *= -1.0;
+    
+    vec2 Z = pixel;
+    vec2 C = point;
     int steps;
   
     for (int i = 0; i < 100000; i++) {
