@@ -1,12 +1,10 @@
 let offsets = {
     Mandelbrot: { //-0.31750109, 0.48999993, 0.00000000000000588, 0.0
-        x: 0.51750109, //1.25698
-        y: 0.68999993, //0.37948
-        z: 0.00000000000000588, //X
-        w: 0    //Y
+        x: 1.2485, //1.25698
+        y: 0.01278 //0.37948
     },
     Ship: {
-        x: 1.77006,
+        x: 1.27006,
         y: 0.05118
     }
 }
@@ -96,7 +94,7 @@ function Animate() {
     if(!animationRunning) {
         //Run animation
         zoom = 3.0;
-        SET_ATTR_VEC4F("PAN", offsets[current].x, offsets[current].y, offsets[current].z, offsets[current].w)
+        SET_ATTR_VEC2F("PAN", offsets[current].x, offsets[current].y);
         document.getElementById('animation').innerHTML = "Stop";
         animateIn = true;
         animationRunning = true;
@@ -248,7 +246,7 @@ function render() {
             zoom += zoom*.003* (16/dt);
         }
 
-        if(zoom < 0.00000000000000001) { //0.00000000000000001 with dp 0.00001 without
+        if(zoom < 0.00001) { //0.00000000000000001 with dp 0.00001 without
             //Go back
             animateIn = false;
             //Animate();
