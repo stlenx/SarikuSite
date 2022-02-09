@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <meta name="title" content="Mandelbrot Set - and other fractal stuff">
+    <meta name="description" content="Play around with different fractals! and shit">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sariku.gay/mandelbrot/index.html">
+    <meta property="og:title" content="Mandelbrot Set - and other fractal stuff">
+    <meta property="og:description" content="Play around with different fractals! and shit">
+    <meta property="og:image" content="https://sariku.gay/mandelbrot/733fcb3147fa883f2393c5efe66c4195.jpg">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://sariku.gay/mandelbrot/index.html">
+    <meta property="twitter:title" content="Mandelbrot Set - and other fractal stuff">
+    <meta property="twitter:description" content="Play around with different fractals! and shit">
+    <meta property="twitter:image" content="https://sariku.gay/mandelbrot/733fcb3147fa883f2393c5efe66c4195.jpg">
+
+    <title>Fractals</title>
+    <link rel="stylesheet" href="styleFractals.css">
+    <script src="../dist/gpu-browser.js"></script>
+</head>
+    <body>
+
+    <div>
+        <div class="controls">
+            <div class="buttons">
+                <button class="renderButton" type="button" onclick="MandelbrotSet()">Mandelbrot</button>
+                <button class="renderButton" type="button" onclick="BurningShip()">Burning ship</button>
+                <button class="renderButton" type="button" id="animation" onclick="Animate()">Animate</button>
+                <button class="renderButton" type="button" onclick="location.href = '../index.html';">Go back</button>
+                <button class="renderButton" type="button" id="julia" onclick="alwaysJulia()">Enable always Julia</button>
+            </div>
+            <input type="number" id="iterations" value="50">
+        </div>
+        <canvas id="canvas" width="1000" height="1000"></canvas>
+        <script src="main.js"></script>
+    </div>
+
+    </body>
+</html>
