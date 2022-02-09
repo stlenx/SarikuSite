@@ -112,7 +112,7 @@ var Mandelbrot = {
     vec2 C = pixel;
     int steps;
     
-    C -= PAN;
+    C += PAN;
   
     for (int i = 0; i < 100000; i++) {
       vec2 Z2;

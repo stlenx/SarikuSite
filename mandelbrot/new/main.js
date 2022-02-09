@@ -1,10 +1,10 @@
 let offsets = {
     Mandelbrot: { //-0.31750109, 0.48999993, 0.00000000000000588, 0.0
-        x: 1.2485, //1.25698
-        y: 0.01278 //0.37948
+        x: -1.2485, //1.25698
+        y: -0.01278 //0.37948
     },
     Ship: {
-        x: 1.27006,
+        x: -1.27006,
         y: 0.05118
     }
 }
@@ -55,7 +55,6 @@ function inputChanged(value) {
 
 function MandelbrotSet() {
     useShader(Mandelbrot);
-
     SET_ATTR_INT("ITERNUM", iterations);
     SET_ATTR_INT("whichColor", colorFunction);
     SET_ATTR_INT("smoothResult", smoothReuslt);
@@ -64,7 +63,6 @@ function MandelbrotSet() {
 
 function BurningShip() {
     useShader(Ship);
-
     SET_ATTR_INT("ITERNUM", iterations);
     SET_ATTR_INT("whichColor", colorFunction);
     SET_ATTR_INT("smoothResult", smoothReuslt);
@@ -78,6 +76,8 @@ function UpdateJulia(x, y) {
     SET_ATTR_INT("smoothResult", smoothReuslt);
 }
 
+//#region coloring attributes
+
 function smoothMaybe(bool) {
     SET_ATTR_INT("smoothResult", bool);
     smoothReuslt = bool;
@@ -87,6 +87,8 @@ function changeColoring(coloring) {
     SET_ATTR_INT("whichColor", coloring);
     colorFunction = coloring;
 }
+
+//#endregion
 
 let animationRunning = false;
 let animateIn = true;
@@ -133,42 +135,40 @@ function alwaysJulia() {
     }
 }
 
-
 canvas.addEventListener("mousemove", (ev => {
     if(veryJulia) {
         UpdateJulia(ev.offsetX, ev.offsetY);
     }
 }))
 
+//#region SET_ATTR
+
 function SET_ATTR_INT(gl_var_name, val){
     let loc = gl.getUniformLocation(program, gl_var_name);
-    gl.useProgram(program);
     gl.uniform1i(loc, val);
 }
 
 function SET_ATTR_FLOAT(gl_var_name, val){
     let loc = gl.getUniformLocation(program, gl_var_name);
-    gl.useProgram(program);
     gl.uniform1f(loc, val);
 }
 
 function SET_ATTR_VEC4F(gl_var_name, val1, val2, val3, val4) {
     let loc = gl.getUniformLocation(program, gl_var_name);
-    gl.useProgram(program);
     gl.uniform4f(loc, val1, val2, val3, val4);
 }
 
 function SET_ATTR_VEC3F(gl_var_name, val1, val2, val3) {
     let loc = gl.getUniformLocation(program, gl_var_name);
-    gl.useProgram(program);
     gl.uniform3f(loc, val1, val2, val3);
 }
 
 function SET_ATTR_VEC2F(gl_var_name, val1, val2) {
     let loc = gl.getUniformLocation(program, gl_var_name);
-    gl.useProgram(program);
     gl.uniform2f(loc, val1, val2);
 }
+
+//#endregion
 
 function useShader(shader) {
     //Grab and compile vertex shader
@@ -194,9 +194,7 @@ function useShader(shader) {
 }
 
 function init() {
-    let isMobile = window.mobileCheck();
-
-    if(isMobile) {
+    if(window.mobileCheck()) {
         res = Math.min(window.innerWidth, window.innerHeight);
     } else {
         res = Math.min(window.innerWidth, window.innerHeight) * .98;
@@ -257,6 +255,18 @@ function render() {
         }
     }
 
+    if (!stop_zooming) { /* zooming in progress */
+        SET_ATTR_VEC2F("PAN", zoom_center.x, zoom_center.y);
+        SET_ATTR_FLOAT("ZOOM", zoom);
+
+        /* zoom in */
+        zoom *= zoom_factor;
+
+        /* move zoom center towards target */
+        zoom_center.x += 0.1 * (target_zoom_center.x - zoom_center.x);
+        zoom_center.y += 0.1 * ( target_zoom_center.y - zoom_center.y);
+    }
+
     gl.clearColor(1.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -266,3 +276,22 @@ function render() {
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
+
+
+//#region Manual zoom
+let zoom_center = {x: 0, y: 0};
+let target_zoom_center = {x: 0, y: 0};
+let stop_zooming = true;
+let zoom_factor = 1.0;
+
+canvas.onmousedown = function(e) {
+    let x_part = e.offsetX / canvas.width;
+    let y_part = e.offsetY / canvas.height;
+    target_zoom_center.x = zoom_center.x - zoom / 2.0 + x_part * zoom;
+    target_zoom_center.y = zoom_center.y + zoom / 2.0 - y_part * zoom;
+    stop_zooming = false;
+    zoom_factor = e.buttons & 1 ? 0.99 : 1.01;
+}
+canvas.oncontextmenu = function(){return false;}
+canvas.onmouseup = function() { stop_zooming = true; }
+//#endregion
