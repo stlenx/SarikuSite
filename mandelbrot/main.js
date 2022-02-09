@@ -239,9 +239,9 @@ function render() {
         SET_ATTR_FLOAT("ZOOM", zoom);
 
         if(animateIn) {
-            zoom -= zoom*.003* (16/dt);
+            zoom -= (zoom*.005) * (dt/6);
         } else {
-            zoom += zoom*.003* (16/dt);
+            zoom += (zoom*.005) * (dt/6);
         }
 
         if(zoom < 0.00001) { //0.00000000000000001 with dp 0.00001 without
@@ -263,8 +263,8 @@ function render() {
         zoom *= zoom_factor;
 
         /* move zoom center towards target */
-        zoom_center.x += 0.1 * (target_zoom_center.x - zoom_center.x);
-        zoom_center.y += 0.1 * ( target_zoom_center.y - zoom_center.y);
+        zoom_center.x += (0.1 * (target_zoom_center.x - zoom_center.x)) * (dt/16);
+        zoom_center.y += (0.1 * (target_zoom_center.y - zoom_center.y)) * (dt/16);
     }
 
     gl.clearColor(1.0, 0.0, 0.0, 1.0);
