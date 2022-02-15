@@ -68,6 +68,19 @@ body {
     left: 0;
 }
 
+
+canvas {
+    position: absolute;
+    top: 0;
+}
+#background {
+    z-index: 0;
+}
+#bannerCanvas {
+    z-index: 1;
+}
+
+
 .site {
     margin-top: 20%;
     z-index: 9;

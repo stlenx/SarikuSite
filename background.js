@@ -1,43 +1,18 @@
-let canvas = document.getElementById('bannerCanvas'),
-    can_w = parseInt(document.body.scrollWidth),
-    can_h = parseInt(document.body.scrollHeight),
-    ctx = canvas.getContext('2d');
+let canvas = document.getElementById('background');
+let canvas2d = document.getElementById('bannerCanvas');
+let gl = canvas.getContext("webgl");
+let ctx = canvas2d.getContext("2d");
 
-let ball = {
-        x: 0,
-        y: 0,
-        vx: 0,
-        vy: 0,
-        r: 0,
-        alpha: 1,
-        phase: 0,
-        cR : 3
-    },
-    R = 2,
-    balls = [],
-    alpha_f = 0.03,
-// Line
-    link_line_width = 0.8,
-    dis_limit = 300,
-    mouse_in = false,
-    mouse_ball = {
-        x: 0,
-        y: 0,
-        vx: 0,
-        vy: 0,
-        r: 0,
-        type: 'mouse'
-    };
-
-//#region Banner
-
-let particleArray = [];
-let particleSize = window.innerWidth * 0.0052;
 let mouse = {
     x: null,
     y: null,
     radius: window.innerWidth * 0.078
 }
+
+//#region Banner
+
+let particleArray = [];
+let particleSize = window.innerWidth * 0.0052;
 
 let data;
 
@@ -158,213 +133,196 @@ function connect() {
     }
 }
 
+
 //#endregion
 
-// Random speed
-function getRandomSpeed(pos){
-    let  min = -1,
-        max = 1;
-    switch(pos){
-        case 'top':
-            return [randomNumFrom(min, max), randomNumFrom(0.1, max)];
-        case 'right':
-            return [randomNumFrom(min, -0.1), randomNumFrom(min, max)];
-        case 'bottom':
-            return [randomNumFrom(min, max), randomNumFrom(min, -0.1)];
-        case 'left':
-            return [randomNumFrom(0.1, max), randomNumFrom(min, max)];
-        default:
-            return;
+//#region METABALLS
+let Metaballs = {
+    vertex: `
+  attribute vec2 a_position;
+  void main() {
+      gl_Position = vec4(a_position, 0, 1);
+  }
+  `,
+    fragment: `
+  precision highp float;
+
+  uniform vec3 metaballs[30]; //Hard coding for now
+  uniform vec2 iResolution;
+  uniform vec3 backgroundColor;
+
+  void main(){
+    float x = gl_FragCoord.x;
+    float y = gl_FragCoord.y;
+    
+    float sum = 0.0;
+
+    for (int i = 0; i < 30; i++) {
+      vec3 metaball = metaballs[i];
+      float dx = metaball.x - x;
+      float dy = metaball.y - y;
+      float radius = metaball.z;
+      
+      sum += (radius * radius) / (dx * dx + dy * dy);
     }
-}
-
-function randomArrayItem(arr){
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function randomNumFrom(min, max){
-    return Math.random()*(max - min) + min;
-}
-
-// Random Ball
-function getRandomBall(){
-    let pos = randomArrayItem(['top', 'right', 'bottom', 'left']);
-    switch(pos){
-        case 'top':
-            return {
-                x: randomSidePos(can_w),
-                y: -R,
-                vx: getRandomSpeed('top')[0],
-                vy: getRandomSpeed('top')[1],
-                r: R,
-                alpha: 1,
-                phase: randomNumFrom(0, 10),
-                cR : randomNumFrom(0,255)
-            }
-        case 'right':
-            return {
-                x: can_w + R,
-                y: randomSidePos(can_h),
-                vx: getRandomSpeed('right')[0],
-                vy: getRandomSpeed('right')[1],
-                r: R,
-                alpha: 1,
-                phase: randomNumFrom(0, 10),
-                cR : randomNumFrom(0,255)
-            }
-        case 'bottom':
-            return {
-                x: randomSidePos(can_w),
-                y: can_h + R,
-                vx: getRandomSpeed('bottom')[0],
-                vy: getRandomSpeed('bottom')[1],
-                r: R,
-                alpha: 1,
-                phase: randomNumFrom(0, 10),
-                cR : randomNumFrom(0,255)
-            }
-        case 'left':
-            return {
-                x: -R,
-                y: randomSidePos(can_h),
-                vx: getRandomSpeed('left')[0],
-                vy: getRandomSpeed('left')[1],
-                r: R,
-                alpha: 1,
-                phase: randomNumFrom(0, 10),
-                cR : randomNumFrom(0,255)
-            }
+    
+    if (sum >= 0.99) {
+        gl_FragColor = vec4(mix(vec3(x / iResolution.x, y / iResolution.y, 1.0), backgroundColor, max(0.0, 1.0 - (sum - 0.99) * 100.0)), 1.0);
+        return;
     }
+    
+    gl_FragColor = vec4(0.0);
+  }
+  `
 }
 
-function randomSidePos(length){
-    return Math.ceil(Math.random() * length);
+let program;
+
+let numMetaballs = 30;
+let metaballs = [];
+
+initCanvas();
+
+function useShader(shader) {
+    //Grab and compile vertex shader
+    let gl_vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(gl_vertexShader, shader.vertex);
+    gl.compileShader(gl_vertexShader);
+
+    //Create and compile fragment shader (Superior)
+    let gl_fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(gl_fragmentShader, shader.fragment);
+    gl.compileShader(gl_fragmentShader);
+
+    //Create the program with the vertex and fragment shaders
+    program = gl.createProgram();
+    gl.attachShader(program, gl_vertexShader);
+    gl.attachShader(program, gl_fragmentShader);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    //Set resolution of shader
+    let loc = gl.getUniformLocation(program, "iResolution");
+    gl.uniform2f(loc, canvas.width, canvas.height);
 }
 
-// Draw Ball
-function renderBalls(){
-    Array.prototype.forEach.call(balls, function(b){
-        if(!b.hasOwnProperty('type')){
+function SET_ATTR_VEC3F(gl_var_name, val1, val2, val3) {
+    let loc = gl.getUniformLocation(program, gl_var_name);
+    gl.uniform3f(loc, val1, val2, val3);
+}
 
-            ctx.fillStyle = 'rgba('+b.cR+',0,255,'+b.alpha+')';
-            ctx.beginPath();
-            ctx.arc(b.x, b.y, R, 0, Math.PI*2, true);
-            ctx.closePath();
-            ctx.fill();
-        }
+function SET_ATTR_3FV(gl_var_name, val) {
+    let loc = gl.getUniformLocation(program, gl_var_name);
+    gl.uniform3fv(loc, val);
+}
+
+function UpdateMetaballs() {
+    metaballs.forEach(metaball => {
+        metaball.x += metaball.vx;
+        metaball.y += metaball.vy;
+
+        if (metaball.x < metaball.r || metaball.x > canvas.width - metaball.r) metaball.vx *= -1;
+        if (metaball.y < metaball.r || metaball.y > canvas.height - metaball.r) metaball.vy *= -1;
+    })
+
+    let dataToSendToGPU = new Float32Array(3 * numMetaballs);
+    for (let i = 0; i < numMetaballs; i++) {
+        let baseIndex = 3 * i;
+        let mb = metaballs[i];
+        dataToSendToGPU[baseIndex] = mb.x;
+        dataToSendToGPU[baseIndex + 1] = mb.y;
+        dataToSendToGPU[baseIndex + 2] = mb.r;
+    }
+
+    SET_ATTR_3FV("metaballs", dataToSendToGPU);
+}
+
+function DrawMetaballs() {
+    let color = window.getComputedStyle( document.body ,null).getPropertyValue('background-color');
+    let colors = color.replace("rgb(", "").replace(")", "").split(",")
+
+    let r = Remap(parseInt(colors[0]), 0, 255, 0, 1);
+    let g = Remap(parseInt(colors[1]), 0, 255, 0, 1);
+    let b = Remap(parseInt(colors[2]), 0, 255, 0, 1);
+
+    SET_ATTR_VEC3F("backgroundColor", r, g, b);
+
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    positionLocation = gl.getAttribLocation(program, "a_position");
+    gl.enableVertexAttribArray(positionLocation);
+    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+}
+
+//#region INIT
+for (let i = 0; i < numMetaballs; i++) {
+    let radius = Math.random() * 60 + 40;
+    metaballs.push({
+        x: Math.random() * (canvas.width - 2 * radius) + radius,
+        y: Math.random() * (canvas.height - 2 * radius) + radius,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3,
+        r: radius * 0.75
     });
 }
 
-// Update balls
-function updateBalls(dt){
-    let new_balls = [];
-    Array.prototype.forEach.call(balls, function(b){
-        b.x += b.vx * (dt / 16);
-        b.y += b.vy * (dt / 16);
+gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-        if(b.x > -(50) && b.x < (can_w+50) && b.y > -(50) && b.y < (can_h+50)){
-            new_balls.push(b);
-        }
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array([
+        -1.0, -1.0,
+        1.0, -1.0,
+        -1.0,  1.0,
+        -1.0,  1.0,
+        1.0, -1.0,
+        1.0,  1.0]),
+    gl.STATIC_DRAW
+);
 
-        // alpha change
-        b.phase += alpha_f;
-        b.alpha = Math.abs(Math.cos(b.phase));
-    });
+useShader(Metaballs);
+//#endregion
 
-    balls = new_balls.slice(0);
-}
 
-// Draw lines
-function renderLines(){
-    let fraction, alpha;
-    for (let i = 0; i < balls.length; i++) {
-        for (let j = i + 1; j < balls.length; j++) {
-
-            fraction = getDisOf(balls[i], balls[j]) / dis_limit;
-
-            if(fraction < 1) {
-                alpha = (1 - fraction).toString();
-
-                ctx.strokeStyle = 'rgba(150,150,150,'+alpha+')';
-                ctx.lineWidth = link_line_width;
-
-                ctx.beginPath();
-                ctx.moveTo(balls[i].x, balls[i].y);
-                ctx.lineTo(balls[j].x, balls[j].y);
-                ctx.stroke();
-                ctx.closePath();
-            }
-        }
-    }
-}
-
-// calculate distance between two points
-function getDisOf(b1, b2){
-    let  delta_x = Math.abs(b1.x - b2.x),
-        delta_y = Math.abs(b1.y - b2.y);
-
-    return Math.sqrt(delta_x*delta_x + delta_y*delta_y);
-}
-
-// add balls if there a little balls
-function addBallIfy(){
-    if(balls.length < 100){
-        balls.push(getRandomBall());
-    }
-}
-
+//#endregion
 
 // Render
-let lastFrame = Date.now();
 function render(){
-    let now = Date.now();
-    let dt = now - lastFrame;
-    lastFrame = now;
-
-    ctx.clearRect(0, 0, can_w, can_h);
-
-    renderBalls();
-
-    renderLines();
-
-    updateBalls(dt);
-
-    addBallIfy();
-
-    connect();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     particleArray.forEach((particle) => {
         particle.Update()
         particle.Draw()
     })
 
-    window.requestAnimationFrame(render);
-}
+    UpdateMetaballs();
 
-// Init Balls
-function initBalls(num){
-    for(let i = 1; i <= num; i++){
-        balls.push({
-            x: randomSidePos(can_w),
-            y: randomSidePos(can_h),
-            vx: getRandomSpeed('top')[0],
-            vy: getRandomSpeed('top')[1],
-            r: R,
-            alpha: 1,
-            phase: randomNumFrom(0, 10),
-            cR: randomNumFrom(0,255)
-        });
-    }
+    DrawMetaballs();
+
+    window.requestAnimationFrame(render);
 }
 
 // Init Canvas
 function initCanvas(){
-    canvas.setAttribute('width', Math.max(document.body.scrollWidth, window.innerWidth));
-    canvas.setAttribute('height', Math.max(document.body.scrollHeight, window.innerHeight));
+    let body = document.body,
+        html = document.documentElement;
 
-    can_w = parseInt(canvas.getAttribute('width'));
-    can_h = parseInt(canvas.getAttribute('height'));
+    let height = Math.max( body.scrollHeight, body.offsetHeight,
+        html.clientHeight, html.scrollHeight, html.offsetHeight );
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight * 1.8;
+
+
+    canvas2d.width = window.innerWidth;
+    canvas2d.height = window.innerHeight * 1.8;
+    useShader(Metaballs);
 }
+
 window.addEventListener('resize', function(e){
     console.log('Window Resize...');
     initCanvas();
@@ -376,36 +334,14 @@ window.addEventListener('load', function(e){
     initCanvas();
 });
 
-function goMovie(){
+function goMovie() {
     initCanvas();
-    initBalls(30);
     window.requestAnimationFrame(render);
 }
 
 goMovie();
 
-// Mouse effect
-document.body.addEventListener('mouseenter', function(){
-    //console.log('mouseenter');
-    mouse_in = true;
-    balls.push(mouse_ball);
-});
-
-document.body.addEventListener('mouseleave', function(){
-    //console.log('mouseleave');
-    mouse_in = false;
-    let new_balls = [];
-    Array.prototype.forEach.call(balls, function(b){
-        if(!b.hasOwnProperty('type')){
-            new_balls.push(b);
-        }
-    });
-    balls = new_balls.slice(0);
-});
-
 document.body.addEventListener('mousemove', function(e){
-    mouse_ball.x = e.pageX;
-    mouse_ball.y = e.pageY;
     mouse.x = e.pageX;
     mouse.y = e.pageY;
 });

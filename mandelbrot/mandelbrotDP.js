@@ -20,7 +20,7 @@ let MandelbrotDP = {
   
   uniform int ITERNUM;
   uniform vec2 iResolution;
-  uniform vec4 PAN;
+  uniform vec2 PAN;
   uniform float ZOOM;
   uniform bool smoothResult;
   uniform int whichColor;
@@ -86,61 +86,126 @@ let MandelbrotDP = {
 
     return vec3(newR, newG, newB);
   }
-  
-  vec2 DoubleMul(vec2 a, vec2 b) {
-    vec2 c;
-    c.y = a.y * b.y;
-    float l = a.x * b.x;
-    float r = a.x * b.y + a.y * b.x;
-    
-    c.x = l;
-    c.y += r;
-    
-    return c;
-  }
-  
-  float smooth(float l, vec4 z) {
-    //float sl = l - log2(log2(dot(z,z))) + 2.0;
-    float sl = l - log2(log2(dot((DoubleMul(z.xz,z.xz) + DoubleMul(z.yw,z.yw)),vec2(1)))) + 2.0;
+
+  float smooth(float l, vec2 z) {
+    float sl = l - log2(log2(dot(z,z))) + 2.0;
     return sl;
   }
+  
+  vec2 quickTwoSum(float a, float b) {
+    float s = a + b;
+    float e = b - (s - a);
+    return vec2(s, e);
+  }
+  
+  vec2 twoSum(float a, float b) {
+    float s = a + b;
+    float v = s - a;
+    float e = (a - (s - v)) + (b - v);
+    return vec2(s, e);
+  }
+  
+  vec2 ds_add (vec2 a, vec2 b) {
+    vec2 s, t;
+    s = twoSum(a.x, b.x);
+    t = twoSum(a.y, b.y);
+    s.y += t.x;
+    s = quickTwoSum(s.x, s.y);
+    s.y += t.y;
+    s = quickTwoSum(s.x, s.y);
+    return s;
+  }
 
+  vec2 ds_sub (vec2 dsa, vec2 dsb) {
+    vec2 dsc;
+    float e, t1, t2;
+    
+    t1 = dsa.x - dsb.x;
+    e = t1 - dsa.x;
+    t2 = ((-dsb.x - e) + (dsa.x - (t1 - e))) + dsa.y - dsb.y;
+    
+    dsc.x = t1 + t2;
+    dsc.y = t2 - (dsc.x - t1);
+    return dsc;
+  }
+
+  float ds_compare(vec2 dsa, vec2 dsb) {
+    if (dsa.x < dsb.x) return -1.0;
+    if (dsa.x == dsb.x)  {
+      if (dsa.y < dsb.y) return -1.0;
+      else if (dsa.y == dsb.y) return 0.0;
+      else return 1.0;
+    }
+    else return 1.0;
+  }
+  
+  vec2 ds_set(float a) {
+    float split = 4097.0;
+    float t = a * split;
+    float a_hi = t - (t - a);
+    float a_lo = a - a_hi;
+    return vec2(a_hi, a_lo);
+  }
+  
+  vec2 twoProd(float a, float b) {
+    float p = a * b;
+    vec2 aS = ds_set(a);
+    vec2 bS = ds_set(b);
+    float err = ((aS.x * bS.x - p) + aS.x * bS.y + aS.y * bS.x) + aS.y * bS.y;
+    return vec2(p, err);
+  }
+
+  vec2 ds_mul (vec2 a, vec2 b) {
+    vec2 p;
+    
+    p = twoProd(a.x, b.x);
+    p.y += a.x * b.y;
+    p.y += a.y * b.x;
+    p = quickTwoSum(p.x, p.y);
+    return p;
+  }
+    
   void main() {
     if(ITERNUM != 0) {
       iterNum = ITERNUM;
     } else {
       iterNum = NUM_STEPS;
     }
-  
+
     if(ZOOM != 0.0) {
       zoom = ZOOM;
     } else {
       zoom = ZOOM_FACTOR;
     }
+
+    vec2 pixel = (gl_FragCoord.xy / iResolution.xy - 0.5);
+    
+    vec2 cx = ds_set(pixel.x);
+    vec2 cy = ds_set(pixel.y);
+    
+    cx = ds_mul(cx, ds_set(zoom));
+    cy = ds_mul(cy, ds_set(zoom));
+    cx = ds_sub(cx, ds_set(0.5)); // 
+    
+    //vec2 cx = ds_add(vec2(ds_cx0, ds_cx1),ds_mul(e_tx,vec2(ds_z0, ds_z1)));  
     
     vec4 Z = vec4(0.0);
-    vec4 C = vec4(0.0);
-    int steps;
+    vec4 C = vec4(cx, cy);
+    int steps = 0;
     
-    vec4 pan = PAN;
-    //vec4 pan = vec4(-0.31750109, 0.48999993, 0.00000000000000588, 0.0);
+    C.xy = ds_add(C.xy, ds_set(PAN.x));
+    C.zw = ds_add(C.zw, ds_set(PAN.y));
 
-    vec2 pixel;
-    pixel = (gl_FragCoord.xy / iResolution.xy - 0.5) * zoom; 
-    //pixel.x -= 0.5;
-    
-    C.zw = pixel;
-    C -= pan;
-    
     for (int i = 0; i < 100000; i++) {
       vec4 Z2;
-      Z2.xz = DoubleMul(Z.xz,Z.xz) - DoubleMul(Z.yw,Z.yw);
-      Z2.yw = 2.0*DoubleMul(Z.xz,Z.yw);
-      Z = Z2 + C;
+      Z2.xy = ds_sub(ds_mul(Z.xy, Z.xy), ds_mul(Z.zw, Z.zw));
+      Z2.zw = 2.0 * ds_mul(Z.xy, Z.zw);
+      Z = vec4(ds_add(Z2.xy, C.xy), ds_add(Z2.zw, C.zw));
       
       steps = i;
-     
-      if ( dot((DoubleMul(Z.xz,Z.xz) + DoubleMul(Z.yw,Z.yw)),vec2(1)) > 20.0 ) {
+      
+      vec2 modulus = ds_add(ds_mul(Z.xy, Z.xy), ds_mul(Z.zw, Z.zw));
+      if (ds_compare(modulus, ds_set(40.0)) > 0.0) {
         break;
       }
       
@@ -149,6 +214,8 @@ let MandelbrotDP = {
       }
     }
     
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+
     if (steps >= iterNum-1) {
         //Paint black
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
@@ -161,7 +228,7 @@ let MandelbrotDP = {
         
         //If smooth, make it smooth :D
         if(smoothResult) {
-          l = smooth(l,Z);
+          //l = smooth(l,Z);
         }
         
         if(whichColor == 0) {

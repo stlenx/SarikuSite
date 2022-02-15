@@ -218,7 +218,7 @@ function init() {
       gl.STATIC_DRAW
     );
 
-    useShader(Mandelbrot);
+    useShader(MandelbrotDP);
 
     changeColoring(1);
 
