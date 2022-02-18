@@ -7,6 +7,7 @@ let mouse = {
     y: null,
     radius: window.innerWidth * 0.078
 }
+let performanceMode = false;
 let particleArray = [];
 let particleSize = window.innerWidth * 0.0052;
 let program;
@@ -108,7 +109,7 @@ function doText() {
             if (data.data[((x + y * data.width) * 4) + 3] > 128) {
                 //particleArray.push(new Particle(x * (window.innerWidth * 0.0078) - (window.innerWidth * 0.057) + (window.innerWidth /4), y * (window.innerWidth * 0.0078) - (window.innerWidth * 0.078), color));
                 //let finalY = (y * (-window.innerWidth * 0.0078)) + window.innerWidth * 1.25;
-                let finalY = (-(y * (window.innerWidth * 0.0078) - (window.innerWidth * 0.078))) + window.innerHeight;
+                let finalY = (-(y * (window.innerWidth * 0.0078) - (window.innerWidth * 0.078))) + window.innerHeight * 0.8;
                 particleArray.push(new Particle(x * (window.innerWidth * 0.0078) - (window.innerWidth * 0.057) + (window.innerWidth /4), finalY));
             }
         }
@@ -195,7 +196,7 @@ function UpdateText() {
         let mb = particleArray[i];
         dataToSendToGPU[baseIndex] = mb.x;
         dataToSendToGPU[baseIndex + 1] = mb.y;
-        dataToSendToGPU[baseIndex + 2] = 5; //4
+        dataToSendToGPU[baseIndex + 2] = window.innerWidth * 0.0025; //5
     }
 
     SET_ATTR_3FV("metaballs", dataToSendToGPU);
@@ -292,12 +293,14 @@ function render(){
 
     //console.timeEnd("particle updates")
 
+    if(performanceMode) return;
+
     window.requestAnimationFrame(render);
 }
 // Init Canvas
 function initCanvas(){
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = window.innerHeight * 0.8;
 
     InitGL();
     GenerateMetaballs();
@@ -319,5 +322,14 @@ goMovie();
 document.body.addEventListener('mousemove', function(e){
     //(y * (-window.innerWidth * 0.0078)) + window.innerWidth * 1.25;
     mouse.x = e.pageX;
-    mouse.y =  (-e.pageY) + window.innerHeight;
+    mouse.y =  (-e.pageY) + window.innerHeight * 0.8;
 });
+
+function togglePerformanceMode() {
+    if(performanceMode) {
+        performanceMode = false;
+        goMovie();
+        return;
+    }
+    performanceMode = true;
+}
