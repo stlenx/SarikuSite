@@ -225,6 +225,14 @@ input[type="radio"]:checked + label {
 }
 
 
+#performanceToggle {
+    position: relative;
+    left: 50%;
+}
+#performanceToggle label {
+    transform: translate(-50%);
+}
+
 
 /* PHONE STUFF EWWW YUK*/
 @media screen and (max-width: 1000px) {

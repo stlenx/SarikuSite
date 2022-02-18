@@ -1,3 +1,16 @@
+// Function that returns a Promise for the FPS
+let fps;
+const getFPS = () =>
+    new Promise(resolve =>
+        requestAnimationFrame(t1 =>
+            requestAnimationFrame(t2 => resolve(1000 / (t2 - t1)))
+        )
+    )
+
+// Calling the function to get the FPS
+getFPS().then(fpsS => fps = fpsS);
+
+
 let canvas = document.getElementById('background');
 let gl = canvas.getContext("webgl");
 let ctx = document.createElement("canvas").getContext("2d");
@@ -282,7 +295,35 @@ function GenerateMetaballs() {
 //#endregion
 
 // Render
+let lastFrame = Date.now();
+let numberOfSuggestions = 0;
+let firstSuggestion = Date.now();
+let alreadySuggested = false;
 function render(){
+    let now = Date.now();
+    let dt = now - lastFrame;
+    lastFrame = now;
+
+    let currentFps = 1000 / dt;
+
+    if(currentFps < fps * 0.9) {
+        if(!alreadySuggested) {
+            if(numberOfSuggestions > 50) {
+                if((now - firstSuggestion) < 7000) {
+                    suggestPerformanceMode()
+                    alreadySuggested = true;
+                    console.log("Actually suggest lol")
+                }
+                alreadySuggested = true;
+            }
+
+            numberOfSuggestions++;
+            if(numberOfSuggestions < 5) {
+                firstSuggestion = Date.now()
+            }
+        }
+    }
+
     //console.time("particle updates")
 
     UpdateText();
@@ -332,4 +373,15 @@ function togglePerformanceMode() {
         return;
     }
     performanceMode = true;
+}
+
+function changePerformanceMode(bool) {
+    performanceMode = bool;
+    if (!bool) {
+        goMovie();
+    }
+}
+
+function suggestPerformanceMode() {
+    displayErrorMessage("Enable performance mode at the bottom", "white", "black", 2000)
 }

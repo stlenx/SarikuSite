@@ -1,4 +1,5 @@
 let svg = document.getElementById("themeSvg");
+let performanceCheck = document.getElementById("performanceCheckbox");
 let isDarkMode = false;
 
 let storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
@@ -12,6 +13,15 @@ if (storedTheme) {
         isDarkMode = false;
     }
 }
+
+let storedPerformance = localStorage.getItem('performance')
+if (storedPerformance) {
+    if(storedPerformance === "yes") {
+        changePerformanceMode(true);
+        performanceCheck.checked = true;
+    }
+}
+
 
 function toggle() {
     if(!isDarkMode) {
@@ -29,4 +39,15 @@ function toggle() {
         localStorage.setItem('theme', 'light'); //add this
     }
     isDarkMode = !isDarkMode;
+}
+
+function performance() {
+    if (!performanceMode) { //Make it perform
+        togglePerformanceMode();
+        localStorage.setItem('performance', 'yes'); //add this
+    }
+    else { //Smokie dokie
+        togglePerformanceMode();
+        localStorage.setItem('performance', 'no'); //add this
+    }
 }
