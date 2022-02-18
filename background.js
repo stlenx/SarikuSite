@@ -8,7 +8,11 @@ const getFPS = () =>
     )
 
 // Calling the function to get the FPS
-getFPS().then(fpsS => fps = fpsS);
+function loadFPS() {
+    getFPS().then(fpsS => fps = fpsS);
+}
+
+loadFPS();
 
 
 let canvas = document.getElementById('background');
@@ -357,6 +361,8 @@ function goMovie() {
     initCanvas();
     window.requestAnimationFrame(render);
 }
+
+loadFPS();
 
 goMovie();
 
