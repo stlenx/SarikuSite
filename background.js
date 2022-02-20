@@ -143,7 +143,12 @@ let CanvasShader = {
   }
   `,
     fragment: `
-  precision highp float;
+  #ifdef GL_FRAGMENT_PRECISION_HIGH
+    precision highp float;
+  #else
+    precision mediump float;
+  #endif
+  precision mediump int;
 
   uniform vec3 metaballs[`+ particleArray.length +`]; //Hard coding for now
   uniform vec3 background[15]; //Background stuff
