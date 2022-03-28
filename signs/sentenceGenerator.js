@@ -1,4 +1,5 @@
 let uselessWords = ["are"];
+let cachedWords = {};
 let words = [];
 let loadedWords = {};
 let currentWord = 69;
@@ -48,8 +49,13 @@ API.onreadystatechange = () => {
         return;
     }
 
+    cachedWords[words[Object.keys(loadedWords).length]] = result;
     loadedWords[`${words[Object.keys(loadedWords).length]}-${Object.keys(loadedWords).length}`] = result;
 
+    AddWord();
+}
+
+function AddWord() {
     ShowProgressBar(words.length);
     UpdateProgressBar(Object.keys(loadedWords).length);
     AddWordToDisplay(words[Object.keys(loadedWords).length - 1], Object.keys(loadedWords).length - 1);
@@ -160,9 +166,14 @@ function ExecuteGenerator(text) {
 
 function getWord(sign) {
     if(sign === "") return;
-    API.open("GET", url);
-    API.setRequestHeader("sign", sign)
-    API.send();
+    if(sign in cachedWords) {
+        loadedWords[`${words[Object.keys(loadedWords).length]}-${Object.keys(loadedWords).length}`] = cachedWords[sign];
+        AddWord();
+    } else {
+        API.open("GET", url);
+        API.setRequestHeader("sign", sign)
+        API.send();
+    }
 }
 
 function DeStupify(input) {
