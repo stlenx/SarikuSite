@@ -33,8 +33,8 @@ API.onreadystatechange = () => {
         return;
     } // Check for ready because xmlhttprequest gae
 
-    let output = JSON.parse(API.responseText)
-    console.log(output)
+    let output = JSON.parse(API.responseText);
+    console.log(output);
 
     if(Object.keys(loadedWords).length >= words.length) {
         return;
@@ -42,13 +42,13 @@ API.onreadystatechange = () => {
 
     let result = "";
     if (output.pageResults !== undefined) {
-        result = getLeVideo(output)
+        result = getLeVideo(output); //Gets the url from the json
     } else {
         getLeInterpretations(output);
         return;
     }
 
-    loadedWords[words[Object.keys(loadedWords).length]] = result;
+    loadedWords[`${words[Object.keys(loadedWords).length]}-${Object.keys(loadedWords).length}`] = result;
 
     ShowProgressBar(words.length);
     UpdateProgressBar(Object.keys(loadedWords).length);
@@ -102,8 +102,9 @@ function getLeInterpretations(output) {
 function ShowWords() {
     NeutralizeColors()
 
+    //Change this
     let word = words[currentWord];
-    let url = loadedWords[word];
+    let url = loadedWords[`${word}-${currentWord}`];
 
     if(url === "DOESNOTEXIST") {
         //Skip word
