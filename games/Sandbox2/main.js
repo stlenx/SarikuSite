@@ -1,6 +1,6 @@
 let canvas = document.getElementById("canvas");
-canvas.setAttribute("width", window.innerHeight)
-canvas.setAttribute("height", window.innerHeight)
+canvas.width = window.innerHeight;
+canvas.height = window.innerHeight;
 let ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
@@ -13,6 +13,17 @@ const type = {
     fire: "fire",
     oil: "oil",
     bomb: "bomb"
+}
+
+const ran = {
+    empty: 0,
+    sand: 3,
+    water: 3,
+    barrier: 0,
+    wood: 0,
+    fire: 2,
+    oil: 3,
+    bomb: 0
 }
 
 const color = {
@@ -33,7 +44,6 @@ let resolution = 100;
 let resPicked = false;
 
 let world = [];
-let newWorld = [];
 
 let mouse = {
     clicked: false,
@@ -61,7 +71,6 @@ const tools = [
 ]
 
 //Actual code
-ctx.clearRect(0, 0, canvas.width, canvas.height);
 let imageData = ctx.createImageData(resolution,resolution);
 let data = imageData.data;
 
@@ -78,8 +87,8 @@ function InitializeWorld() {
     data = imageData.data;
 
     newCanvas = document.createElement("canvas")
-    newCanvas.setAttribute("width", imageData.width)
-    newCanvas.setAttribute("height", imageData.height)
+    newCanvas.width = imageData.width;
+    newCanvas.height = imageData.height;
     newCtx = newCanvas.getContext("2d")
 
     for(let x = 0; x < imageData.width; x++) {
@@ -170,76 +179,25 @@ function drawBorder(xPos, yPos, width, height, thickness = 1) {
 }
 
 function UpdateWorld() {
-    newWorld = new Array(world.length)
-    for(let x = 0; x < world.length; x++){
-        newWorld[x] = new Array(world[x].length)
-        for(let y = 0; y < world[x].length; y++) {
-            switch (world[x][y].type) {
-                case type.empty:
-                    newWorld[x][y] =  new Empty(x, y)
-                    break;
-                case type.sand:
-                    newWorld[x][y] =  new Sand(x, y, world[x][y].random)
-                    break;
-                case type.water:
-                    newWorld[x][y] =  new Water(x, y, world[x][y].random)
-                    break;
-                case type.barrier:
-                    newWorld[x][y] =  new Barrier(x, y)
-                    break;
-                case type.wood:
-                    newWorld[x][y] =  new Wood(x, y, world[x][y].random)
-                    break;
-                case type.fire:
-                    newWorld[x][y] =  new Fire(x, y, 10, false)
-                    break;
-                case type.oil:
-                    newWorld[x][y] =  new Oil(x, y, world[x][y].random)
-                    break;
-                case type.bomb:
-                    newWorld[x][y] =  new Bomb(x, y, world[x][y].random)
-                    break;
-            }
-        }
-    } //this fucking thing is like 10ms
-
     for(let x = 1; x < imageData.width - 1; x++) {
-        for(let y = 0; y < imageData.height - 1; y++) {
+        for(let y = imageData.height - 1; y >= 0; y--) {
             world[x][y].Update()
         }
     }
-
-    for(let x = 1; x < world.length -1; x++) {
-        if(world[x][world[x].length-1].type !== type.barrier && world[x][world[x].length-1].type !== type.empty) {
-            if(world[x][0].type === type.barrier) {
-                newWorld[x][world[x].length-1] = new Empty(x, 0)
-            } else {
-                newWorld[x][world[x].length-1] = new Empty(x, 0)
-                newWorld[x][0] = world[x][world[x].length-1]
-            }
-        }
-    } //Like 4-10ms
-    
-    function RecursiveMove(x, y, direction, amount) {
-        if(amount > 1) {
-            if(world[x + direction.x][y + direction.y].type === type.empty && newWorld[x + direction.x][y + direction.y].type === type.empty) {
-                RecursiveMove(x + direction.x, y + direction.y, direction, amount - 1)
-            } else {
-                newWorld[x][y] = world[x][y];
-                newWorld[x - direction.x][y - direction.y] = new Cell(x, y, type.empty)
-            }
-        } else {
-            newWorld[x + direction.x][y + direction.y] = world[x][y];
-            newWorld[x][y] = new Cell(x, y, type.empty)
-        }
-    }
-
-    world = newWorld;
 }
 
 function SwapCell(x, y, direction, amount) {
-    newWorld[x + direction.x][y + direction.y] = world[x][y];
-    newWorld[x][y] = world[x + direction.x][y + direction.y];
+    let origin = world[x][y];
+    let dest = world[x + direction.x][y + direction.y];
+
+    origin.x = x + direction.x;
+    origin.y = y + direction.y;
+
+    dest.x = x;
+    dest.y = y;
+
+    world[x + direction.x][y + direction.y] = origin;
+    world[x][y] = dest;
 }
 
 function PickRes() {
@@ -269,12 +227,8 @@ function PickRes() {
 
 let lastTick = Date.now();
 function frame() {
-    //let now = Date.now()
-    //let time = now - lastTick;
-    //lastTick = now;
-    ////console.log(time)
 
-    //console.time("Frame");
+    console.time("Frame");
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -287,7 +241,9 @@ function frame() {
             for(let x = mouse.x - mouse.radius; x < mouse.x + mouse.radius; x++) {
                 for(let y = mouse.y - mouse.radius; y < mouse.y + mouse.radius; y++) {
                     if(x > 0 && x < world.length - 1 && y >= 0 && y < world[0].length) {
-                        world[x][y] = new Cell(x, y, mouse.type)
+                        if(Math.floor(getRandom(0, mouse.random + 1)) === 0) {
+                            world[x][y] = new Cell(x, y, mouse.type);
+                        }
                     }
                 }
             }
@@ -299,8 +255,10 @@ function frame() {
                     let distanceSquared = dx * dx + dy * dy;
 
                     if (distanceSquared <= mouse.radius * mouse.radius) {
-                        if(x > 0 && x < world.length - 1 && y >= 0 && y < world[0].length) {
-                            world[x][y] = new Cell(x, y, mouse.type)
+                        if(Math.floor(getRandom(0, mouse.random*mouse.random + 1)) === 0) {
+                            if(world[x][y].type === type.empty) {
+                                world[x][y] = new Cell(x, y, mouse.type);
+                            }
                         }
                     }
                 }
@@ -334,7 +292,7 @@ function frame() {
 
     if(!resPicked) PickRes()
 
-    //console.timeEnd("Frame");
+    console.timeEnd("Frame");
 
     window.requestAnimationFrame(frame)
 }
@@ -388,6 +346,7 @@ canvas.addEventListener("mousedown", (e) => {
         if(!buttonClick) {
             if(hover) {
                 mouse.type = type[text];
+                mouse.random = ran[text];
             } else {
                 mouse.clicked = true;
             }

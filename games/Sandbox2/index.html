@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sandbox</title>
+    <style>
+        canvas {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            margin: 0;
+            transform: translate(-50%);
+        }
+        body {
+            background-color: black;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<script src="../../dist/gpu-browser.js"></script>
+<script src="../../misc/jsplus.js" defer></script>
+<script src="font.js" defer></script>
+<script src="cells/cell.js" defer></script>
+<script src="cells/barrier.js" defer></script>
+<script src="cells/empty.js" defer></script>
+<script src="cells/fire.js" defer></script>
+<script src="cells/sand.js" defer></script>
+<script src="cells/water.js" defer></script>
+<script src="cells/oil.js" defer></script>
+<script src="cells/wood.js" defer></script>
+<script src="cells/bomb.js" defer></script>
+<script src="main.js" defer></script>
+
+<canvas id="canvas"></canvas>
+
+</body>
+</html>
