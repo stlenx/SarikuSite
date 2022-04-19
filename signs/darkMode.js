@@ -17,8 +17,11 @@ if (storedTheme) {
 let storedPerformance = localStorage.getItem('performance')
 if (storedPerformance) {
     if(storedPerformance === "yes") {
-        changePerformanceMode(true);
-        performanceCheck.checked = true;
+        //Only pc's have such luxury
+        if(!window.mobileCheck()) {
+            changePerformanceMode(true);
+            performanceCheck.checked = true;
+        }
     }
 }
 

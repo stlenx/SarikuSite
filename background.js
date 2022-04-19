@@ -20,10 +20,19 @@ window.mobileCheck = function() {
     return check;
 };
 
+{
+    //Delete performance toggle if mobile (fixes le cringe styling)
+    let toggle = document.getElementById("performanceToggle");
+    if(window.mobileCheck()) {
+        toggle.remove();
+    }
+}
+
 
 let canvas = document.getElementById('background');
 let gl = canvas.getContext("webgl");
 let ctx = document.createElement("canvas").getContext("2d");
+
 
 let mouse = {
     x: null,
