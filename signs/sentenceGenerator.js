@@ -1,7 +1,14 @@
+class Word {
+    constructor(name, url) {
+        this.name = name;
+        this.url = url;
+    }
+}
+
 let uselessWords = ["are"];
 let cachedWords = {};
 let words = [];
-let loadedWords = {};
+let loadedWords = [];
 let currentWord = 69;
 
 let API = new XMLHttpRequest();
@@ -37,7 +44,7 @@ API.onreadystatechange = () => {
     let output = JSON.parse(API.responseText);
     console.log(output);
 
-    if(Object.keys(loadedWords).length >= words.length) {
+    if(loadedWords.length >= words.length) {
         return;
     }
 
@@ -49,19 +56,19 @@ API.onreadystatechange = () => {
         return;
     }
 
-    cachedWords[words[Object.keys(loadedWords).length]] = result;
-    loadedWords[`${words[Object.keys(loadedWords).length]}-${Object.keys(loadedWords).length}`] = result;
+    cachedWords[words[loadedWords.length]] = result;
+    loadedWords.push(new Word(words[loadedWords.length], result));
 
     AddWord();
 }
 
 function AddWord() {
     ShowProgressBar(words.length);
-    UpdateProgressBar(Object.keys(loadedWords).length);
-    AddWordToDisplay(words[Object.keys(loadedWords).length - 1], Object.keys(loadedWords).length - 1);
+    UpdateProgressBar(loadedWords.length);
+    AddWordToDisplay(words[loadedWords.length - 1], loadedWords.length - 1);
 
     if(Object.keys(loadedWords).length < words.length) {
-        getWord(words[Object.keys(loadedWords).length]);
+        getWord(words[loadedWords.length]);
         return;
     }
 
@@ -105,16 +112,15 @@ function getLeInterpretations(output) {
     getWord(result.pageLink);
 }
 
+//MAIN LOOP
 function ShowWords() {
     NeutralizeColors()
 
-    //Change this
-    let word = words[currentWord];
-    let url = loadedWords[`${word}-${currentWord}`];
+    let url = loadedWords[currentWord].url;
 
     if(url === "DOESNOTEXIST") {
         //Skip word
-        if(Object.keys(loadedWords).length === 0) return;
+        if(loadedWords.length === 0) return;
 
         currentWord++;
         if(currentWord === words.length) {
@@ -158,7 +164,7 @@ function toggleGenerator() {
 function ExecuteGenerator(text) {
     text = DeStupify(text);
     words = text.split(" ");
-    loadedWords = {};
+    loadedWords =[];
 
     while(sentenceDisplay.children.length > 0) sentenceDisplay.removeChild(sentenceDisplay.lastChild)
     getWord(words[0]);
@@ -167,7 +173,7 @@ function ExecuteGenerator(text) {
 function getWord(sign) {
     if(sign === "") return;
     if(sign in cachedWords) {
-        loadedWords[`${words[Object.keys(loadedWords).length]}-${Object.keys(loadedWords).length}`] = cachedWords[sign];
+        loadedWords.push(new Word(words[loadedWords.length], cachedWords[sign]));
         AddWord();
     } else {
         API.open("GET", url);
@@ -185,8 +191,8 @@ function DeStupify(input) {
     return input;
 }
 
-v.addEventListener("ended", (ev => {
-    if(Object.keys(loadedWords).length === 0) return;
+v.addEventListener("ended", (e => {
+    if(loadedWords.length === 0) return;
 
     currentWord++;
     if(currentWord === words.length) {
