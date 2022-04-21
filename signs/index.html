@@ -54,7 +54,11 @@
 
                 <div class="article-container">
                     <div class="inputThingie">
+<<<<<<< Updated upstream
                         <input placeholder="Enter sign" type="text" name="sign" onkeyup="inputChanged(this.value)" size="25" id="textInput" autocomplete="off">
+=======
+                        <input placeholder="Enter sign" type="text" name="sign" onkeyup="inputChanged(this.value)" id="textInput">
+>>>>>>> Stashed changes
                     </div>
 
                     <div id="container">
@@ -133,39 +137,49 @@
 </div>
 
 <div class="sentenceMain" id="mainContainerGenerator">
-    <div class="sentenceContent">
-        <div class="article-container">
-            <div class="topRightDropdown noSelect" id="BetaThing">
-                BETA
-                <span>
+    <div class="content">
+        <div class="article">
+            <div class="article-container">
+                <div class="topRightDropdown noSelect" id="BetaThing">
+                    BETA
+                    <span>
                     This feature is in beta. It may (and probably will) break while using.
                     Currently under development.
                 </span>
-            </div>
+                </div>
 
-            <div class="generatorHeader" style="font-size: 3em;">
+                <div class="generatorHeader" style="font-size: 3em;">
                         <span class="extraTitleTitle">
                             Sentence Generator
                         </span>
+<<<<<<< Updated upstream
             </div>
 
             <div class="generatorContent">
                 <div class="inputThingie">
                     <input placeholder="Enter sentence" type="text" name="sign" onkeyup="ExecuteGenerator(this.value)" size="50" autocomplete="off">
+=======
+>>>>>>> Stashed changes
                 </div>
 
-                <div id="sentenceDisplay">
-                </div>
+                <div class="generatorContent">
+                    <div class="inputThingie">
+                        <input placeholder="Enter sentence" type="text" name="sign" onkeyup="ExecuteGenerator(this.value)">
+                    </div>
 
-                <div class="progressContainer" id="progressC">
-                    <progress id="progressBar" value="0" max="100"></progress>
-                </div>
+                    <div id="sentenceDisplay">
+                    </div>
 
-                <div>
-                    <video height="450" width="800" id="videoGenerator" autoplay muted>
-                        <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" id="sourceGenerator" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    <div class="progressContainer" id="progressC">
+                        <progress id="progressBar" value="0" max="100"></progress>
+                    </div>
+
+                    <div>
+                        <video height="450" width="800" id="videoGenerator" autoplay muted>
+                            <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" id="sourceGenerator" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                 </div>
             </div>
         </div>

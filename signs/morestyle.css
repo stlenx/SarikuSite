@@ -111,9 +111,10 @@ video {
     text-align: center;
     outline: transparent;
 
-    transition: font-size 0.3s;
+    transition: font-size 0.3s, width 0.3s;
 
     padding: 6px;
+    width: 75%;
 
     color: var(--dark);
 
@@ -243,6 +244,7 @@ input[type="radio"]:checked + label {
     }
 
     input[type=text] {
+        width: 100%;
         font-size: 3.5em;
     }
 
