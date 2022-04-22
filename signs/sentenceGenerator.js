@@ -114,7 +114,7 @@ function getLeInterpretations(output) {
 
 //MAIN LOOP
 function ShowWords() {
-    NeutralizeColors()
+    NeutralizeColors();
 
     let url = loadedWords[currentWord].url;
 
@@ -137,6 +137,18 @@ function ShowWords() {
     s.setAttribute("src", url);
     v.load()
 }
+
+v.addEventListener("ended", (e => {
+    if(loadedWords.length === 0) return;
+
+    currentWord++;
+
+    if(currentWord === words.length) {
+        currentWord = 0;
+    }
+
+    ShowWords();
+}))
 
 function NeutralizeColors() {
     let Words = sentenceDisplay.children;
@@ -190,17 +202,6 @@ function DeStupify(input) {
 
     return input;
 }
-
-v.addEventListener("ended", (e => {
-    if(loadedWords.length === 0) return;
-
-    currentWord++;
-    if(currentWord === words.length) {
-        currentWord = 0;
-    }
-
-    ShowWords();
-}))
 
 function UpdateSize() {
     mainC.style.height = `${document.documentElement.scrollHeight}px`;
