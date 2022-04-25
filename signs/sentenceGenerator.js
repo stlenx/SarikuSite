@@ -2,6 +2,11 @@ class Word {
     constructor(name, url) {
         this.name = name;
         this.url = url;
+        this.fingerspell = {};
+    }
+
+    addLetter(letter, link) {
+        this.fingerspell[letter] = link;
     }
 }
 
@@ -25,18 +30,11 @@ API.onreadystatechange = () => {
         if(API.status === 404) {
             if(words[Object.keys(loadedWords).length] === undefined) return; //Idk
 
-            ShowProgressBar(words.length);
-            loadedWords[words[Object.keys(loadedWords).length]] = "DOESNOTEXIST";
-            AddWordToDisplay(words[Object.keys(loadedWords).length - 1], Object.keys(loadedWords).length - 1, true);
+            //Must do fingerspelling D:
 
-            if(Object.keys(loadedWords).length < words.length) {
-                getWord(words[Object.keys(loadedWords).length]);
-                return;
-            }
+            loadedWords.push(new Word(words[loadedWords.length], "DOESNOTEXIST"));
 
-            currentWord = 0;
-            HideProgressBar();
-            ShowWords();
+            AddWord(true);
         }
         return;
     } // Check for ready because xmlhttprequest gae
@@ -62,10 +60,10 @@ API.onreadystatechange = () => {
     AddWord();
 }
 
-function AddWord() {
+function AddWord(nonExistant = false) {
     ShowProgressBar(words.length);
     UpdateProgressBar(loadedWords.length);
-    AddWordToDisplay(words[loadedWords.length - 1], loadedWords.length - 1);
+    AddWordToDisplay(words[loadedWords.length - 1], loadedWords.length - 1, nonExistant);
 
     if(Object.keys(loadedWords).length < words.length) {
         getWord(words[loadedWords.length]);
