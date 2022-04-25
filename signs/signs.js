@@ -1,4 +1,4 @@
-let Http = new XMLHttpRequest();
+let BenAPI = new XMLHttpRequest();
 const url='https://api.benaclegames.com/sl/asl';
 let loadedSign = "";
 
@@ -11,15 +11,15 @@ let synonyms = document.getElementById("synonyms");
 let context = document.getElementById("context");
 let sentence = document.getElementById("sentence");
 
-Http.onreadystatechange = () => {
-    if (Http.readyState !== 4 || Http.status !== 200) {
-        if(Http.status === 404) {
+BenAPI.onreadystatechange = () => {
+    if (BenAPI.readyState !== 4 || BenAPI.status !== 200) {
+        if(BenAPI.status === 404) {
             text.style.color = "red";
         }
         return;
     } // Check for ready because xmlhttprequest gae
 
-    let output = JSON.parse(Http.responseText)
+    let output = JSON.parse(BenAPI.responseText)
     console.log(output)
 
     let url = document.location.href.split("?");
@@ -179,9 +179,9 @@ function inputChanged(input) {
 function getSign(sign) {
     if(sign === "") return;
     loadedSign = sign;
-    Http.open("GET", url);
-    Http.setRequestHeader("sign", sign)
-    Http.send();
+    BenAPI.open("GET", url);
+    BenAPI.setRequestHeader("sign", sign)
+    BenAPI.send();
 }
 
 function CheckUrl() {

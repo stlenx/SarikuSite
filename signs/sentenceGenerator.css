@@ -41,8 +41,10 @@ html, body { height: 100%; }
     margin: 10px;
 }
 
-.notExist {
-    color: red;
+#sentenceDisplay span p {
+    padding: 0;
+    margin: 0;
+    display: inline;
 }
 
 #BetaThing {
