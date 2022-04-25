@@ -62,7 +62,6 @@ LettersAPI.onreadystatechange = () => {
     if(output.pageResults !== undefined) {
         url = getLeVideo(output);
     } else {
-        console.log(letter);
         if(["i", "x"].includes(letter)) { //Special cases, "i" shows up as (like me you know) instead of the letter, x shows up as multiplication.
             getLetterInterpretation(output.searchResults.results[1].pageLink);
             return;
@@ -242,6 +241,7 @@ function ShowWords() {
     if(showingFingerSpelling) {
         url = word.fingerspell[currentLetter];
 
+        ColorGrey(currentWord);
         document.getElementById(currentWord).children[currentLetter].style.color = "rgb(55,255,0)";
     }
 
@@ -273,6 +273,14 @@ v.addEventListener("ended", (e => {
 
     ShowWords();
 }))
+
+function ColorGrey(id) {
+    let ps = document.getElementById(id).children;
+
+    for(let i = 0; i < ps.length; i++) {
+        ps[i].style.color = "rgb(132,132,132)";
+    }
+}
 
 function NeutralizeColors() {
     let Words = sentenceDisplay.children;
