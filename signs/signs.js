@@ -272,6 +272,7 @@ function SignOfTheDayReturn(API) {
 
 
     document.getElementById("textInput").value = output.word.toLowerCase();
+    loadedSign = output.word.toLowerCase();
     getVideo(input);
 }
 
