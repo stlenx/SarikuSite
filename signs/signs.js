@@ -195,12 +195,84 @@ function CheckUrl() {
     let searchSign = sign;
 
     if(id !== null) {
-        searchSign = `https://www.signingsavvy.com/sign/${sign.toUpperCase()}/${id}/${v}`
+        searchSign = `https://www.signingsavvy.com/sign/${sign.toUpperCase()}/${id}/${v}`;
+        console.log("apple")
+    }
+
+    if(searchSign === null) {
+        //Sign of da day baby
+        GetSignOfTheDay();
+        return;
     }
 
     document.getElementById("textInput").value = sign;
-    console.log(searchSign)
     getSign(searchSign);
 }
 
-CheckUrl()
+function GetSignOfTheDay() {
+    let API = new XMLHttpRequest();
+    API.onreadystatechange = () => {
+        SignOfTheDayReturn(API);
+    }
+
+    API.open("GET", "https://www.signingsavvy.com/mapp3/signs?id=0&token=BOGUSTOKEN9873609&sotd=1"); //Thanks ben!
+    API.send();
+}
+
+function SignOfTheDayReturn(API) {
+    if (API.readyState !== 4 || API.status !== 200) {
+        return;
+    } // Check for ready because xmlhttprequest gae
+
+    let output = JSON.parse(API.responseText);
+    console.log(output);
+
+    input = {
+        "pageResults": {
+            "videoURL": output.signid,
+            "variations": [],
+            "pageDetails": {
+                "meaning": output.word,
+                "context": output.asin,
+                "synonyms": []
+            }
+        }
+    }
+
+    output.variations.forEach((v) => {
+        let variation = {
+            "type": `${v.signtype} ${v.variation}`,
+            "url": `https://www.signingsavvy.com/sign/${v.word}/${v.wordid}/${v.variation}`
+        }
+
+        if(v.variation === 1) {
+            variation.url = `https://www.signingsavvy.com//search/${v.word.toLowerCase()}`
+        }
+
+        if(v.signtype === "FS") {
+            variation.type = "finger spell";
+        }
+
+        input.pageResults.variations.push(variation);
+    })
+
+    input.pageResults.pageDetails.synonyms.push(output.word);
+    output.synonyms.forEach((s) => {
+        input.pageResults.pageDetails.synonyms.push(s.word);
+    })
+
+
+    let container = document.getElementById("container");
+
+    while (container.hasChildNodes()) container.removeChild(container.lastChild)
+
+    let h1 = document.createElement("h1");
+    h1.innerText = "Sign of the day";
+    container.appendChild(h1);
+
+
+    document.getElementById("textInput").value = output.word.toLowerCase();
+    getVideo(input);
+}
+
+CheckUrl();

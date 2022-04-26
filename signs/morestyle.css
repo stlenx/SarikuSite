@@ -146,8 +146,9 @@ label {
     -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome, Edge, Opera and Firefox */
 }
 
 label:hover {
@@ -158,6 +159,12 @@ label:hover {
 input[type="radio"]:checked + label {
     background-color: var(--dark);
     color: var(--almost-white);
+}
+
+h1 {
+    color: var(--dark);
+    font-family: var(--text-font);
+    font-size: 2em;
 }
 
 
@@ -266,6 +273,10 @@ input[type="radio"]:checked + label {
 
     th {
         font-size: 40pt;
+    }
+
+    h1 {
+        font-size: 3em;
     }
 
     h2 {
