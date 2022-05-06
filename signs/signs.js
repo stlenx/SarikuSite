@@ -1,5 +1,5 @@
 let BenAPI = new XMLHttpRequest();
-const url='https://api.benaclegames.com/sl/asl';
+const url= 'https://api.benaclegames.com/sl/asl';
 let loadedSign = "";
 
 let text = document.getElementById("textInput")

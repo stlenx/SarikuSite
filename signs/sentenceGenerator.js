@@ -187,7 +187,7 @@ function GetLetter() {
         loadedWords[loadedWords.length - 1].addLetter(cachedWords[letter]);
         GetLetter();
     } else {
-        LettersAPI.open("GET", url);
+        LettersAPI.open("GET", BenURL);
         LettersAPI.setRequestHeader("sign", letter);
         LettersAPI.send();
     }
@@ -195,7 +195,7 @@ function GetLetter() {
 
 function getLetterInterpretation(letter) {
     console.log(letter, "pls");
-    LettersAPI.open("GET", url);
+    LettersAPI.open("GET", BenURL);
     LettersAPI.setRequestHeader("sign", letter)
     LettersAPI.send();
 }
@@ -326,7 +326,7 @@ function getWord(sign) {
         loadedWords.push(new Word(words[loadedWords.length], cachedWords[sign]));
         AddWord();
     } else {
-        API.open("GET", url);
+        API.open("GET", BenURL);
         API.setRequestHeader("sign", sign)
         API.send();
     }

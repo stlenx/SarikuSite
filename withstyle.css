@@ -8,6 +8,8 @@
     --almost-white: #efefef;
     --clear: #ffffff;
     --dark: black;
+    --dark2: #1a1a1a;
+    --dark3: #393939;
 }
 
 html[data-theme="dark"] {
@@ -15,6 +17,8 @@ html[data-theme="dark"] {
     --almost-white: #2b2b2b;
     --clear: black;
     --dark: white;
+    --dark2: #d0d0d0;
+    --dark3: #979797;
     --svg: brightness(0) invert(1);
 }
 

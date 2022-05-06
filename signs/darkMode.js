@@ -25,7 +25,6 @@ if (storedPerformance) {
     }
 }
 
-
 function toggle() {
     if(!isDarkMode) {
         svg.src = "sun.svg";

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signs</title>
+  <link rel="icon" href="../../img/icon.jpg">
+  <link rel="stylesheet" href="../../withstyle.css">
+  <link rel="stylesheet" href="../morestyle.css">
+  <link rel="stylesheet" href="gamestyle.css">
+  <link rel="stylesheet" href="../errors.css">
+  <script src="../../misc/jsplus.js" defer></script>
+</head>
+<body>
+
+<div id="error">
+
+</div>
+
+<div class="main" id="id">
+
+  <script src="../errors.js" defer></script>
+  <script src="main.js" defer></script>
+
+  <div class="site">
+    <div class="topButtons noSelect">
+      <div class="topLeft" onclick="document.location.href = '../index.html';">
+        <img src="../return-button.svg" alt="return button">
+      </div>
+
+      <div class="topRight noSelect" onclick="toggle();">
+        <img src="../moon.svg" alt="dark-mode toggle button" id="themeSvg">
+      </div>
+
+      <div class="bottomRight noSelect" onclick="toggleGenerator();">
+        <img src="../asterisk.svg" alt="return button">
+      </div>
+    </div>
+
+    <div class="titleHeaderThing">
+            <span>
+                Guess the sign!
+            </span>
+    </div>
+
+    <div class="content">
+      <div class="article">
+        <div class="article-container">
+
+          <div class="top-ui">
+            <div class="top-ui-child" id="hearts">
+              <img src="heart.svg" alt="cool heart" id="heart-0">
+              <img src="heart.svg" alt="cool heart" id="heart-1">
+              <img src="heart.svg" alt="cool heart" id="heart-2">
+            </div>
+
+            <div class="top-ui-child" id="score">
+              Score: 0
+            </div>
+          </div>
+
+          <div>
+            <video height="450" width="800" id="video" autoplay muted loop>
+              <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" id="source" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+          <div id="variations">
+
+          </div>
+
+          <div>
+            <button style="width: 95%" onclick="Skip()">Skip sign</button>
+          </div>
+
+          <div class="inputThingie">
+            <input placeholder="Enter sign" type="text" name="sign" id="textInput" autocomplete="off">
+            <label for="textInput" onclick="TakeGuess()" class="long-label">Guess!</label>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="article-container">
+          <div class="article-header">
+            Leaderboard
+          </div>
+
+          <div class="article-content">
+
+            <table>
+                <colgroup>
+                  <col>
+                  <col>
+                  <col>
+                  <col>
+                </colgroup>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Score</th>
+                  <th>Region</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard">
+
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="message" id="death-message">
+  <div class="content">
+    <div class="article">
+      <div class="article-container">
+        <div class="article-header">
+          <h1>You lost!</h1>
+
+          <p id="result-score">
+            Your total score was: 0
+          </p>
+        </div>
+
+        <div class="upload-score">
+          Publish your score:
+            <input type="text" id="username" placeholder="Name">
+          <label for="username" onclick="PublishScore()">Upload</label>
+        </div>
+
+        <h2>The sign was:</h2>
+
+        <div class="answers">
+
+        </div>
+
+        <button onclick="TryAgain()">Try again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

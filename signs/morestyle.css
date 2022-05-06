@@ -129,7 +129,7 @@ input[type=radio] {
     width: 0;
 }
 
-label {
+label, button {
     margin: 30px 10px;
 
     display: inline-block;
@@ -151,7 +151,7 @@ label {
                                      supported by Chrome, Edge, Opera and Firefox */
 }
 
-label:hover {
+label:hover, button:hover {
     cursor: pointer;
     background-color: var(--almost-white);
 }
@@ -161,10 +161,16 @@ input[type="radio"]:checked + label {
     color: var(--almost-white);
 }
 
-h1 {
+
+h1, h2, h3 {
     color: var(--dark);
     font-family: var(--text-font);
+}
+h1 {
     font-size: 2em;
+}
+h2 {
+    font-size: 1.5em;
 }
 
 
