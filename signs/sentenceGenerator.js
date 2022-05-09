@@ -27,6 +27,8 @@ let currentWord = 69;
 //APIs
 let API = new XMLHttpRequest();
 let LettersAPI = new XMLHttpRequest();
+const BenURL= 'https://api.benaclegames.com/sl/asl';
+
 
 //Useful tags
 let mainC = document.getElementById("mainContainerGenerator");
