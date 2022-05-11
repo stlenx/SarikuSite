@@ -2,7 +2,7 @@ let BenAPI = new XMLHttpRequest();
 const url= 'https://api.benaclegames.com/sl/asl';
 let loadedSign = "";
 
-let text = document.getElementById("textInput")
+let text = document.getElementById("textInput");
 
 //Here we load html elements so we don't need to constantly load them over and over again
 let noSignText = document.getElementById("NoInfo");

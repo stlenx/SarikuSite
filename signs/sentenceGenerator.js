@@ -20,6 +20,7 @@ class Word {
 //Workie workie
 let uselessWords = ["are"];
 let cachedWords = {};
+let cachedLetters = {};
 let words = [];
 let loadedWords = [];
 let currentWord = 69;
@@ -72,7 +73,7 @@ LettersAPI.onreadystatechange = () => {
         return;
     }
 
-    cachedWords[letter] = url;
+    cachedLetters[letter] = url;
     loadedWords[loadedWords.length - 1].addLetter(url);
 
     GetLetter();
@@ -158,6 +159,7 @@ function AddWordToDisplay(word, id, fingerspelled = false) {
     }
 
     span.id = id;
+    span.style.color = getComputedStyle(document.documentElement).getPropertyValue('--dark');
 
     sentenceDisplay.appendChild(span);
 }
@@ -185,8 +187,8 @@ function GetLetter() {
         return;
     }
 
-    if(letter in cachedWords) {
-        loadedWords[loadedWords.length - 1].addLetter(cachedWords[letter]);
+    if(letter in cachedLetters) {
+        loadedWords[loadedWords.length - 1].addLetter(cachedLetters[letter]);
         GetLetter();
     } else {
         LettersAPI.open("GET", BenURL);
