@@ -147,6 +147,10 @@ class Vector2 {
     ReturnScaled(amount) {
         return new Vector2(this.x * amount, this.y * amount)
     }
+
+    ReturnAdd(vector) {
+        return new Vector2(this.x + vector, this.y + vector)
+    }
 }
 
 function absVector2(a) {
