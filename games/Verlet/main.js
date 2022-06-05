@@ -20,8 +20,8 @@ let colorDir = false;
 let angleDir = false;
 let radius = 3;
 function frame(dt) {
-    ctx.fillStyle = "rgb(50,50,50)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 
     solver.update(dt);
     previewSolver.update(dt);
@@ -95,9 +95,9 @@ function AddPreviewRope(ev) {
                 }
 
                 previewSolver.objects.push(new VerletObject(
-                    new Vector2(Lerp(ev.offsetX, lastMouse.x, i / lastMouse.amount), Lerp(ev.offsetY, lastMouse.y, i / lastMouse.amount)),
+                    new Vector2(Lerp(lastMouse.x, ev.offsetX, i / lastMouse.amount), Lerp(lastMouse.y, ev.offsetY, i / lastMouse.amount)),
                     i === 0 || i === lastMouse.amount-1,
-                    "white",
+                    "rgba(255,255,255,0.5)",
                     10
                 ))
             }
@@ -123,6 +123,10 @@ canvas.addEventListener("mouseup", (ev => {
         link.object_2 += solver.objects.length;
     })
 
+    previewSolver.objects.forEach((object) => {
+        object.color = "white";
+    })
+
     solver.objects = solver.objects.concat(previewSolver.objects);
     solver.links = solver.links.concat(previewSolver.links);
 
@@ -143,3 +147,40 @@ canvas.addEventListener("wheel", (ev => {
 
     AddPreviewRope(ev);
 }))
+
+
+//Number thingy pog
+document.addEventListener("mousemove", (e) => {
+    let div = document.getElementById("NumberIndicator");
+    div.style.left = `${e.pageX + 15}px`;
+    div.style.top = `${e.pageY + 15}px`;
+})
+
+function ShowNumberIndicator() {
+    let div = document.getElementById("NumberIndicator");
+    div.style.opacity = "100%";
+}
+
+function HideNumberIndicator() {
+    let div = document.getElementById("NumberIndicator");
+    div.style.opacity = "0";
+}
+
+function SetNumberIndicator(value) {
+    document.getElementById("NumberIndicator").innerHTML = value;
+}
+
+//Substep slider
+let sub = document.getElementById("sub");
+sub.addEventListener("mouseenter", () => {
+    ShowNumberIndicator();
+})
+
+sub.addEventListener("mouseleave", () => {
+    HideNumberIndicator();
+})
+
+sub.addEventListener("mousemove", () => {
+    SetNumberIndicator(sub.value);
+    solver.subSteps = sub.value;
+})

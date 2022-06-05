@@ -2,20 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        body {
-            background-color: rgb(50,50,50);
-        }
+    <title>Verlet Integration</title>
 
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 50%;
-
-            transform: translate(-50%, 0);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -23,10 +12,44 @@
 <script src="Solver.js" defer></script>
 <script src="Link.js" defer></script>
 <script src="main.js" defer></script>
-<script src="sariku.js" defer></script>
+<script src="../../misc/sarikujs.js" defer></script>
 
+
+<div class="NumberIndicator" id="NumberIndicator"></div>
+
+
+<div class="left-controls cardContainer">
+    <div class="card">
+        <div class="cardTitle">
+            Spawn controls
+        </div>
+
+        <div class="cardBody">
+
+
+
+        </div>
+    </div>
+</div>
 
 <canvas id="canvas" property="square"></canvas>
+
+<div class="right-controls cardContainer">
+    <div class="card">
+        <div class="cardTitle">
+            Simulation controls
+        </div>
+
+        <div class="cardBody">
+
+            <div class="inputShelf">
+                <label for="sub">Number of substeps </label>
+                <input id="sub" type="range" value="3" min="1" max="10" step="1">
+            </div>
+
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

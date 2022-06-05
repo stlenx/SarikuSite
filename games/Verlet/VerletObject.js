@@ -35,10 +35,11 @@ class VerletObject {
         this.position_old_y = this.position_current_y;
 
         //Perform Verlet integration
-        this.position_current_x += velocity.x + this.acceleration.x * dt * dt;
-        this.position_current_y += velocity.y + this.acceleration.y * dt * dt;
+        let dtSQ = dt * dt;
+        this.position_current_x += velocity.x + this.acceleration.x * dtSQ;
+        this.position_current_y += velocity.y + this.acceleration.y * dtSQ;
 
-        //Reset acceleration ??
+        //Reset acceleration
         this.acceleration = new Vector2(0, 0);
     }
 
