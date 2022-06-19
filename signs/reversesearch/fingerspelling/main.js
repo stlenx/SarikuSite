@@ -126,13 +126,16 @@ function onResults(results) {
         handedness = results.multiHandedness[0].label === "Right" ? 1 : -1;
     }
 
-    DrawHandMe(aHand, results.multiHandLandmarks[0], '#002aff', handedness);
+    DrawHandMe(aHand, results.multiHandLandmarks[0], '#002aff');
 
     GuessBetter(results.multiHandLandmarks[0], handedness);
 
     ctx.restore();
 
-    //console.log(ConvertToLocal(results.multiHandLandmarks[0]));
+    //if(results.multiHandLandmarks[0] !== undefined) {
+    //    console.log(ConvertToLocal(results.multiHandLandmarks[0]));
+    //}
+
 
     video.requestVideoFrameCallback(frame);
 }
@@ -140,18 +143,14 @@ function onResults(results) {
 function ConvertToLocal(hand) {
     let origin = hand[0];
 
-    let result = [];
-
     for(let i = 1; i < hand.length; i++) {
         let landmark = hand[i];
 
-        result[i] = {
-            x: landmark.x - origin.x,
-            y: landmark.y - origin.y
-        }
+        landmark.x -= origin.x
+        landmark.y -= origin.y
     }
 
-    return result;
+    return hand;
 }
 
 function GuessGesture(hand, variety, handedness) {
@@ -173,8 +172,10 @@ function GuessGesture(hand, variety, handedness) {
 function GuessBetter(hand, handedness) {
     let guesses = [];
 
-    for(const gesture of gestures) {
-        let closeness = CheckHandBetter(hand, gesture.positions, handedness);
+    let gesturesToUse = handedness === 1 ? gestures.left : gestures.right;
+
+    for(const gesture of gesturesToUse) {
+        let closeness = CheckHandBetter(hand, gesture.positions);
         guesses = insert(guesses, {
             value: closeness,
             name: gesture.name,
@@ -207,12 +208,12 @@ function insert(arr, item) {
     }
 }
 
-function CheckHandBetter(hand, target, handedness) {
+function CheckHandBetter(hand, target) {
     if(hand === undefined || target === undefined) return false;
 
     let scaleFactor = GetScaleFactor(hand, target);
 
-    let angle = GetRotationFactor(hand, target)  * handedness;
+    let angle = GetRotationFactor(hand, target);
 
     let total = 0;
     let sum = 0;
@@ -221,7 +222,7 @@ function CheckHandBetter(hand, target, handedness) {
         let landmarkY = hand[i].y * canvas.height;
         let landmarkZ = hand[i].z * canvas.width;
 
-        let targetLandmarkX = (hand[0].x + RotateX(target[i].x * scaleFactor, target[i].y * scaleFactor, angle) * handedness) * canvas.width;
+        let targetLandmarkX = (hand[0].x + RotateX(target[i].x * scaleFactor, target[i].y * scaleFactor, angle)) * canvas.width;
         let targetLandmarkY = (hand[0].y + RotateY(target[i].x * scaleFactor, target[i].y * scaleFactor, angle)) * canvas.height;
         let targetLandmarkZ = (hand[0].z + target[i].z * scaleFactor) * canvas.width;
 
@@ -244,7 +245,6 @@ function CheckHandBetter(hand, target, handedness) {
 
     return sum / total;
 }
-
 
 function CheckHand(hand, target, variety, handedness) {
     if(hand === undefined || target === undefined) return false;
@@ -281,14 +281,14 @@ function CheckHand(hand, target, variety, handedness) {
     return true;
 }
 
-function DrawHandMe(hand, actualHand, landmarkColor, handedness) {
+function DrawHandMe(hand, actualHand, landmarkColor) {
     if(actualHand === undefined) return;
 
     //Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z)) 9
 
     let origin = actualHand[0];
 
-    let angle = GetRotationFactor(actualHand, hand) * handedness;
+    let angle = GetRotationFactor(actualHand, hand);
 
     let scaleFactor = GetScaleFactor(actualHand, hand);
 
@@ -309,7 +309,7 @@ function DrawHandMe(hand, actualHand, landmarkColor, handedness) {
         let finalY = RotateY(x, y, angle);
 
         ctx.fillStyle = landmarkColor;
-        ctx.fillRect(canvas.width * origin.x + finalX * handedness, canvas.height * origin.y + finalY, 15, 15);
+        ctx.fillRect(canvas.width * origin.x + finalX, canvas.height * origin.y + finalY, 15, 15);
     }
 }
 
