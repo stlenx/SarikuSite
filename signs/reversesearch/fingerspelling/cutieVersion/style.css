@@ -1,0 +1,9 @@
+video {
+    position: absolute;
+    left: -100%;
+    top: -100%;
+}
+
+#results {
+    font-size: 3em;
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="container">
+    <video class="input_video" autoplay></video>
+    <canvas class="output_canvas" width="1280px" height="720px"></canvas>
+    <script src="perspective-transform.js" defer></script>
+    <script src="../gestures.js" defer></script>
+    <script type="module" src="main.js" defer></script>
+
+    <div id="results">
+
+    </div>
+</div>
+</body>
+</html>

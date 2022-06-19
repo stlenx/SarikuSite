@@ -3,6 +3,7 @@ class Solver {
         this.gravity = new Vector2(0, 0.001);
         this.objects = objects;
         this.links = [];
+        this.generators = [];
         this.subSteps = 3;
     }
 
@@ -12,10 +13,17 @@ class Solver {
         for(let i = 0; i < this.subSteps; i++) {
             this.applyGravity();
             this.applyConstraint();
+            this.executeGenerators(dt);
             this.applyLinks();
             this.solveCollisions();
             this.updatePositions(sub_dt);
         }
+    }
+
+    executeGenerators(dt) {
+        this.generators.forEach((generator) => {
+            generator.update(dt, this);
+        })
     }
 
     applyLinks() {

@@ -11,6 +11,7 @@
 <script src="VerletObject.js" defer></script>
 <script src="Solver.js" defer></script>
 <script src="Link.js" defer></script>
+<script src="BallGenerator.js" defer></script>
 <script src="main.js" defer></script>
 <script src="../../misc/sarikujs.js" defer></script>
 
@@ -26,8 +27,39 @@
 
         <div class="cardBody">
 
+            <div class="typeSelect">
+                <input type="radio" id="chain" name="type" onclick="ChangeType(parseInt(this.value))">
+                <label for="chain" class="radioInput">Chain</label>
 
+                <input type="radio" id="ball" name="type" value="1" onclick="ChangeType(parseInt(this.value))">
+                <label for="ball" class="radioInput">Ball</label>
 
+                <input type="radio" id="ball-spawner" name="type" checked onclick="ChangeType(parseInt(this.value))">
+                <label for="ball-spawner" class="radioInput">Ball Spawner</label>
+            </div>
+            <div class="inputShelf">
+                <label for="r" id="radius">Radius:</label>
+                <input type="number" value="50" id="r">
+
+                <label for="random-radius">Randomize radius: </label>
+                <input type="checkbox" id="random-radius" onclick="RandomizeRadius(this.checked)">
+            </div>
+
+            <div class="inputShelf" id="random-radius-controls">
+
+            </div>
+
+            <div class="inputShelf">
+                <label for="col">Color: </label>
+                <input type="color" id="col">
+
+                <label for="random-color">Randomize color: </label>
+                <input type="checkbox" id="random-color">
+            </div>
+
+            <div class="inputShelf" id="random-color-controls">
+
+            </div>
         </div>
     </div>
 </div>
