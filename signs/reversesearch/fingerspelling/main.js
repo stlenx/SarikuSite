@@ -136,7 +136,6 @@ function onResults(results) {
     //    console.log(ConvertToLocal(results.multiHandLandmarks[0]));
     //}
 
-
     video.requestVideoFrameCallback(frame);
 }
 

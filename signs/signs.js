@@ -82,8 +82,8 @@ function getVideo(output) {
     //https://www.signingsavvy.com/media/mp4-hd/21/21609.mp4
     //Example video url
 
-    document.getElementById('source').setAttribute("src", output.pageResults.videoURL)
-    document.getElementById('video').load()
+    document.getElementById('source').setAttribute("src", output.pageResults.videoURL.split(":")[2]); //AAAAAAAAAAA THE PAIN OF THE SHITTY QUICK FIX AAAAAAAAA
+    document.getElementById('video').load();
 
     //Variations time
     let container = document.getElementById("variations");
@@ -173,7 +173,6 @@ function inputChanged(input) {
         container.removeChild(container.lastChild)
     }
     getSign(input)
-
 }
 
 function getSign(sign) {
@@ -229,7 +228,7 @@ function SignOfTheDayReturn(API) {
 
     input = {
         "pageResults": {
-            "videoURL": output.signid,
+            "videoURL": "https://www.signingsavvy.com/" + output.signid[0], //PLEASE FIX THIS OMG THIS IS SOOOO BAD BUT PLEASE PLEASSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
             "variations": [],
             "pageDetails": {
                 "meaning": output.word,
