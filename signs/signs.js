@@ -2,6 +2,8 @@ let BenAPI = new XMLHttpRequest();
 const url= 'https://api.benaclegames.com/sl/asl';
 let loadedSign = "";
 
+let factory = new SignFactory();
+
 let text = document.getElementById("textInput");
 
 //Here we load html elements so we don't need to constantly load them over and over again
@@ -19,8 +21,8 @@ BenAPI.onreadystatechange = () => {
         return;
     } // Check for ready because xmlhttprequest gae
 
-    let output = JSON.parse(BenAPI.responseText)
-    console.log(output)
+    let output = JSON.parse(BenAPI.responseText);
+    console.log(output);
 
     let url = document.location.href.split("?");
 
@@ -36,11 +38,16 @@ BenAPI.onreadystatechange = () => {
     window.history.replaceState(nextState, "", nextURL);
 
     if (output.pageResults !== undefined) {
-        getVideo(output)
-        return
+        getVideo(output);
+
+        //let sign = factory.create(output);
+        //console.log(sign);
+        //getVideo2(sign);
+
+        return;
     }
 
-    getInterpretations(output)
+    getInterpretations(output);
 }
 
 function getInterpretations(output) {
@@ -76,6 +83,43 @@ function getInterpretations(output) {
 
         pos++;
     });
+}
+
+function getVideo2(sign) {
+    //https://www.signingsavvy.com/media/mp4-hd/21/21609.mp4
+    //Example video url
+
+    document.getElementById('source').setAttribute("src", sign.video);
+    document.getElementById('video').load();
+
+    //Variations time
+    let container = document.getElementById("variations");
+
+    //Reset variations before adding the new ones
+    while (container.hasChildNodes()) container.removeChild(container.lastChild)
+
+    for(let pos = 0; pos < sign.variations.length; pos++) {
+        let i = sign.variations[pos];
+
+        //Make the radio button
+        let input = makeRadioInput(i.type,"variations", i.url, function() { getSign(this.value); })
+
+        //Check what sign variation we have selected and check it
+        if(i.url.slice(i.url.length - 1) === loadedSign.slice(loadedSign.length - 1))
+            input.checked = true;
+
+        //Make the label for the button
+        let tag = document.createElement("label")
+        tag.setAttribute("for", i.type)
+        tag.innerHTML = i.type;
+
+        //Add the new elements
+        container.appendChild(input);
+        container.appendChild(tag);
+    }
+
+    ////Extra info! -Twiple-
+    //LoadExtraInfo(output.pageResults.pageDetails);
 }
 
 function getVideo(output) {

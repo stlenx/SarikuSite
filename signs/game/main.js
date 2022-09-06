@@ -2,12 +2,13 @@ let BenAPI = new XMLHttpRequest();
 const BenURL= 'https://api.benaclegames.com/sl/asl';
 
 let RandomAPI = new XMLHttpRequest();
-const RandomURL = 'https://192.18.0.17:5001/Game';
+const RandomURL = 'http://fight.sariku.gay:5000/Game';
 
 let LeaderboardAPI = new XMLHttpRequest();
-const LeaderboardURL = "https://192.18.0.17:5001/Leaderboard";
+const LeaderboardURL = "http://fight.sariku.gay:5000/Leaderboard";
 
 let loadedUrl = "";
+let country = localStorage.getItem('country');
 
 let answers = [];
 let textInput = document.getElementById("textInput");
@@ -21,7 +22,7 @@ BenAPI.onreadystatechange = () => {
     } // Check for ready because xmlhttprequest gae
 
     let output = JSON.parse(BenAPI.responseText);
-    console.log(output);
+    //console.log(output);
 
     answers = output.pageResults.pageDetails.synonyms;
 
@@ -38,7 +39,7 @@ RandomAPI.onreadystatechange = () => {
 
 
 function getVideo(output) {
-    document.getElementById('source').setAttribute("src", output.pageResults.videoURL);
+    document.getElementById('source').setAttribute("src", output.pageResults.videoURL.split(":")[2]);
     document.getElementById('video').load();
 
     //Variations time
@@ -125,21 +126,19 @@ function UpdateSize() {
 }
 
 function ShowAnswers() {
-    let displays = document.getElementsByClassName("answers");
+    let display = document.getElementsByClassName("answers")[0];
 
-    for(let i = 0; i < displays.length; i++) {
-        let display = displays[i];
+    while (display.children.length !== 0) display.removeChild(display.lastChild);
 
-        answers.forEach((answer => {
-            let h3 = document.createElement("h3");
+    answers.forEach((answer => {
+        let h3 = document.createElement("h3");
 
-            h3.innerText = answer;
+        h3.innerText = answer;
 
-            display.appendChild(h3);
-        }))
+        display.appendChild(h3);
+    }))
 
-        document.getElementById("result-score").innerText = `Your total score was: ${score}`;
-    }
+    document.getElementById("result-score").innerText = `Your total score was: ${score}`;
 }
 
 function MissGuess() {
@@ -181,7 +180,7 @@ function HitGuess() {
 let guessesLeft = 3;
 let score = 0;
 function TakeGuess() {
-    let guess = textInput.value;
+    let guess = textInput.value.replace(" ", "");
 
     if(answers.includes(guess.toUpperCase().replace(" ", ""))) {
         score += 100 * guessesLeft;
@@ -240,11 +239,17 @@ function PublishScore() {
     }
 
     //GET COUNTRY HAHAHAHAHAHAHA *evil laugh*
+    if(country !== null) {
+        UploadScore(name, score, country);
+        return;
+    }
+
     fetch('https://api.ipregistry.co/?key=tryout')
         .then(function (response) {
             return response.json();
         })
         .then(function (payload) {
+            localStorage.setItem('country', payload.location.country.code.toLowerCase());
             UploadScore(name, score, payload.location.country.code.toLowerCase());
    });
 }
@@ -265,6 +270,7 @@ function UploadScore(name, score, region) {
 
 LeaderboardAPI.onreadystatechange = () => {
     if (LeaderboardAPI.readyState !== 4 || LeaderboardAPI.status !== 200) {
+        console.log("leaderboard?")
         return;
     } // Check for ready because xmlhttprequest gae
 

@@ -181,7 +181,7 @@ function drawBorder(xPos, yPos, width, height, thickness = 1) {
 function UpdateWorld() {
     for(let x = 1; x < imageData.width - 1; x++) {
         for(let y = imageData.height - 1; y >= 0; y--) {
-            world[x][y].Update()
+            world[x][y].Update();
         }
     }
 }
@@ -230,7 +230,7 @@ function frame() {
 
     console.time("Frame");
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     DrawWorld() //2-5ms uhhhh it's faster i swear
 
