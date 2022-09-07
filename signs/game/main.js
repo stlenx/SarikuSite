@@ -195,6 +195,30 @@ function TakeGuess() {
     }
 }
 
+function ShowAnswersSkip() {
+    let skipContainer = document.getElementById("skip-message");
+    skipContainer.style.opacity = "1";
+
+    setTimeout(
+        () => {
+            skipContainer.style.opacity = "0";
+        },
+        2000
+    );
+
+    let display = document.getElementById("answers");
+
+    while (display.children.length !== 0) display.removeChild(display.lastChild);
+
+    answers.forEach((answer => {
+        let h3 = document.createElement("h3");
+
+        h3.innerText = answer;
+
+        display.appendChild(h3);
+    }));
+}
+
 function Skip() {
     guessesLeft--;
     textInput.value = "";
@@ -202,6 +226,8 @@ function Skip() {
 
     if(guessesLeft === 0) {
         Die();
+    } else {
+        ShowAnswersSkip();
     }
 
     GetWord();

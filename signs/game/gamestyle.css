@@ -17,7 +17,7 @@
     margin-top: 25%;
 }
 
-.answers h3 {
+.answers h3, #answers h3 {
     display: inline-block;
     margin: 8px;
 }
@@ -101,6 +101,31 @@ tr {
 td img {
     width: 15%;
     border-radius: 2px;
+}
+
+#skip-message {
+    display: unset;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    width: unset;
+    height: unset;
+    min-height: unset;
+
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    margin-top: 30%;
+    padding: 50px;
+
+    border-radius: 5px;
+
+    font-family: var(--text-font);
+    font-size: 1.5em;
+    color: var(--clear);
+    text-align: center;
+}
+#answers h3 {
+    color: var(--clear);
 }
 
 @media screen and (max-width: 1000px) {
