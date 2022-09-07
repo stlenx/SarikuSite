@@ -104,7 +104,7 @@ td img {
 }
 
 #skip-message {
-    display: unset;
+    display: none;
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
     width: unset;

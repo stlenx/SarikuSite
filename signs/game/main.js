@@ -126,6 +126,7 @@ function TryAgain() {
 
 function Die() {
     let death = document.getElementById("death-message");
+    HideHeart(guessesLeft);
     UpdateSize();
     ShowAnswers();
     death.style.display = "unset";
@@ -202,17 +203,20 @@ function TakeGuess() {
         HitGuess();
     } else {
         guessesLeft--;
-        MissGuess();
 
         if(guessesLeft === 0) {
             Die();
+            return;
         }
+
+        MissGuess();
     }
 }
 
 function ShowAnswersSkip() {
     let skipContainer = document.getElementById("skip-message");
     skipContainer.style.opacity = "1";
+    skipContainer.style.display = "unset";
 
     let display = document.getElementById("answers");
 
@@ -231,6 +235,7 @@ function ShowAnswersSkip() {
             skipContainer.style.opacity = "0";
             setTimeout(() => {
                     while (display.children.length !== 0) display.removeChild(display.lastChild);
+                    skipContainer.style.display = "none";
                 },
                 200
             )
@@ -246,6 +251,7 @@ function Skip() {
 
     if(guessesLeft === 0) {
         Die();
+        return;
     } else {
         ShowAnswersSkip();
     }
