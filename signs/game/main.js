@@ -11,7 +11,12 @@ let loadedUrl = "";
 let country = localStorage.getItem('country');
 
 let answers = [];
+let displayAnswers = [];
 let textInput = document.getElementById("textInput");
+
+String.prototype.normalize = function() {
+    return this.replace(/[^a-zA-Z0-9]/g, '');
+}
 
 BenAPI.onreadystatechange = () => {
     if (BenAPI.readyState !== 4 || BenAPI.status !== 200) {
@@ -24,7 +29,12 @@ BenAPI.onreadystatechange = () => {
     let output = JSON.parse(BenAPI.responseText);
     //console.log(output);
 
-    answers = output.pageResults.pageDetails.synonyms;
+    displayAnswers = output.pageResults.pageDetails.synonyms;
+
+    answers = [];
+    output.pageResults.pageDetails.synonyms.forEach((synonym) => {
+        answers.push(synonym.normalize());
+    })
 
     getVideo(output);
 }
@@ -130,7 +140,7 @@ function ShowAnswers() {
 
     while (display.children.length !== 0) display.removeChild(display.lastChild);
 
-    answers.forEach((answer => {
+    displayAnswers.forEach((answer => {
         let h3 = document.createElement("h3");
 
         h3.innerText = answer;
@@ -172,6 +182,7 @@ function ShowHeart(index) {
 }
 
 function HitGuess() {
+    ShowAnswersSkip();
     document.getElementById("score").innerText = `Score: ${score}`;
     textInput.value = "";
     GetWord();
@@ -182,7 +193,7 @@ let score = 0;
 function TakeGuess() {
     let guess = textInput.value.replace(" ", "");
 
-    if(answers.includes(guess.toUpperCase().replace(" ", ""))) {
+    if(answers.includes(guess.toUpperCase().normalize())) {
         score += 100 * guessesLeft;
         HitGuess();
     } else {
@@ -210,7 +221,7 @@ function ShowAnswersSkip() {
 
     while (display.children.length !== 0) display.removeChild(display.lastChild);
 
-    answers.forEach((answer => {
+    displayAnswers.forEach((answer => {
         let h3 = document.createElement("h3");
 
         h3.innerText = answer;
