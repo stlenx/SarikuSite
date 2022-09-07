@@ -210,13 +210,6 @@ function ShowAnswersSkip() {
     let skipContainer = document.getElementById("skip-message");
     skipContainer.style.opacity = "1";
 
-    setTimeout(
-        () => {
-            skipContainer.style.opacity = "0";
-        },
-        2000
-    );
-
     let display = document.getElementById("answers");
 
     while (display.children.length !== 0) display.removeChild(display.lastChild);
@@ -228,6 +221,18 @@ function ShowAnswersSkip() {
 
         display.appendChild(h3);
     }));
+
+    setTimeout(
+        () => {
+            skipContainer.style.opacity = "0";
+            setTimeout(() => {
+                    while (display.children.length !== 0) display.removeChild(display.lastChild);
+                },
+                200
+            )
+        },
+        2000
+    );
 }
 
 function Skip() {
