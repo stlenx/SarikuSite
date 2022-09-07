@@ -221,7 +221,7 @@ function getLeVideo(output) {
     //https://www.signingsavvy.com/media/mp4-hd/21/21609.mp4
     //Example video url
 
-    return output.pageResults.videoURL;
+    return output.pageResults.videoURL.split(":")[2];
 }
 
 function getLeInterpretations(output) {
