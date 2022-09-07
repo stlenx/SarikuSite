@@ -111,6 +111,7 @@ function TryAgain() {
     let death = document.getElementById("death-message");
     death.style.display = "none";
 
+    textInput.value = "";
     score = 0;
     document.getElementById("score").innerText = `Score: ${score}`;
 
@@ -166,7 +167,6 @@ function MissGuess() {
     });
 
     ShowAnswersSkip();
-    textInput.value = "";
     GetWord();
 
     HideHeart(guessesLeft);
@@ -176,6 +176,14 @@ function HideHeart(index) {
     let heart = document.getElementById(`heart-${index}`);
 
     heart.src = "heart-outline.svg";
+
+    document.getElementById("hearts").style.backgroundColor = "rgb(255,35,35)";
+
+    setTimeout(() => {
+            document.getElementById("hearts").style.backgroundColor = "rgba(113,255,35, 0)";
+        },
+        100
+    )
     //heart.style.filter = "none";
 }
 
@@ -189,6 +197,14 @@ function ShowHeart(index) {
 function HitGuess() {
     ShowAnswersSkip();
     document.getElementById("score").innerText = `Score: ${score}`;
+    document.getElementById("score").style.backgroundColor = "rgb(113,255,35)";
+
+    setTimeout(() => {
+            document.getElementById("score").style.backgroundColor = "rgba(113,255,35, 0)";
+        },
+        100
+    )
+
     textInput.value = "";
     GetWord();
 }

@@ -59,8 +59,16 @@
     filter: invert(40%) sepia(100%) saturate(10000%) hue-rotate(0deg);
 }
 
+#hearts {
+    transition: 0.1s background-color ease-in-out;
+    background-color: unset;
+}
+
 #score {
     font-size: 2.4em;
+
+    transition: 0.1s background-color ease-in-out;
+    background-color: unset;
 }
 
 .upload-score {
