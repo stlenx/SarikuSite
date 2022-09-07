@@ -111,10 +111,10 @@ td img {
     height: unset;
     min-height: unset;
 
+    top: 60%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -50%);
 
-    margin-top: 30%;
     padding: 50px;
 
     border-radius: 5px;

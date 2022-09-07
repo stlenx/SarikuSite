@@ -164,6 +164,10 @@ function MissGuess() {
         iterations: 2
     });
 
+    ShowAnswersSkip();
+    textInput.value = "";
+    GetWord();
+
     HideHeart(guessesLeft);
 }
 
