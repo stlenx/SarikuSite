@@ -211,13 +211,21 @@ function HitGuess() {
 
 let guessesLeft = 3;
 let score = 0;
+let streak = 0;
+let bonus = 25;
 function TakeGuess() {
     let guess = textInput.value.replace(" ", "");
 
     if(answers.includes(guess.toUpperCase().normalize())) {
-        score += 100 * guessesLeft;
+        //Guessed correctly
+        score += 100 + (bonus * streak);
+
+        streak++;
         HitGuess();
     } else {
+        //Guessed incorrectly you poo head empty
+
+        streak = 0;
         guessesLeft--;
 
         if(guessesLeft === 0) {
@@ -262,6 +270,7 @@ function ShowAnswersSkip() {
 
 function Skip() {
     guessesLeft--;
+    streak = 0;
     textInput.value = "";
     HideHeart(guessesLeft);
 
