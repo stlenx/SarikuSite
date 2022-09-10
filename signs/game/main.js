@@ -2,10 +2,10 @@ let BenAPI = new XMLHttpRequest();
 const BenURL= 'https://api.benaclegames.com/sl/asl';
 
 let RandomAPI = new XMLHttpRequest();
-const RandomURL = 'https://fight.sariku.gay:5000/Game';
+const RandomURL = 'https://fight.sariku.gay/Game';
 
 let LeaderboardAPI = new XMLHttpRequest();
-const LeaderboardURL = "https://fight.sariku.gay:5000/Leaderboard";
+const LeaderboardURL = "https://fight.sariku.gay/Leaderboard";
 
 let loadedUrl = "";
 let country = localStorage.getItem('country');
