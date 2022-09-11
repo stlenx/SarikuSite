@@ -9,6 +9,29 @@ const LeaderboardURL = "https://fight.sariku.gay/Leaderboard";
 
 let loadedUrl = "";
 let country = localStorage.getItem('country');
+if(country === null) {
+    fetch('https://api.ipregistry.co/?key=tryout')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (payload) {
+            country = payload.location.country.code.toLowerCase()
+            localStorage.setItem('country', country);
+            document.getElementById("user-country").src = `flags/4x3/${country}.svg`;
+        });
+} else {
+    document.getElementById("user-country").src = `flags/4x3/${country}.svg`;
+}
+
+let username = localStorage.getItem('username');
+if(username !== null) {
+    let uploader = document.getElementsByClassName("upload-score")[0];
+    uploader.remove();
+
+    document.getElementById("username-display").innerText = `Username: ${username}`;
+} else {
+    document.getElementById("username-display").innerText = `Username not set yet, go play!`;
+}
 
 let answers = [];
 let displayAnswers = [];
@@ -130,6 +153,9 @@ function Die() {
     HideHeart(guessesLeft);
     UpdateSize();
     ShowAnswers();
+    if(username !== null) {
+        PublishScore();
+    }
     death.style.display = "unset";
 }
 
@@ -150,7 +176,7 @@ function ShowAnswers() {
         display.appendChild(h3);
     }))
 
-    document.getElementById("result-score").innerText = `Your total score was: ${score}`;
+    document.getElementById("result-score").innerText = `Your score was: ${score}`;
 }
 
 function MissGuess() {
@@ -184,14 +210,12 @@ function HideHeart(index) {
         },
         100
     )
-    //heart.style.filter = "none";
 }
 
 function ShowHeart(index) {
     let heart = document.getElementById(`heart-${index}`);
 
     heart.src = "heart.svg";
-    //heart.style.filter = "none";
 }
 
 function HitGuess() {
@@ -291,15 +315,23 @@ textInput.addEventListener("keydown", (e) => {
         TakeGuess();
     }
 })
-document.getElementById("username").addEventListener("keydown", (e) => {
-    if(e.code === "Enter") {
-        PublishScore();
-    }
-})
+if(username === null) {
+    document.getElementById("username").addEventListener("keydown", (e) => {
+        if(e.code === "Enter") {
+            PublishScore();
+        }
+    })
+}
 
 function PublishScore() {
-    let input = document.getElementById("username");
-    let name = input.value;
+    let name;
+    if(username === null) {
+        let input = document.getElementById("username");
+        name = input.value;
+        localStorage.setItem("username", name);
+    } else {
+        name = username;
+    }
 
     if(name === "") {
         input.animate([
@@ -315,25 +347,10 @@ function PublishScore() {
         return;
     }
 
-    //GET COUNTRY HAHAHAHAHAHAHA *evil laugh*
-    if(country !== null) {
-        UploadScore(name, score, country);
-        return;
-    }
-
-    fetch('https://api.ipregistry.co/?key=tryout')
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (payload) {
-            localStorage.setItem('country', payload.location.country.code.toLowerCase());
-            UploadScore(name, score, payload.location.country.code.toLowerCase());
-   });
+    UploadScore(name, score, country);
 }
 
 function UploadScore(name, score, region) {
-    console.log(name, score, region);
-
     LeaderboardAPI.open("POST", LeaderboardURL);
     LeaderboardAPI.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     LeaderboardAPI.send(JSON.stringify({
@@ -347,7 +364,6 @@ function UploadScore(name, score, region) {
 
 LeaderboardAPI.onreadystatechange = () => {
     if (LeaderboardAPI.readyState !== 4 || LeaderboardAPI.status !== 200) {
-        console.log("leaderboard?")
         return;
     } // Check for ready because xmlhttprequest gae
 
@@ -391,3 +407,18 @@ function GetTopUsers(amount) {
 }
 
 GetTopUsers(10);
+
+function EditUsername() {
+    document.getElementById("username-display").innerText = "Username: ";
+
+    document.getElementById("new-username").value = username;
+    document.getElementById("new-username").style.display = "unset";
+}
+
+document.getElementById("new-username").addEventListener("keydown", (e) => {
+    if(e.code === "Enter") {
+        username = document.getElementById("new-username").value;
+        document.getElementById("username-display").innerText = `Username: ${username}`;
+        document.getElementById("new-username").style.display = "none";
+    }
+})

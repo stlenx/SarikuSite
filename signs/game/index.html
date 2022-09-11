@@ -52,7 +52,7 @@
 
           <div>
             <video height="450" width="800" id="video" autoplay muted loop>
-              <source src="https://www.signingsavvy.com/media/mp4-hd/24/24851.mp4" id="source" type="video/mp4">
+              <source src="" id="source" type="video/mp4">
               Your browser does not support the video tag.
             </video>
           </div>
@@ -70,6 +70,23 @@
             <label for="textInput" onclick="TakeGuess()" class="long-label">Guess!</label>
           </div>
 
+        </div>
+      </div>
+
+      <div class="article" id="user-data">
+        <div class="article-container">
+          <div class="article-content">
+            <div class="username-stuff">
+              <h3 id="username-display">Username: SARIKU</h3>
+              <input type="text" placeholder="username" id="new-username">
+              <img src="pencil.svg" alt="editButton" id="edit-username" onclick="EditUsername()">
+            </div>
+
+            <div class="username-stuff">
+              <h3>Country: </h3>
+              <img src="flags/4x3/es.svg" alt="country" id="user-country">
+            </div>
+          </div>
         </div>
       </div>
 
@@ -121,16 +138,16 @@
     <div class="article">
       <div class="article-container">
         <div class="article-header">
-          <h1>You lost!</h1>
+          <h1>You missed!</h1>
 
           <p id="result-score">
-            Your total score was: 0
+            Your score was: 0
           </p>
         </div>
 
         <div class="upload-score">
           Publish your score:
-            <input type="text" id="username" placeholder="Name">
+            <input type="text" id="username" placeholder="Username">
           <label for="username" onclick="PublishScore()">Upload</label>
         </div>
 

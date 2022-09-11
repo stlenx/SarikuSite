@@ -81,13 +81,14 @@ label, button {
 
 .upload-score {
     font-family: var(--text-font);
+    font-size: 1.5em;
 }
 .upload-score input {
-    font-size: 1em;
-    width: 20%;
+    font-size: 1.2em;
+    width: 25%;
 }
 .upload-score label {
-    font-size: 0.8em;
+    font-size: 1.2em;
     padding: 5px 10px;
 }
 
@@ -117,6 +118,7 @@ tr {
 td img {
     width: 15%;
     border-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 #skip-message {
@@ -143,13 +145,64 @@ td img {
 #answers h3 {
     color: var(--clear);
 }
+#user-data {
+    padding: 40px 0 0 0;
+}
+
+
+.username-stuff h3 {
+    margin-top: 25px;
+}
+.username-stuff {
+    display: flex;
+}
+.article-content div {
+    flex: unset;
+}
+.username-stuff input {
+    font-size: 1em;
+    width: unset;
+    display: none;
+}
+.username-stuff img {
+    filter: var(--svg);
+    width: 3em;
+    border-radius: 2px;
+    margin: 18px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+}
+#edit-username {
+    width: 2em;
+    box-shadow: unset;
+}
+#edit-username:hover {
+    cursor: pointer;
+}
+
 
 @media screen and (max-width: 1000px) {
+    th {
+        font-size: 2em;
+    }
+    td {
+        font-size: 1.5em;
+    }
+    td img {
+        width: 25%;
+    }
+
     .message .content {
         width: 100%;
     }
 
     .long-label {
         width: 90%;
+    }
+
+    .username-stuff img {
+        width: 5em;
+    }
+    #edit-username {
+        width: 3em;
     }
 }
