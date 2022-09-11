@@ -126,6 +126,12 @@ class Particle {
     }
 }
 
+let text = "SARIKU";
+
+if(window.location.host === "bernal.encisa.dev") {
+    text = "BERNAL";
+}
+
 function doText() {
     particleArray = [];
     particleSize = window.innerWidth * 0.0052;
@@ -133,7 +139,7 @@ function doText() {
 
     ctx.font = 'bold 16px Verdana';
     ctx.fillStyle = "rgb(0, 0, 0)";
-    ctx.fillText('SARIKU', 5, 30);
+    ctx.fillText(text, 5, 30);
     data = ctx.getImageData(0, 0, 500, 100);
 
     for (let y = 0; y < data.height; y++) {
