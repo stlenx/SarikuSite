@@ -21,7 +21,7 @@ String.prototype.normalize = function() {
 BenAPI.onreadystatechange = () => {
     if (BenAPI.readyState !== 4 || BenAPI.status !== 200) {
         if(BenAPI.status === 404) {
-            text.style.color = "red";
+            bannerTXT.style.color = "red";
         }
         return;
     } // Check for ready because xmlhttprequest gae
