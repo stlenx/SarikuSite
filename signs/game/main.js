@@ -328,6 +328,7 @@ function PublishScore() {
     if(username === null) {
         let input = document.getElementById("username");
         name = input.value;
+        document.getElementById("username-display").innerText = `Username: ${name}`;
         localStorage.setItem("username", name);
     } else {
         name = username;
