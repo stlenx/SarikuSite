@@ -19,12 +19,17 @@
 <div class="main" id="id">
 
   <script src="../errors.js" defer></script>
+  <script src="lazyDarkMode.js" defer></script>
   <script src="./main.js" defer></script>
 
   <div class="site">
     <div class="topButtons noSelect">
       <div class="topLeft" onclick="document.location.href = '../';">
         <img src="../return-button.svg" alt="return button">
+      </div>
+
+      <div class="topRight noSelect" onclick="toggle();">
+        <img src="../moon.svg" alt="dark-mode toggle button" id="themeSvg">
       </div>
     </div>
 
@@ -62,7 +67,7 @@
           </div>
 
           <div>
-            <button style="width: 95%" onclick="Skip()">Skip sign</button>
+            <button style="width: 95%; color: black;" onclick="Skip()">Skip sign</button>
           </div>
 
           <div class="inputThingie">
