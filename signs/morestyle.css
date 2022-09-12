@@ -75,6 +75,11 @@ body {
     left: calc(100% - 69px);
 }
 
+.bottomLeft {
+    top: calc(100% - 69px);
+    left: 69px;
+}
+
 .topButtons div:hover {
     cursor: pointer;
     transition: padding 0.2s;
