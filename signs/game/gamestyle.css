@@ -140,11 +140,11 @@ td img {
 
     font-family: var(--text-font);
     font-size: 1.5em;
-    color: var(--clear);
+    color: white;
     text-align: center;
 }
 #answers h3 {
-    color: var(--clear);
+    color: white;
 }
 #user-data {
     padding: 40px 0 0 0;
