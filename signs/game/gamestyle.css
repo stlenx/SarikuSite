@@ -180,6 +180,10 @@ td img {
     cursor: pointer;
 }
 
+#autoCorrect button {
+    color: black;
+}
+
 
 @media screen and (max-width: 1000px) {
     th {

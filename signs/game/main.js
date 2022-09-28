@@ -423,3 +423,86 @@ document.getElementById("new-username").addEventListener("keydown", (e) => {
         document.getElementById("new-username").style.display = "none";
     }
 })
+
+
+// AUTOCORRECT STUFF
+let output = document.getElementById("autoCorrect");
+
+function CorrectText(text) {
+    while (output.hasChildNodes()) { output.lastChild.remove(); }
+
+    let results = autoCorrect(text);
+
+    for(let i = 0; i < results.length; i++) {
+        let button = document.createElement("button");
+        button.innerText = results[i].name;
+        button.onclick = function () {
+            document.getElementById("textInput").value = this.innerText;
+        }
+
+        output.append(button);
+    }
+}
+
+function autoCorrect(word) {
+    class Word {
+        constructor(value, name) {
+            this.value = value;
+            this.name = name;
+        }
+    }
+
+    let best = [];
+
+    for (let i = 0; i < words.length; i++) {
+        let similarity = getSimilarity(words[i], word);
+
+        if(best.length === 0) {
+            best.push(new Word(similarity, words[i].toLowerCase()));
+        }
+
+        for(let x = 0; x < best.length; x++) {
+            if(words[i] !== best[x].name) {
+                if(similarity > best[x].value) {
+                    best.splice(x, 0, new Word(similarity, words[i].toLowerCase()));
+                    best = best.slice(0, 10);
+                    break;
+                }
+            }
+        }
+    }
+
+    if(best.length === 1) {
+        best = [];
+    }
+
+    return best;
+}
+
+function getSimilarity(word1, word2) {
+    word1 = word1.toLowerCase();
+    word2 = word2.toLowerCase();
+
+    const bigram1 = getBigram(word1);
+    const bigram2 = getBigram(word2);
+
+    let similar = [];
+
+    for (let i = 0; i < bigram1.length; i++) {
+        if(bigram2.indexOf(bigram1[i]) > -1) {
+            similar.push(bigram1[i]);
+        }
+    }
+
+    return similar.length / Math.max(bigram1.length, bigram2.length);
+}
+
+function getBigram(word) {
+    let result = [];
+
+    for (let i = 0; i < word.length-1; i++) {
+        result.push(word[i] + word[i+1]);
+    }
+
+    return result;
+}

@@ -20,6 +20,7 @@
 
   <script src="../errors.js" defer></script>
   <script src="lazyDarkMode.js" defer></script>
+  <script src="words.js" defer></script>
   <script src="./main.js" defer></script>
 
   <div class="site">
@@ -71,8 +72,12 @@
           </div>
 
           <div class="inputThingie">
-            <input placeholder="Enter sign" type="text" name="sign" id="textInput" autocomplete="off">
+            <input placeholder="Enter sign" type="text" name="sign" id="textInput" autocomplete="off" onkeyup="CorrectText(this.value)">
             <label for="textInput" onclick="TakeGuess()" class="long-label">Guess!</label>
+          </div>
+
+          <div id="autoCorrect">
+
           </div>
 
         </div>
